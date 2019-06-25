@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package format="2">
+	<name>drone_wrapper</name>
+	<version>0.0.1</version>
+	<description>The drone_wrapper package</description>
+
+	<maintainer email="nikhilvkhedekar@gmail.com">Nikhil Khedekar</maintainer>
+	<author email="nikhilvkhedekar@gmail.com">Nikhil Khedekar</author>
+
+	<license>MIT</license>
+
+	<!-- <url type="website">To be added soon</url> -->
+
+	<buildtool_depend>catkin</buildtool_depend>
+	<exec_depend>cv_bridge</exec_depend>
+	<exec_depend>geometry_msgs</exec_depend>
+	<exec_depend>mavros_msgs</exec_depend>
+	<exec_depend>rospy</exec_depend>
+	<exec_depend>sensor_msgs</exec_depend>
+	<exec_depend>tf</exec_depend>
+	<exec_depend>mavlink_sitl_gazebo</exec_depend>
+	<exec_depend>gazebo_ros</exec_depend>
+	<exec_depend>px4</exec_depend>
+	<exec_depend>mavros</exec_depend>
+
+	<!-- The export tag contains other, unspecified, tags -->
+	<export>
+		<!-- Other tools can request additional information be placed here -->
+
+	</export>
+</package>
