@@ -46,7 +46,9 @@ cd catkin_ws/src
 git clone https://github.com/PX4/Firmware.git
 cd Firmware
 git submodule update --init --recursive
-cd ../..
+cd ..
+ln -s Firmware/Tools/sitl_gazebo mavlink_sitl_gazebo
+cd ..
 catkin build
 echo 'source '$PWD'/devel/setup.bash' >> ~/.bashrc
 source ~/.bashrc
