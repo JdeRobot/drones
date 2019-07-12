@@ -18,9 +18,7 @@
 	<exec_depend>rospy</exec_depend>
 	<exec_depend>sensor_msgs</exec_depend>
 	<exec_depend>tf</exec_depend>
-	<exec_depend>mavlink_sitl_gazebo</exec_depend>
 	<exec_depend>gazebo_ros</exec_depend>
-	<exec_depend>px4</exec_depend>
 	<exec_depend>mavros</exec_depend>
 
 	<!-- The export tag contains other, unspecified, tags -->

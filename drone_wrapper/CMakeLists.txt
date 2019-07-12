@@ -14,8 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   tf
-  mavlink_sitl_gazebo
-  px4
   mavros
   gazebo_ros
 )
