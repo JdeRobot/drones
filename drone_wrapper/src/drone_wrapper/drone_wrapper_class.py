@@ -2,6 +2,7 @@
 
 import rospy
 import tf
+import numpy as np
 import cv2
 from cv_bridge import CvBridge
 from sensor_msgs.msg import NavSatFix, Image
@@ -45,10 +46,10 @@ class DroneWrapper():
 		return self.bridge.imgmsg_to_cv2(self.ventral_image)
 	
 	def get_position(self):
-		return self.pose_stamped.pose.position
+		return np.array([self.pose_stamped.pose.position.x, self.pose_stamped.pose.position.y, self.pose_stamped.pose.position.z])
 	
 	def get_orientation(self):
-		return tf.transformations.euler_from_quaternion([self.pose_stamped.pose.orientation.x, self.pose_stamped.pose.orientation.y, self.pose_stamped.pose.orientation.z, self.pose_stamped.pose.orientation.w])
+		return np.array(tf.transformations.euler_from_quaternion([self.pose_stamped.pose.orientation.x, self.pose_stamped.pose.orientation.y, self.pose_stamped.pose.orientation.z, self.pose_stamped.pose.orientation.w]))
 
 	def get_roll(self):
 		return self.get_orientation()[0]
