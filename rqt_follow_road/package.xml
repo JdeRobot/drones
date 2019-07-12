@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
 	<name>rqt_follow_road</name>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<description>The rqt_follow_road package</description>
 
 	<maintainer email="nikhilvkhedekar@gmail.com">Nikhil Khedekar</maintainer>

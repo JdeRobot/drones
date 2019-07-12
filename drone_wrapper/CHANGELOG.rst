@@ -2,8 +2,8 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.3 (2019-07-12)
+------------------
 * removed packages requiring source builds
 * Contributors: Nikhil Khedekar
 
