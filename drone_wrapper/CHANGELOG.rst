@@ -2,8 +2,8 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2019-07-12)
+------------------
 * converted returns to numpy arrays
 * made DroneWrapper importable
 * made DroneWrapper importable
