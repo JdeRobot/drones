@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(rqt_follow_road)
+project(rqt_drone_teleop)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,11 +8,11 @@ project(rqt_follow_road)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
-  rospy
-  rqt_gui
-  rqt_gui_py
-  sensor_msgs
+	geometry_msgs
+	rospy
+	rqt_gui
+	rqt_gui_py
+	sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,8 +106,8 @@ catkin_python_setup()
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES rqt_follow_road
-#  CATKIN_DEPENDS geometry_msgs rospy rqt_gui rqt_gui_py sensor_msgs
+#  LIBRARIES rqt_drone_teleop
+#  CATKIN_DEPENDS rospy
 #  DEPENDS system_lib
 )
 
@@ -119,12 +119,12 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 # include
-  ${catkin_INCLUDE_DIRS}
+	${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/rqt_follow_road.cpp
+#   src/${PROJECT_NAME}/rqt_drone_teleop.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -135,7 +135,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/rqt_follow_road_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/rqt_drone_teleop_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,8 +162,8 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 install(PROGRAMS
-  scripts/rqt_follow_road
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+	scripts/rqt_drone_teleop
+	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 ## Mark executables and/or libraries for installation
@@ -175,13 +175,13 @@ install(PROGRAMS
 
 ## Mark cpp header files for installation
 install(DIRECTORY resource
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+	DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(FILES
-  plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+	plugin.xml
+	DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 #############
@@ -189,7 +189,7 @@ install(FILES
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_rqt_follow_road.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_rqt_drone_teleop.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

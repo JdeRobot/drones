@@ -19,11 +19,11 @@ from geometry_msgs.msg import Pose, PoseStamped, Twist, TwistStamped
 from teleopWidget import TeleopWidget
 from sensorsWidget import SensorsWidget
 
-class FollowRoad(Plugin):
+class DroneTeleop(Plugin):
 	def __init__(self, context):
-		super(FollowRoad, self).__init__(context)
+		super(DroneTeleop, self).__init__(context)
 		# Give QObjects reasonable names
-		self.setObjectName('FollowRoad')
+		self.setObjectName('DroneTeleop')
 
 		# Process standalone plugin command-line arguments
 		from argparse import ArgumentParser
@@ -41,11 +41,11 @@ class FollowRoad(Plugin):
 		self._widget = QWidget()
 		# Get path to UI file which should be in the "resource" folder of this package
 		ui_file = os.path.join(rospkg.RosPack().get_path(
-			'rqt_follow_road'), 'resource', 'FollowRoad.ui')
+			'rqt_drone_teleop'), 'resource', 'DroneTeleop.ui')
 		# Extend the widget with all attributes and children from UI file
 		loadUi(ui_file, self._widget)
 		# Give QObjects reasonable names
-		self._widget.setObjectName('FollowRoadUi')
+		self._widget.setObjectName('DroneTeleopUi')
 		# Show _widget.windowTitle on left-top of each plugin (when
 		# it's set in _widget). This is useful when you open multiple
 		# plugins at once. Also if you open multiple instances of your
@@ -57,7 +57,7 @@ class FollowRoad(Plugin):
 
 		# Add logo
 		pixmap = QPixmap(os.path.join(rospkg.RosPack().get_path(
-			'rqt_follow_road'), 'resource', 'jderobot.png'))
+			'rqt_drone_teleop'), 'resource', 'jderobot.png'))
 		self._widget.img_logo.setPixmap(pixmap.scaled(121, 121))
 
 		# Set Variables

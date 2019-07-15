@@ -2,9 +2,9 @@
 
 import sys
 
-from rqt_follow_road.follow_road import FollowRoad
+from rqt_drone_teleop.drone_teleop import DroneTeleop
 from rqt_gui.main import Main
 
-plugin = 'rqt_follow_road'
+plugin = 'rqt_drone_teleop'
 main = Main(filename=plugin)
 sys.exit(main.main(standalone=plugin))
