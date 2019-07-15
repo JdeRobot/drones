@@ -5,14 +5,14 @@
       "keys": {
         "running-plugins": {
           "type": "repr",
-          "repr": "{u'rqt_follow_road/FollowRoad': [1]}"
+          "repr": "{u'rqt_drone_teleop/DroneTeleop': [1]}"
         }
       },
       "groups": {
-        "plugin__rqt_moveit__Moveit__1": {
+        "plugin__rqt_follow_road__FollowRoad__1": {
           "keys": {},
           "groups": {
-            "dock_widget___plugincontainer_top_widget": {
+            "dock_widget__FollowRoadUi": {
               "keys": {
                 "dockable": {
                   "type": "repr",
@@ -24,52 +24,29 @@
                 },
                 "dock_widget_title": {
                   "type": "repr",
-                  "repr": "u'Moveit! Monitor'"
-                }
-              },
-              "groups": {}
-            },
-            "plugin": {
-              "keys": {
-                "_splitter": {
-                  "type": "repr(QByteArray.hex)",
-                  "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff0000000100000002000000c8000000640100000009010000000200')",
-                  "pretty-print": "         d     "
-                },
-                "splitter_horizontal": {
-                  "type": "repr(QByteArray.hex)",
-                  "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff0000000100000002000000640000006e0100000009010000000200')",
-                  "pretty-print": "       d n     "
+                  "repr": "u'Follow Road'"
                 }
               },
               "groups": {}
             }
           }
         },
-        "plugin__rqt_robot_steering__RobotSteering__1": {
+        "plugin__rqt_drone_teleop__DroneTeleop__1": {
           "keys": {},
           "groups": {
-            "plugin": {
+            "dock_widget__DroneTeleopUi": {
               "keys": {
-                "topic": {
+                "dockable": {
                   "type": "repr",
-                  "repr": "u'/cmd_vel'"
+                  "repr": "True"
                 },
-                "vx_min": {
+                "parent": {
                   "type": "repr",
-                  "repr": "u'-1'"
+                  "repr": "None"
                 },
-                "vw_min": {
+                "dock_widget_title": {
                   "type": "repr",
-                  "repr": "u'-3'"
-                },
-                "vw_max": {
-                  "type": "repr",
-                  "repr": "u'3'"
-                },
-                "vx_max": {
-                  "type": "repr",
-                  "repr": "u'1'"
+                  "repr": "u'Follow Road'"
                 }
               },
               "groups": {}
@@ -79,23 +56,6 @@
         "plugin__rqt_image_view__ImageView__1": {
           "keys": {},
           "groups": {
-            "dock_widget__ImageViewWidget": {
-              "keys": {
-                "dockable": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                },
-                "parent": {
-                  "type": "repr",
-                  "repr": "None"
-                },
-                "dock_widget_title": {
-                  "type": "repr",
-                  "repr": "u'Image View'"
-                }
-              },
-              "groups": {}
-            },
             "plugin": {
               "keys": {
                 "max_range": {
@@ -112,7 +72,7 @@
                 },
                 "mouse_pub_topic": {
                   "type": "repr",
-                  "repr": "u'/iris/cam_frontal/image_raw_mouse_left'"
+                  "repr": "u''"
                 },
                 "num_gridlines": {
                   "type": "repr",
@@ -132,239 +92,11 @@
                 },
                 "topic": {
                   "type": "repr",
-                  "repr": "u'/iris/cam_frontal/image_raw'"
+                  "repr": "u''"
                 },
                 "publish_click_location": {
                   "type": "repr",
                   "repr": "u'false'"
-                }
-              },
-              "groups": {}
-            }
-          }
-        },
-        "plugin__rqt_follow_road__FollowRoad__2": {
-          "keys": {},
-          "groups": {
-            "dock_widget__FollowRoadUi": {
-              "keys": {
-                "dockable": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                },
-                "parent": {
-                  "type": "repr",
-                  "repr": "None"
-                },
-                "dock_widget_title": {
-                  "type": "repr",
-                  "repr": "u'Follow Road (2)'"
-                }
-              },
-              "groups": {}
-            }
-          }
-        },
-        "plugin__rqt_plot__Plot__1": {
-          "keys": {},
-          "groups": {
-            "dock_widget__DataPlotWidget": {
-              "keys": {
-                "dockable": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                },
-                "parent": {
-                  "type": "repr",
-                  "repr": "None"
-                },
-                "dock_widget_title": {
-                  "type": "repr",
-                  "repr": "u'Plot'"
-                }
-              },
-              "groups": {}
-            },
-            "plugin": {
-              "keys": {
-                "autoscroll": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                },
-                "plot_type": {
-                  "type": "repr",
-                  "repr": "u'1'"
-                },
-                "topics": {
-                  "type": "repr",
-                  "repr": "u''"
-                },
-                "y_limits": {
-                  "type": "repr",
-                  "repr": "[u'0', u'1']"
-                },
-                "x_limits": {
-                  "type": "repr",
-                  "repr": "[u'0', u'1']"
-                }
-              },
-              "groups": {}
-            }
-          }
-        },
-        "plugin__rqt_mypkg__My Plugin__1": {
-          "keys": {},
-          "groups": {
-            "dock_widget__MyPluginUi": {
-              "keys": {
-                "dockable": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                },
-                "parent": {
-                  "type": "repr",
-                  "repr": "None"
-                },
-                "dock_widget_title": {
-                  "type": "repr",
-                  "repr": "u'Form'"
-                }
-              },
-              "groups": {}
-            },
-            "dock_widget___widget_topic": {
-              "keys": {
-                "dockable": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                },
-                "parent": {
-                  "type": "repr",
-                  "repr": "None"
-                },
-                "dock_widget_title": {
-                  "type": "repr",
-                  "repr": "u'Topic Monitor'"
-                }
-              },
-              "groups": {}
-            }
-          }
-        },
-        "plugin__rqt_follow_road__FollowRoad__1": {
-          "keys": {},
-          "groups": {
-            "dock_widget__FollowRoadUi": {
-              "keys": {
-                "dockable": {
-                  "type": "repr",
-                  "repr": "True"
-                },
-                "parent": {
-                  "type": "repr",
-                  "repr": "None"
-                },
-                "dock_widget_title": {
-                  "type": "repr",
-                  "repr": "u'FollowRoad Widget'"
-                }
-              },
-              "groups": {}
-            }
-          }
-        },
-        "plugin__rqt_publisher__Publisher__1": {
-          "keys": {},
-          "groups": {
-            "dock_widget__PublisherWidget": {
-              "keys": {
-                "dockable": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                },
-                "parent": {
-                  "type": "repr",
-                  "repr": "None"
-                },
-                "dock_widget_title": {
-                  "type": "repr",
-                  "repr": "u'Message Publisher'"
-                }
-              },
-              "groups": {}
-            },
-            "plugin": {
-              "keys": {
-                "publishers": {
-                  "type": "repr",
-                  "repr": "u'[]'"
-                }
-              },
-              "groups": {}
-            }
-          }
-        },
-        "plugin__rqt_top__TOP__1": {
-          "keys": {},
-          "groups": {
-            "plugin": {
-              "keys": {
-                "is_regex": {
-                  "type": "repr",
-                  "repr": "u'0'"
-                },
-                "filter_text": {
-                  "type": "repr",
-                  "repr": "u''"
-                }
-              },
-              "groups": {}
-            }
-          }
-        },
-        "plugin__rqt_tf_tree__RosTfTree__1": {
-          "keys": {},
-          "groups": {
-            "dock_widget__RosTfTreeUi": {
-              "keys": {
-                "dockable": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                },
-                "parent": {
-                  "type": "repr",
-                  "repr": "None"
-                },
-                "dock_widget_title": {
-                  "type": "repr",
-                  "repr": "u'TF Tree'"
-                }
-              },
-              "groups": {}
-            },
-            "plugin": {
-              "keys": {
-                "highlight_connections_check_box_state": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                },
-                "auto_fit_graph_check_box_state": {
-                  "type": "repr",
-                  "repr": "u'true'"
-                }
-              },
-              "groups": {}
-            }
-          }
-        },
-        "plugin__rqt_service_caller__ServiceCaller__1": {
-          "keys": {},
-          "groups": {
-            "plugin": {
-              "keys": {
-                "splitter_orientation": {
-                  "type": "repr",
-                  "repr": "u'2'"
                 }
               },
               "groups": {}
@@ -377,13 +109,13 @@
       "keys": {
         "geometry": {
           "type": "repr(QByteArray.hex)",
-          "repr(QByteArray.hex)": "QtCore.QByteArray('01d9d0cb00020000000008660000002f00000bef000003ff000008660000004b00000bef000003ff00000001000000000780')",
-          "pretty-print": "     f /     f K         "
+          "repr(QByteArray.hex)": "QtCore.QByteArray('01d9d0cb00020000000007800000001800000eff00000437000007800000001800000eff0000043700000001000000000780')",
+          "pretty-print": "           7       7     "
         },
         "state": {
           "type": "repr(QByteArray.hex)",
-          "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000fd00000001000000030000038a0000039ffc0100000001fb00000058007200710074005f0066006f006c006c006f0077005f0072006f00610064005f005f0046006f006c006c006f00770052006f00610064005f005f0031005f005f0046006f006c006c006f00770052006f006100640055006901000000000000038a00000294000003e80000038a0000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')",
-          "pretty-print": "                 Xrqt_follow_road__FollowRoad__1__FollowRoadUi                            6MinimizedDockWidgetsToolbar        "
+          "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000fd00000001000000030000078000000404fc0100000001fb0000005e007200710074005f00640072006f006e0065005f00740065006c0065006f0070005f005f00440072006f006e006500540065006c0065006f0070005f005f0031005f005f00440072006f006e006500540065006c0065006f00700055006901000000000000078000000294000003e8000003e80000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')",
+          "pretty-print": "                 ^rqt_drone_teleop__DroneTeleop__1__DroneTeleopUi                            6MinimizedDockWidgetsToolbar        "
         }
       },
       "groups": {
