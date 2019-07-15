@@ -58,7 +58,7 @@ class FollowRoad(Plugin):
 		# Add logo
 		pixmap = QPixmap(os.path.join(rospkg.RosPack().get_path(
 			'rqt_follow_road'), 'resource', 'jderobot.png'))
-		self._widget.img_logo.setPixmap(pixmap.scaled(50, 50))
+		self._widget.img_logo.setPixmap(pixmap.scaled(121, 121))
 
 		# Set Variables
 		self.play_code_flag = False
