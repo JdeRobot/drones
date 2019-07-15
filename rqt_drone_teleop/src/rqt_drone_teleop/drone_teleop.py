@@ -19,6 +19,7 @@ from geometry_msgs.msg import Pose, PoseStamped, Twist, TwistStamped
 from teleopWidget import TeleopWidget
 from sensorsWidget import SensorsWidget
 
+
 class DroneTeleop(Plugin):
 	def __init__(self, context):
 		super(DroneTeleop, self).__init__(context)
@@ -63,6 +64,9 @@ class DroneTeleop(Plugin):
 		# Set Variables
 		self.play_code_flag = False
 		self.takeoff = False
+		self.linear_velocity_scaling_factor = 1
+		self.vertical_velocity_scaling_factor = 0.8
+		self.angular_velocity_scaling_factor = 0.5
 		self._widget.term_out.setReadOnly(True)
 		self._widget.term_out.setLineWrapMode(self._widget.term_out.NoWrap)
 
@@ -70,13 +74,11 @@ class DroneTeleop(Plugin):
 		self._widget.takeoffButton.clicked.connect(self.call_takeoff_land)
 		self._widget.playButton.clicked.connect(self.call_play)
 		self._widget.stopButton.clicked.connect(self.call_stop)
-		self._widget.altdSlider.valueChanged.connect(self.alt_slider_val_changed)
-		self._widget.rotationDial.valueChanged.connect(self.rotation_val_changed)
 
 		# Add Publishers
 		self.takeoff_pub = rospy.Publisher('gui/takeoff_land', Bool, queue_size=1)
 		self.play_stop_pub = rospy.Publisher('gui/play_stop', Bool, queue_size=1)
-		self.twist_pub = rospy.Publisher('gui/twist', Twist, queue_size = 1)
+		self.twist_pub = rospy.Publisher('gui/twist', Twist, queue_size=1)
 
 		#Add global variables
 		self.shared_twist_msg = Twist()
@@ -85,9 +87,14 @@ class DroneTeleop(Plugin):
 
 		self.bridge = CvBridge()
 
-		self.teleop = TeleopWidget(self)
-		self._widget.tlLayout.addWidget(self.teleop)
-		self.teleop.setVisible(True)
+		self.teleop_stick_1 = TeleopWidget(self, 'set_linear_xy', 151)
+		self._widget.tlLayout.addWidget(self.teleop_stick_1)
+		self.teleop_stick_1.setVisible(True)
+
+		self.teleop_stick_2 = TeleopWidget(self, 'set_alt_yawrate', 151)
+		self._widget.tlLayout_2.addWidget(self.teleop_stick_2)
+		self.teleop_stick_2.setVisible(True)
+
 		self.sensors_widget = SensorsWidget(self)
 		self._widget.sensorsCheck.stateChanged.connect(self.show_sensors_widget)
 
@@ -99,8 +106,10 @@ class DroneTeleop(Plugin):
 		rospy.Subscriber('iris/cam_ventral/image_raw', Image, self.cam_ventral_cb)
 		rospy.Subscriber('interface/filtered_img', Image, self.filtered_img_cb)
 		rospy.Subscriber('interface/threshed_img', Image, self.threshed_img_cb)
-		rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
-		rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
+		rospy.Subscriber('mavros/local_position/pose',
+		                 PoseStamped, self.pose_stamped_cb)
+		rospy.Subscriber('mavros/local_position/velocity_body',
+		                 TwistStamped, self.twist_stamped_cb)
 
 	def show_sensors_widget(self, state):
 		if state == Qt.Checked:
@@ -130,7 +139,7 @@ class DroneTeleop(Plugin):
 
 	def pose_stamped_cb(self, msg):
 		self.current_pose = msg.pose
-	
+
 	def twist_stamped_cb(self, msg):
 		self.current_twist = msg.twist
 
@@ -168,28 +177,24 @@ class DroneTeleop(Plugin):
 			rospy.loginfo('Student code not running')
 			self._widget.term_out.append('Student code not running')
 
-	def alt_slider_val_changed(self, value):
-		value = (1.0/(self._widget.altdSlider.maximum()/2)) * \
-                    (value - (self._widget.altdSlider.maximum()/2))
-		self._widget.altdValue.setText('%.2f' % value)
-		rospy.logdebug('Altitude slider value changed to: %.2f', value)
-		self.shared_twist_msg.linear.z = value
+	def set_linear_xy(self, u, v):
+		x = -self.linear_velocity_scaling_factor * v
+		y = -self.linear_velocity_scaling_factor * u
+		self._widget.XValue.setText('%.2f' % x)
+		self._widget.YValue.setText('%.2f' % y)
+		rospy.logdebug('Stick 2 value changed to - x: %.2f y: %.2f', x, y)
+		self.shared_twist_msg.linear.x = x
+		self.shared_twist_msg.linear.y = y
 		self.twist_pub.publish(self.shared_twist_msg)
 
-	def rotation_val_changed(self, value):
-		value = (1.0/(self._widget.rotationDial.maximum()/2)) * \
-                    (value - (self._widget.rotationDial.maximum()/2))
-		self._widget.rotValue.setText('%.2f' % value)
-		rospy.logdebug('Rotational dial value changed to: %.2f', value)
-		self.shared_twist_msg.angular.z = value
-		self.twist_pub.publish(self.shared_twist_msg)
-	
-	def setXYValues(self, x, y):
-		self._widget.XValue.setText('%.2f' % -y)
-		self._widget.YValue.setText('%.2f' % -x)
-		rospy.logdebug('Teleop value changed to - x: %.2f y: %.2f', x, y)
-		self.shared_twist_msg.linear.x = -y
-		self.shared_twist_msg.linear.y = -x
+	def set_alt_yawrate(self, u, v):
+		az = -self.vertical_velocity_scaling_factor * u
+		z = -self.angular_velocity_scaling_factor * v
+		self._widget.rotValue.setText('%.2f' % az)
+		self._widget.altdValue.setText('%.2f' % z)
+		rospy.logdebug('Stick 1 value changed to - az: %.2f z: %.2f', az, z)
+		self.shared_twist_msg.linear.z = z
+		self.shared_twist_msg.angular.z = az
 		self.twist_pub.publish(self.shared_twist_msg)
 
 	def shutdown_plugin(self):

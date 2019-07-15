@@ -11,24 +11,24 @@ import rospkg
 class TeleopWidget(QWidget):
     stop_sig = pyqtSignal()
 
-    def __init__(self, win_parent):
+    def __init__(self, win_parent, parent_function_name, side):
         super(TeleopWidget, self).__init__()
-        self.win_parent = win_parent
+        self.parent_function = getattr(win_parent, parent_function_name)
         self.line = QPointF(0, 0)
         self.qimage = QImage()
         self.qimage.load(os.path.join(rospkg.RosPack().get_path('rqt_drone_teleop'), 'resource', 'ball.png'))
         self.stop_sig.connect(self.stop)
-        self.init_ui()
+        self.init_ui(side)
 
-    def init_ui(self):
+    def init_ui(self, side):
         layout = QGridLayout()
         self.setLayout(layout)
         self.setAutoFillBackground(True)
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         self.setPalette(p)
-        self.resize(300, 300)
-        self.setMinimumSize(300, 300)
+        self.resize(side, side)
+        self.setMinimumSize(side, side)
 
     def stop(self):
         self.line = QPointF(0, 0)
@@ -85,6 +85,6 @@ class TeleopWidget(QWidget):
         w_normalized = float("{0:.2f}".format(w_normalized))
 
         #print "v: %f w: %f" % (v_normalized,w_normalized)
-        self.win_parent.setXYValues(w_normalized, v_normalized)
+        self.parent_function(w_normalized, v_normalized)
         painter.drawImage(self.line.x()-self.qimage.width()/2,
                           self.line.y()-self.qimage.height()/2, self.qimage)
