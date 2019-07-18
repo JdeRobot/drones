@@ -73,7 +73,7 @@ class DroneTeleop(Plugin):
 		# Set functions for each GUI Item
 		self._widget.takeoffButton.clicked.connect(self.call_takeoff_land)
 		self._widget.playButton.clicked.connect(self.call_play)
-		self._widget.stopButton.clicked.connect(self.call_stop)
+		self._widget.stopButton.clicked.connect(self.stop_drone)
 
 		# Add Publishers
 		self.takeoff_pub = rospy.Publisher('gui/takeoff_land', Bool, queue_size=1)
@@ -84,6 +84,13 @@ class DroneTeleop(Plugin):
 		self.shared_twist_msg = Twist()
 		self.current_pose = Pose()
 		self.current_twist = Twist()
+		self.stop_icon = QIcon()
+		self.stop_icon.addPixmap(QPixmap(os.path.join(rospkg.RosPack().get_path(
+			'rqt_drone_teleop'), 'resource', 'stop.png')), QIcon.Normal, QIcon.Off)
+
+		self.play_icon = QIcon()
+		self.play_icon.addPixmap(QPixmap(os.path.join(rospkg.RosPack().get_path(
+			'rqt_drone_teleop'), 'resource', 'play.png')), QIcon.Normal, QIcon.Off)
 
 		self.bridge = CvBridge()
 
@@ -159,23 +166,31 @@ class DroneTeleop(Plugin):
 
 	def call_play(self):
 		if not self.play_code_flag:
+			self._widget.playButton.setText('Stop Code')
+			self._widget.playButton.setStyleSheet("background-color: #ec7063")
+			self._widget.playButton.setIcon(self.stop_icon)
 			rospy.loginfo('Executing student code')
 			self._widget.term_out.append('Executing student code')
 			self.play_stop_pub.publish(Bool(True))
 			self.play_code_flag = True
 		else:
-			rospy.loginfo('Already executing student code')
-			self._widget.term_out.append('Already executing student code')
-
-	def call_stop(self):
-		if self.play_code_flag:
+			self._widget.playButton.setText('Play Code')
+			self._widget.playButton.setStyleSheet("background-color: #7dcea0")
+			self._widget.playButton.setIcon(self.play_icon)
 			rospy.loginfo('Stopping student code')
 			self._widget.term_out.append('Stopping student code')
 			self.play_stop_pub.publish(Bool(False))
 			self.play_code_flag = False
-		else:
-			rospy.loginfo('Student code not running')
-			self._widget.term_out.append('Student code not running')
+		
+	def stop_drone(self):
+		self._widget.term_out.append('Stopping Drone')
+		rospy.loginfo('Stopping Drone')
+		self.teleop_stick_1.stop()
+		self.teleop_stick_2.stop()
+		for i in range(5):
+			self.shared_twist_msg = Twist()
+			self.twist_pub.publish(self.shared_twist_msg)
+			rospy.sleep(0.05)
 
 	def set_linear_xy(self, u, v):
 		x = -self.linear_velocity_scaling_factor * v

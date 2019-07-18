@@ -41,35 +41,18 @@
   <widget class="QPushButton" name="playButton">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>80</y>
-     <width>71</width>
+     <x>740</x>
+     <y>390</y>
+     <width>151</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>Play</string>
+    <string>Play Code</string>
    </property>
    <property name="icon">
     <iconset>
      <normaloff>play.png</normaloff>play.png</iconset>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="stopButton">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>80</y>
-     <width>71</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Stop</string>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>stop.png</normaloff>stop.png</iconset>
    </property>
   </widget>
   <widget class="QCheckBox" name="sensorsCheck">
@@ -370,6 +353,23 @@
      <enum>QLayout::SetMinimumSize</enum>
     </property>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="stopButton">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>80</y>
+     <width>161</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Stop Drone</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>stop.png</normaloff>stop.png</iconset>
+   </property>
   </widget>
  </widget>
  <resources/>
