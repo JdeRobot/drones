@@ -4,7 +4,7 @@
     <!-- launches MAVROS, PX4 SITL, Gazebo environment, and spawns vehicle -->
     <!-- This file includes the base mavros_px4_sitl.launch so as to allow for reusability -->
 
-    <arg name="world_name" default="/opt/jderobot/share/jderobot/gazebo/worlds/iris_1_roadtexturesROS.world"/>
+    <arg name="world_name"/>
     <arg name="solution_file_name"/>
 
     <include file="$(find drone_wrapper)/launch/mavros_px4_sitl.launch">

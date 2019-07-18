@@ -46,7 +46,7 @@
                 },
                 "dock_widget_title": {
                   "type": "repr",
-                  "repr": "u'Follow Road'"
+                  "repr": "u'Drone Teleop'"
                 }
               },
               "groups": {}
