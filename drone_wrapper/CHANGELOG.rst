@@ -2,8 +2,8 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2019-07-20)
+------------------
 * updated makefile
 * removed packages requiring source builds
 * converted returns to numpy arrays
