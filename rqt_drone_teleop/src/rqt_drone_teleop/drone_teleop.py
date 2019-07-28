@@ -187,6 +187,8 @@ class DroneTeleop(Plugin):
 		rospy.loginfo('Stopping Drone')
 		self.teleop_stick_1.stop()
 		self.teleop_stick_2.stop()
+		if self.play_code_flag:
+			self.call_play()
 		for i in range(5):
 			self.shared_twist_msg = Twist()
 			self.twist_pub.publish(self.shared_twist_msg)
