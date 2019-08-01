@@ -12,14 +12,14 @@
 	<!-- <url type="website">To be added soon</url> -->
 
 	<buildtool_depend>catkin</buildtool_depend>
-	<exec_depend>cv_bridge</exec_depend>
-	<exec_depend>geometry_msgs</exec_depend>
-	<exec_depend>mavros_msgs</exec_depend>
-	<exec_depend>rospy</exec_depend>
-	<exec_depend>sensor_msgs</exec_depend>
-	<exec_depend>tf</exec_depend>
-	<exec_depend>gazebo_ros</exec_depend>
-	<exec_depend>mavros</exec_depend>
+	<depend>cv_bridge</depend>
+	<depend>geometry_msgs</depend>
+	<depend>mavros_msgs</depend>
+	<depend>rospy</depend>
+	<depend>sensor_msgs</depend>
+	<depend>tf</depend>
+	<depend>gazebo_ros</depend>
+	<depend>mavros</depend>
 
 	<!-- The export tag contains other, unspecified, tags -->
 	<export>
