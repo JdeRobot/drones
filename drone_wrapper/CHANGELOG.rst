@@ -2,8 +2,8 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2019-08-01)
+------------------
 * corrected dependancies
 * Contributors: Nikhil Khedekar
 
