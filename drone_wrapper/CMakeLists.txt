@@ -16,6 +16,11 @@ catkin_python_setup()
 
 catkin_package()
 
+install(PROGRAMS
+	scripts/play_python_code
+	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
 install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
