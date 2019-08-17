@@ -135,7 +135,7 @@ class DroneWrapper():
 
 	def __init__(self, name = 'drone', verbose = False):
 		if verbose:
-			rospy.init_node(name, log_level = rospy.DEBUG)
+			rospy.init_node(name, anonymous = True, log_level = rospy.DEBUG)
 		else:
 			rospy.init_node(name)
 		
@@ -162,7 +162,9 @@ class DroneWrapper():
 		rospy.Subscriber('mavros/state', State, self.state_cb)
 		rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
 		rospy.Subscriber('mavros/global_position/global', NavSatFix, self.global_position_cb)
-		rospy.Subscriber('iris/cam_frontal/image_raw', Image, self.cam_frontal_cb)
-		rospy.Subscriber('iris/cam_ventral/image_raw', Image, self.cam_ventral_cb)
+		cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
+		cam_ventral_topic = rospy.get_param('cam_ventral_topic', '/iris/cam_ventral/image_raw')
+		rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
+		rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
 
 		self.setpoint_raw_publisher = rospy.Publisher('mavros/setpoint_raw/local', PositionTarget, queue_size = 1)
