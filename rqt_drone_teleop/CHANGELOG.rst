@@ -2,6 +2,11 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* added topics as parameters
+* Contributors: Nikhil Khedekar
+
 1.0.0 (2019-08-01)
 ------------------
 * corrected dependancies
