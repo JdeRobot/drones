@@ -2,8 +2,8 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2019-08-18)
+------------------
 * anonymised drone and added topics as parameters
 * added new format launch files
 * updated scripts and readme
