@@ -40,6 +40,9 @@ echo 'Building FastRTPS and FastCDR'
 (cd eProsima_FastRTPS-1.7.1-Linux && ./configure --libdir=/usr/lib && make -j2 && sudo make install)
 rm -rf requiredcomponents eprosima_fastrtps-1-7-1-linux.tar.gz
 
+echo 'Installing catkin tools'
+sudo apt-get install python-catkin-tools
+
 echo 'Setting up catkin workspace'
 mkdir -p catkin_ws/src
 cd catkin_ws/src
