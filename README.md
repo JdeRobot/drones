@@ -20,3 +20,8 @@ The packages provided here depend on the PX4 Firmware and SITL. We plan to provi
 | ----- | ----- | ----- |
 | drone_wrapper | [![released](http://build.ros.org/buildStatus/icon?job=Ksrc_uX__drone_wrapper__ubuntu_xenial__source)](http://build.ros.org/view/Ksrc_uX/job/Ksrc_uX__drone_wrapper__ubuntu_xenial__source/) | [![released](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__drone_wrapper__ubuntu_xenial_amd64__binary)](http://build.ros.org/view/Kbin_uX64/job/Kbin_uX64__drone_wrapper__ubuntu_xenial_amd64__binary/) |
 | rqt_drone_teleop | [![released](http://build.ros.org/buildStatus/icon?job=Ksrc_uX__rqt_drone_teleop__ubuntu_xenial__source)](http://build.ros.org/view/Ksrc_uX/job/Ksrc_uX__rqt_drone_teleop__ubuntu_xenial__source/) | [![released](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__rqt_drone_teleop__ubuntu_xenial_amd64__binary)](http://build.ros.org/view/Kbin_uX64/job/Kbin_uX64__rqt_drone_teleop__ubuntu_xenial_amd64__binary/) |
+
+
+## Installation
+
+An installation guide to Ubuntu 18.04.3 LTS (Bionic Beaver) can be found [here](https://github.com/JdeRobot/drones/blob/master/installation18.md).
