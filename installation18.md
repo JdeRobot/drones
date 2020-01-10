@@ -149,6 +149,9 @@ rosdep check --from-paths . --ignore-src --rosdistro melodic
 rosdep install --from-paths . --ignore-src --rosdistro melodic -y
 ```
 
+## Fail installing Geographiclib dataset
+Links may be broken. Check this [issue](https://github.com/mavlink/mavros/issues/963).
+
 ## qfi package not found
 Please follow qfi installation instructions [here](https://github.com/JdeRobot/ThirdParty/tree/master/qflightinstruments).
 Make sure to run last instruction with superuser priviledges (´sudo make install´).
