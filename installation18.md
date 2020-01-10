@@ -24,7 +24,7 @@ sudo apt install jderobot-gazebo-assets
 git clone https://github.com/JdeRobot/Academy.git
 ```
 
-**_Note:_** At thi point you should try `roscore &` and `rosrun gazebo_ros gazebo` to test if the basic infrastructure works.
+**_Note:_** At this point you should try `roscore &` and `rosrun gazebo_ros gazebo` to test if the basic infrastructure works.
 
 ## Step 2: Dependencies needed for the exercices.
 ### 2.1. Install MAVROS and Geographiclib
@@ -148,6 +148,9 @@ rosdep update
 rosdep check --from-paths . --ignore-src --rosdistro melodic
 rosdep install --from-paths . --ignore-src --rosdistro melodic -y
 ```
+
+## Failure to install Geographiclib dataset
+Links may be broken. Check this [issue](https://github.com/mavlink/mavros/issues/963).
 
 ## qfi package not found
 Please follow qfi installation instructions [here](https://github.com/JdeRobot/ThirdParty/tree/master/qflightinstruments).

@@ -24,4 +24,4 @@ The packages provided here depend on the PX4 Firmware and SITL. We plan to provi
 
 ## Installation
 
-An installation guide to Ubuntu 18.04.3 LTS (Bionic Beaver) can be found [here](instalation18.md).
+An installation guide to Ubuntu 18.04.3 LTS (Bionic Beaver) can be found [here](https://github.com/JdeRobot/drones/blob/master/installation18.md).
