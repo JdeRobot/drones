@@ -112,10 +112,11 @@ catkin build
 ```
 
 ### 3.5. Export environment variables
+Provisional value for GAZEBO_MODEL_PATH variable.
 ```
 echo 'source '$PWD'/devel/setup.bash' >> ~/.bashrc
-echo 'export GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}:/usr/share/gazebo-7' >> ~/.bashrc
-echo 'export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:/opt/ros/kinetic/share/jderobot_assets/models' >> ~/.bashrc
+echo 'export GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}:/usr/share/gazebo-9' >> ~/.bashrc
+echo 'export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:/opt/ros/melodic/share/jderobot_assets/models:~/catkin_ws/src/jderobot_assets/models' >> ~/.bashrc
 
 source ~/.bashrc
 ```
