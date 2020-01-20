@@ -1,6 +1,10 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1.1.0 (2020-01-20)
+------------------
+* generating pkg for melodic distro
+* Contributors: Pedro Arias 
 
 1.0.1 (2019-08-18)
 ------------------
