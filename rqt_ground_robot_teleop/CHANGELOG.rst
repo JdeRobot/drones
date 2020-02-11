@@ -2,6 +2,11 @@
 Changelog for package rqt_ground_robot_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Adding ground_robots
+* Contributors: Pedro Arias
+
 0.0.1 (2019-08-18)
 ------------------
 * updated dependancies
