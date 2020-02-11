@@ -1,0 +1,20 @@
+<library path="src">
+	<class name="GroundRobotTeleop" type="rqt_ground_robot_teleop.ground_robot_teleop.GroundRobotTeleop" base_class_type="rqt_gui_py::Plugin">
+		<description>
+			A common ground_robot teleop interface for all ground_robot exercises in the JdeRobot Robotics Academy
+		</description>
+		<qtgui>
+			<!-- optional grouping...
+			<group>
+				<label>Group</label>
+			</group>
+			<group>
+				<label>Subgroup</label>
+			</group>
+			-->
+			<label>Ground Robot Teleop Plugin</label>
+			<icon type="theme">system-help</icon>
+			<statustip>Controlling Ground Robots since 2019</statustip>
+		</qtgui>
+	</class>
+</library>
