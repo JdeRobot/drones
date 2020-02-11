@@ -2,8 +2,8 @@
 Changelog for package rqt_ground_robot_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2020-02-11)
+------------------
 * Adding ground_robots
 * Contributors: Pedro Arias
 
