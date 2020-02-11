@@ -134,8 +134,8 @@ source ~/.bashrc
 
 **_Note:_** Test installation using: `roslaunch px4 mavros_posix_sitl.launch`
 
-## 4. Install the lastest ROS packages manually 
-- Install additional packages
+## 4. Install the lastest ROS packages
+- Install additional packages which were generated following these tutorial [1](http://wiki.ros.org/bloom/Tutorials/FirstTimeRelease), [2](http://wiki.ros.org/bloom/Tutorials/ReleasingForANewROSDistro), [3](https://wiki.ros.org/bloom/Tutorials/ReleaseCatkinPackage).
 ```
 sudo apt-get install ros-kinetic-drone-wrapper ros-kinetic-rqt-drone-teleop ros-kinetic-jderobot-assets
 ```
