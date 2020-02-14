@@ -2,8 +2,8 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.1 (2020-02-14)
+------------------
 * Fixing dependency on metapackage
 * Contributors: Pedro Arias 
 
