@@ -15,7 +15,7 @@
 
   <exec_depend>drone_wrapper</exec_depend>
   <exec_depend>rqt_drone_teleop</exec_depend>
-  <exec_depend>rqt_ground_drone_teleop</exec_depend>
+  <exec_depend>rqt_ground_robot_teleop</exec_depend>
 
   <export>
     <metapackage/>

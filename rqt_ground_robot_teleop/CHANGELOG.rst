@@ -2,6 +2,11 @@
 Changelog for package rqt_ground_robot_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixing dependency on metapackage
+* Contributors: Pedro Arias 
+
 1.2.0 (2020-02-11)
 ------------------
 * Adding ground_robots

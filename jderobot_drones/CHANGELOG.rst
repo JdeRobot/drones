@@ -2,6 +2,11 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixing dependency on metapackage
+* Contributors: Pedro Arias 
+
 1.3.0 (2020-02-14)
 ------------------
 * Creating metapackage to group up all packages in jderobot-drones stack
