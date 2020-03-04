@@ -116,7 +116,7 @@ Provisional value for GAZEBO_MODEL_PATH variable.
 ```
 echo 'source '$PWD'/devel/setup.bash' >> ~/.bashrc
 echo 'export GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}:/usr/share/gazebo-9' >> ~/.bashrc
-echo 'export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:/opt/ros/melodic/share/jderobot_assets/models:~/catkin_ws/src/jderobot_assets/models' >> ~/.bashrc
+echo 'export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:/opt/ros/melodic/share/jderobot_assets/models' >> ~/.bashrc
 
 source ~/.bashrc
 ```
@@ -126,10 +126,8 @@ source ~/.bashrc
 ## 4. Install the lastest ROS packages
 - Install additional packages which were generated following these tutorial [1](http://wiki.ros.org/bloom/Tutorials/FirstTimeRelease), [2](http://wiki.ros.org/bloom/Tutorials/ReleasingForANewROSDistro), [3](https://wiki.ros.org/bloom/Tutorials/ReleaseCatkinPackage).
 ```
-sudo apt-get install ros-melodic-drone-wrapper ros-melodic-rqt-drone-teleop ros-melodic-jderobot-assets
+sudo apt-get install ros-melodic-jderobot-drones ros-melodic-jderobot-assets
 ```
-- Update ROS dependencies (see step 3.3).
-- Clean (`catkin clean`) and re-build catkin (see step 3.4).
 - Test an exercise. E.g. At academy/exercises/follow_road run `roslaunch follow_road.launch`.
 
 ***
