@@ -82,20 +82,47 @@ class DroneWrapper():
 			rospy.logwarn('Mode change request unsuccessful')
 			return False
 
-	def set_cmd_vel(self, vx = 0, vy = 0, vz = 0, az = 0):
-		self.setpoint_raw.type_mask = int('0b010111000011', 2)
+	def set_cmd_vel(self, vx=0, vy=0, vz=0, az=0):
 		self.setpoint_raw.coordinate_frame = 8
 		self.setpoint_raw.velocity.x = -vy
 		self.setpoint_raw.velocity.y = vx
-		self.setpoint_raw.velocity.z = vz
-
-		self.setpoint_raw.position.z = self.pose_stamped.pose.position.z + vz * self.vz_factor
-		
 		self.setpoint_raw.yaw_rate = az
+
+		if vz == 0:
+			# self.setpoint_raw.type_mask = 4088 # xyz
+			# self.setpoint_raw.type_mask = 3064 # xyz yaw
+			self.setpoint_raw.type_mask = 3011  # vx vy z yaw
+
+			self.height = self.pose_stamped.pose.position.z
+
+			self.prueba = True
+		else:
+			self.prueba = False
+
+			# self.setpoint_raw.type_mask = int('0b010111000011', 2)
+			self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+
+			self.vz = vz
+
+			self.setpoint_raw.velocity.z = vz
+			# self.setpoint_raw.position.z = self.pose_stamped.pose.position.z + vz * self.vz_factor
+
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
 	def repeat_setpoint_raw(self, event):
-		self.setpoint_raw.position.z = self.pose_stamped.pose.position.z + self.setpoint_raw.velocity.z * self.vz_factor
+		self.setpoint_raw.coordinate_frame = 8
+
+		if self.prueba:
+			# self.setpoint_raw.type_mask = 3064 # xyz yaw
+			self.setpoint_raw.type_mask = 3011  # vx vy z yaw
+
+			self.setpoint_raw.position.z = self.height
+		else:
+			self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+
+			self.setpoint_raw.velocity.z = self.vz
+			# self.setpoint_raw.position.z = self.pose_stamped.pose.position.z + self.setpoint_raw.velocity.z * self.vz_factor
+
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
 	def hold_setpoint_raw(self):
@@ -146,6 +173,8 @@ class DroneWrapper():
 		self.setpoint_raw_flag = False
 		self.vz_factor = 0.4
 		self.bridge = CvBridge()
+
+		self.pose_stamped_prueba = PoseStamped()
 		
 		self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
 		self.setpoint_raw_timer.shutdown()
@@ -168,3 +197,4 @@ class DroneWrapper():
 		rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
 
 		self.setpoint_raw_publisher = rospy.Publisher('mavros/setpoint_raw/local', PositionTarget, queue_size = 1)
+		self.prueba_publisher = rospy.Publisher('mavros/setpoint_position/local', PoseStamped, queue_size=1)
