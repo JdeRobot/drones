@@ -84,44 +84,67 @@ class DroneWrapper():
 
 	def set_cmd_vel(self, vx=0, vy=0, vz=0, az=0):
 		self.setpoint_raw.coordinate_frame = 8
-		self.setpoint_raw.velocity.x = -vy
-		self.setpoint_raw.velocity.y = vx
 		self.setpoint_raw.yaw_rate = az
 
-		if vz == 0:
-			# self.setpoint_raw.type_mask = 4088 # xyz
-			# self.setpoint_raw.type_mask = 3064 # xyz yaw
-			self.setpoint_raw.type_mask = 3011  # vx vy z yaw
+		self.posx = self.pose_stamped.pose.position.x
+		self.posy = self.pose_stamped.pose.position.y
+		self.height = self.pose_stamped.pose.position.z
+		self.vx = -vy
+		self.vy = vx
+		self.vz = vz
 
-			self.height = self.pose_stamped.pose.position.z
-
-			self.prueba = True
+		if vx == 0 and vy == 0:
+			self.is_xy = True
 		else:
-			self.prueba = False
+			self.setpoint_raw.velocity.x = -vy
+			self.setpoint_raw.velocity.y = vx
 
-			# self.setpoint_raw.type_mask = int('0b010111000011', 2)
-			self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+			self.is_xy = False
 
-			self.vz = vz
-
+		if vz == 0:
+			self.is_z = True
+		else:
 			self.setpoint_raw.velocity.z = vz
-			# self.setpoint_raw.position.z = self.pose_stamped.pose.position.z + vz * self.vz_factor
+			self.is_z = False
+
+		if self.is_xy:
+			if self.is_z:
+				self.setpoint_raw.type_mask = 3064  # xyz yaw
+			else:
+				self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+				# self.setpoint_raw.type_mask = 3036 # x y vz yaw -> NOT SUPPORTED
+		else:
+			if self.is_z:
+				self.setpoint_raw.type_mask = 3011  # vx vy vz z yaw
+				# self.setpoint_raw.type_mask = 3043  # vx vy z yaw -> NOT SUPPORTED
+			else:
+				self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
 
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
 	def repeat_setpoint_raw(self, event):
 		self.setpoint_raw.coordinate_frame = 8
 
-		if self.prueba:
-			# self.setpoint_raw.type_mask = 3064 # xyz yaw
-			self.setpoint_raw.type_mask = 3011  # vx vy z yaw
+		self.setpoint_raw.position.x = self.posx
+		self.setpoint_raw.position.y = self.posy
+		self.setpoint_raw.position.z = self.height
+		self.setpoint_raw.velocity.x = self.vx
+		self.setpoint_raw.velocity.y = self.vy
+		self.setpoint_raw.velocity.z = self.vz
 
-			self.setpoint_raw.position.z = self.height
+		if self.is_xy:
+			if self.is_z:
+				self.setpoint_raw.type_mask = 3064  # xyz yaw
+			else:
+				self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+				# self.setpoint_raw.type_mask = 3036 # x y vz yaw -> NOT SUPPORTED
 		else:
-			self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+			if self.is_z:
+				self.setpoint_raw.type_mask = 3011  # vx vy vz z yaw
+				# self.setpoint_raw.type_mask = 3043  # vx vy z yaw -> NOT SUPPORTED
 
-			self.setpoint_raw.velocity.z = self.vz
-			# self.setpoint_raw.position.z = self.pose_stamped.pose.position.z + self.setpoint_raw.velocity.z * self.vz_factor
+			else:
+				self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
 
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
@@ -174,8 +197,9 @@ class DroneWrapper():
 		self.vz_factor = 0.4
 		self.bridge = CvBridge()
 
-		self.pose_stamped_prueba = PoseStamped()
-		
+		self.is_z = False
+		self.is_xy = False
+
 		self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
 		self.setpoint_raw_timer.shutdown()
 		self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(5), self.stay_armed_stay_offboard_cb)
@@ -197,4 +221,3 @@ class DroneWrapper():
 		rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
 
 		self.setpoint_raw_publisher = rospy.Publisher('mavros/setpoint_raw/local', PositionTarget, queue_size = 1)
-		self.prueba_publisher = rospy.Publisher('mavros/setpoint_position/local', PoseStamped, queue_size=1)
