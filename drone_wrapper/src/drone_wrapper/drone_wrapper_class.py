@@ -109,16 +109,21 @@ class DroneWrapper():
 
 		if self.is_xy:
 			if self.is_z:
-				self.setpoint_raw.type_mask = 3064  # xyz yaw
+				self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
+				# self.setpoint_raw.type_mask = 3064 # xyz yaw
 			else:
-				self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+				self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
+				# self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
 				# self.setpoint_raw.type_mask = 3036 # x y vz yaw -> NOT SUPPORTED
 		else:
 			if self.is_z:
-				self.setpoint_raw.type_mask = 3011  # vx vy vz z yaw
+				self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
+				# self.setpoint_raw.type_mask = 2019  # vx vy z yaw_rate -> NOT SUPPORTED
+				# self.setpoint_raw.type_mask = 3011  # vx vy vz z yaw
 				# self.setpoint_raw.type_mask = 3043  # vx vy z yaw -> NOT SUPPORTED
 			else:
-				self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+				self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
+				# self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
 
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
@@ -134,17 +139,22 @@ class DroneWrapper():
 
 		if self.is_xy:
 			if self.is_z:
-				self.setpoint_raw.type_mask = 3064  # xyz yaw
+				self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
+				# self.setpoint_raw.type_mask = 3064  # xyz yaw
 			else:
-				self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
-				# self.setpoint_raw.type_mask = 3036 # x y vz yaw -> NOT SUPPORTED
+				self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
+				# self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+				# self.setpoint_raw.type_mask = 3036  # x y vz yaw -> NOT SUPPORTED
+				# self.setpoint_raw.type_mask = 2012  # x y vz yaw_rate -> NOT SUPPORTED
 		else:
 			if self.is_z:
-				self.setpoint_raw.type_mask = 3011  # vx vy vz z yaw
+				self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
+				# self.setpoint_raw.type_mask = 2019  # vx vy z yaw_rate -> NOT SUPPORTED
+				# self.setpoint_raw.type_mask = 3011  # vx vy vz z yaw
 				# self.setpoint_raw.type_mask = 3043  # vx vy z yaw -> NOT SUPPORTED
-
 			else:
-				self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+				self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
+				# self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
 
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
@@ -199,6 +209,13 @@ class DroneWrapper():
 
 		self.is_z = False
 		self.is_xy = False
+
+		self.posx = 0
+		self.posy = 0
+		self.height = 0
+		self.vx = 0
+		self.vy = 0
+		self.vz = 0
 
 		self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
 		self.setpoint_raw_timer.shutdown()
