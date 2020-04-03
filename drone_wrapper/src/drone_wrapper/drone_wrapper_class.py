@@ -10,6 +10,9 @@ from geometry_msgs.msg import PoseStamped
 from mavros_msgs.msg import State, PositionTarget
 from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeRequest, CommandTOL, CommandTOLRequest
 
+EPSILON = 0.01
+
+
 class DroneWrapper():
 	def state_cb(self, msg):
 		self.state = msg
@@ -93,7 +96,7 @@ class DroneWrapper():
 		self.vy = vx
 		self.vz = vz
 
-		if vx == 0 and vy == 0:
+		if vx <= EPSILON and vy <= EPSILON:
 			self.is_xy = True
 		else:
 			self.setpoint_raw.velocity.x = -vy
@@ -101,7 +104,7 @@ class DroneWrapper():
 
 			self.is_xy = False
 
-		if vz == 0:
+		if vz <= EPSILON:
 			self.is_z = True
 		else:
 			self.setpoint_raw.velocity.z = vz
