@@ -96,7 +96,7 @@ class DroneWrapper():
 		self.vy = vx
 		self.vz = vz
 
-		if vx <= EPSILON and vy <= EPSILON:
+		if abs(vx) <= EPSILON and abs(vy) <= EPSILON:
 			self.is_xy = True
 		else:
 			self.setpoint_raw.velocity.x = -vy
@@ -104,7 +104,7 @@ class DroneWrapper():
 
 			self.is_xy = False
 
-		if vz <= EPSILON:
+		if abs(vz) <= EPSILON:
 			self.is_z = True
 		else:
 			self.setpoint_raw.velocity.z = vz
