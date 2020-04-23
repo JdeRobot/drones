@@ -85,6 +85,27 @@ class DroneWrapper():
 			rospy.logwarn('Mode change request unsuccessful')
 			return False
 
+	def set_cmd_pos(self, x=0, y=0, z=0, az=0):
+		self.setpoint_raw.coordinate_frame = 8
+		self.setpoint_raw.yaw_rate = az
+
+		self.posx = x
+		self.posy = y
+		self.height = z
+		self.vx = 0
+		self.vy = 0
+		self.vz = 0
+
+		self.setpoint_raw.position.x = x
+		self.setpoint_raw.position.y = y
+		self.setpoint_raw.position.z = z
+
+		self.is_xy = True
+		self.is_z = True
+		self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
+
+		self.setpoint_raw_publisher.publish(self.setpoint_raw)
+
 	def set_cmd_vel(self, vx=0, vy=0, vz=0, az=0):
 		self.setpoint_raw.coordinate_frame = 8
 		self.setpoint_raw.yaw_rate = az
@@ -130,6 +151,27 @@ class DroneWrapper():
 
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
+	def set_cmd_mix(self, vx=0, vy=0, z=0, az=0):
+		self.setpoint_raw.coordinate_frame = 8
+		self.setpoint_raw.yaw_rate = az
+
+		self.posx = self.pose_stamped.pose.position.x
+		self.posy = self.pose_stamped.pose.position.y
+		self.height = z
+		self.vx = vx
+		self.vy = vy
+		self.vz = 0
+
+		self.setpoint_raw.position.z = z
+		self.setpoint_raw.velocity.x = -vy
+		self.setpoint_raw.velocity.y = vx
+
+		self.is_xy = False
+		self.is_z = True
+		self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
+
+		self.setpoint_raw_publisher.publish(self.setpoint_raw)
+
 	def repeat_setpoint_raw(self, event):
 		self.setpoint_raw.coordinate_frame = 8
 
@@ -165,8 +207,8 @@ class DroneWrapper():
 		if not self.setpoint_raw_flag:
 			self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
 
-	def takeoff(self, uptime = 4):
-		self.set_cmd_vel(0, 0, 0, 0)
+	def takeoff(self, uptime=4, z=3):
+		self.set_cmd_pos(0, 0, 0, 0)
 		self.hold_setpoint_raw()
 		self.arm(True)
 		self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(3), self.stay_armed_stay_offboard_cb)
@@ -177,13 +219,13 @@ class DroneWrapper():
 			rospy.sleep(3)
 			if self.state.mode == 'OFFBOARD':
 				break
-		self.set_cmd_vel(vz = 3)
+		self.set_cmd_mix(z)
 		rospy.loginfo('Taking off!!!')
 		rospy.sleep(uptime)
 		self.set_cmd_vel()
 
 	def take_control(self):
-		self.set_cmd_vel(0, 0, 0, 0)
+		self.set_cmd_pos(0, 0, 0, 0)
 		self.hold_setpoint_raw()
 		self.arm(True)
 		self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(3), self.stay_armed_stay_offboard_cb)	
