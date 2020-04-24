@@ -42,7 +42,7 @@ class DroneTeleop(Plugin):
 		self._widget = QWidget()
 		# Get path to UI file which should be in the "resource" folder of this package
 		ui_file = os.path.join(rospkg.RosPack().get_path(
-			'rqt_drone_teleop'), 'resource', 'DroneTeleop.ui')
+			'rqt_drone_teleop'), 'resource', 'DroneTeleop_info.ui')
 		# Extend the widget with all attributes and children from UI file
 		loadUi(ui_file, self._widget)
 		# Give QObjects reasonable names
@@ -148,9 +148,21 @@ class DroneTeleop(Plugin):
 
 	def pose_stamped_cb(self, msg):
 		self.current_pose = msg.pose
+		self.set_info_pos(self.current_pose)
 
 	def twist_stamped_cb(self, msg):
 		self.current_twist = msg.twist
+		self.set_info_vel(self.current_twist)
+
+	def set_info_pos(self, pose):
+		self._widget.posX.setText(str(round(pose.position.x, 1)))
+		self._widget.posY.setText(str(round(pose.position.y, 1)))
+		self._widget.posZ.setText(str(round(pose.position.z, 1)))
+
+	def set_info_vel(self, twist):
+		self._widget.velX.setText(str(round(twist.linear.x, 1)))
+		self._widget.velY.setText(str(round(twist.linear.y, 1)))
+		self._widget.velZ.setText(str(round(twist.linear.z, 1)))
 
 	def call_takeoff_land(self):
 		if self.takeoff == True:
