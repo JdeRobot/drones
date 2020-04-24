@@ -219,7 +219,7 @@ class DroneWrapper():
 			rospy.sleep(3)
 			if self.state.mode == 'OFFBOARD':
 				break
-		self.set_cmd_mix(z)
+		self.set_cmd_mix(z=3)
 		rospy.loginfo('Taking off!!!')
 		rospy.sleep(uptime)
 		self.set_cmd_vel()
