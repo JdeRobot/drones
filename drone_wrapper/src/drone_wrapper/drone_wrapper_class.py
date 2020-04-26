@@ -207,7 +207,7 @@ class DroneWrapper():
 		if not self.setpoint_raw_flag:
 			self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
 
-	def takeoff(self, uptime=4, z=3):
+	def takeoff(self, uptime=4, h=3):
 		self.set_cmd_pos(0, 0, 0, 0)
 		self.hold_setpoint_raw()
 		self.arm(True)
@@ -219,7 +219,7 @@ class DroneWrapper():
 			rospy.sleep(3)
 			if self.state.mode == 'OFFBOARD':
 				break
-		self.set_cmd_mix(z=3)
+		self.set_cmd_mix(z=h)
 		rospy.loginfo('Taking off!!!')
 		rospy.sleep(uptime)
 		self.set_cmd_vel()
