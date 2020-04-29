@@ -11,7 +11,7 @@ from mavros_msgs.msg import State, PositionTarget
 from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeRequest, CommandTOL, CommandTOLRequest
 
 EPSILON = 0.01
-
+CMD = None
 
 class DroneWrapper():
 	def state_cb(self, msg):
@@ -100,9 +100,9 @@ class DroneWrapper():
 		self.setpoint_raw.position.y = y
 		self.setpoint_raw.position.z = z
 
-		self.is_xy = True
-		self.is_z = True
-		self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
+		global CMD
+		CMD = 0  # POS
+		self.setpoint_raw.type_mask = 3064  # xyz yaw
 
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
@@ -116,6 +116,9 @@ class DroneWrapper():
 		self.vx = -vy
 		self.vy = vx
 		self.vz = vz
+
+		global CMD
+		CMD = 1  # VEL
 
 		if abs(vx) <= EPSILON and abs(vy) <= EPSILON:
 			self.is_xy = True
@@ -166,8 +169,8 @@ class DroneWrapper():
 		self.setpoint_raw.velocity.x = -vy
 		self.setpoint_raw.velocity.y = vx
 
-		self.is_xy = False
-		self.is_z = True
+		global CMD
+		CMD = 2  # MIX
 		self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
 
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
@@ -182,24 +185,24 @@ class DroneWrapper():
 		self.setpoint_raw.velocity.y = self.vy
 		self.setpoint_raw.velocity.z = self.vz
 
-		if self.is_xy:
-			if self.is_z:
-				self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
-				# self.setpoint_raw.type_mask = 3064  # xyz yaw
+		if CMD == 0:  # POS
+			self.setpoint_raw.type_mask = 3064  # xyz yaw
+		elif CMD == 1:  # VEL
+			if self.is_xy:
+				if self.is_z:
+					self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
+				else:
+					self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
 			else:
-				self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
-				# self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
-				# self.setpoint_raw.type_mask = 3036  # x y vz yaw -> NOT SUPPORTED
-				# self.setpoint_raw.type_mask = 2012  # x y vz yaw_rate -> NOT SUPPORTED
+				if self.is_z:
+					self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
+				else:
+					self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
+		elif CMD == 2:  # MIX
+			self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
 		else:
-			if self.is_z:
-				self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
-				# self.setpoint_raw.type_mask = 2019  # vx vy z yaw_rate -> NOT SUPPORTED
-				# self.setpoint_raw.type_mask = 3011  # vx vy vz z yaw
-				# self.setpoint_raw.type_mask = 3043  # vx vy z yaw -> NOT SUPPORTED
-			else:
-				self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
-				# self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+			self.setpoint_raw.type_mask = 3064  # xyz yaw
+			print("[CMD error]: Mask set to position control")
 
 		self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
