@@ -87,7 +87,7 @@ class DroneWrapper():
 
 	def set_cmd_pos(self, x=0, y=0, z=0, az=0):
 		self.setpoint_raw.coordinate_frame = 8
-		self.setpoint_raw.yaw_rate = az
+		self.setpoint_raw.yaw = az
 
 		self.posx = x
 		self.posy = y
