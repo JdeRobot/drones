@@ -161,8 +161,8 @@ class DroneWrapper():
 		self.posx = self.pose_stamped.pose.position.x
 		self.posy = self.pose_stamped.pose.position.y
 		self.height = z
-		self.vx = vx
-		self.vy = vy
+		self.vx = -vy
+		self.vy = vx
 		self.vz = 0
 
 		self.setpoint_raw.position.z = z
