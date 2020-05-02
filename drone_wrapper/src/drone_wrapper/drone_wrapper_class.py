@@ -162,8 +162,8 @@ class DroneWrapper():
         self.posx = self.pose_stamped.pose.position.x
         self.posy = self.pose_stamped.pose.position.y
         self.height = z
-        self.vx = vx
-        self.vy = vy
+        self.vx = -vy
+        self.vy = vx
         self.vz = 0
 
         self.setpoint_raw.position.z = z
@@ -286,4 +286,4 @@ class DroneWrapper():
         rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
         rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
 
-        self.setpoint_raw_publisher = rospy.Publisher('mavros/setpoint_raw/local', PositionTarget, queue_size = 1)
+        self.setpoint_raw_publisher = rospy.Publisher('mavros/setpoint_raw/local', PositionTarget, queue_size=1)
