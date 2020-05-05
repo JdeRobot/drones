@@ -31,8 +31,8 @@ class DroneTeleop(Plugin):
 		parser = ArgumentParser()
 		# Add argument(s) to the parser.
 		parser.add_argument("-q", "--quiet", action="store_true",
-                      dest="quiet",
-                      help="Put plugin in silent mode")
+						dest="quiet",
+						help="Put plugin in silent mode")
 		# args, unknowns = parser.parse_known_args(context.argv())
 		# if not args.quiet:
 		# 	print 'arguments: ', args
@@ -42,7 +42,7 @@ class DroneTeleop(Plugin):
 		self._widget = QWidget()
 		# Get path to UI file which should be in the "resource" folder of this package
 		ui_file = os.path.join(rospkg.RosPack().get_path(
-			'rqt_drone_teleop'), 'resource', 'DroneTeleop_info.ui')
+			'rqt_drone_teleop'), 'resource', 'DroneTeleop.ui')
 		# Extend the widget with all attributes and children from UI file
 		loadUi(ui_file, self._widget)
 		# Give QObjects reasonable names
@@ -80,7 +80,7 @@ class DroneTeleop(Plugin):
 		self.play_stop_pub = rospy.Publisher('gui/play_stop', Bool, queue_size=1)
 		self.twist_pub = rospy.Publisher('gui/twist', Twist, queue_size=1)
 
-		#Add global variables
+		# Add global variables
 		self.shared_twist_msg = Twist()
 		self.current_pose = Pose()
 		self.current_twist = Twist()
@@ -115,10 +115,8 @@ class DroneTeleop(Plugin):
 		rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
 		rospy.Subscriber('interface/filtered_img', Image, self.filtered_img_cb)
 		rospy.Subscriber('interface/threshed_img', Image, self.threshed_img_cb)
-		rospy.Subscriber('mavros/local_position/pose',
-		                 PoseStamped, self.pose_stamped_cb)
-		rospy.Subscriber('mavros/local_position/velocity_body',
-		                 TwistStamped, self.twist_stamped_cb)
+		rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
+		rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
 
 	def show_sensors_widget(self, state):
 		if state == Qt.Checked:
@@ -148,21 +146,26 @@ class DroneTeleop(Plugin):
 
 	def pose_stamped_cb(self, msg):
 		self.current_pose = msg.pose
-		self.set_info_pos(self.current_pose)
+		self.set_info_pos(self.current_pose, msg.header.frame_id)
 
 	def twist_stamped_cb(self, msg):
 		self.current_twist = msg.twist
-		self.set_info_vel(self.current_twist)
+		self.set_info_vel(self.current_twist, msg.header.frame_id)
 
-	def set_info_pos(self, pose):
-		self._widget.posX.setText(str(round(pose.position.x, 1)))
-		self._widget.posY.setText(str(round(pose.position.y, 1)))
-		self._widget.posZ.setText(str(round(pose.position.z, 1)))
+	def set_info_pos(self, pose, frame):
+		self._widget.posX.setText(str(round(pose.position.x, 2)))
+		self._widget.posY.setText(str(round(pose.position.y, 2)))
+		self._widget.posZ.setText(str(round(pose.position.z, 2)))
 
-	def set_info_vel(self, twist):
-		self._widget.velX.setText(str(round(twist.linear.x, 1)))
-		self._widget.velY.setText(str(round(twist.linear.y, 1)))
-		self._widget.velZ.setText(str(round(twist.linear.z, 1)))
+		self._widget.posFrame.setText(str(frame))
+
+	def set_info_vel(self, twist, frame):
+		self._widget.velX.setText(str(round(twist.linear.x, 2)))
+		self._widget.velY.setText(str(round(twist.linear.y, 2)))
+		self._widget.velZ.setText(str(round(twist.linear.z, 2)))
+		self._widget.velYaw.setText(str(round(twist.angular.z, 2)))
+
+		self._widget.velFrame.setText(str(frame))
 
 	def call_takeoff_land(self):
 		if self.takeoff == True:
@@ -242,7 +245,7 @@ class DroneTeleop(Plugin):
 		# v = instance_settings.value(k)
 		pass
 
-	#def trigger_configuration(self):
+	# def trigger_configuration(self):
 	# Comment in to signal that the plugin has a way to configure
 	# This will enable a setting button (gear icon) in each dock widget title bar
 	# Usually used to open a modal configuration dialog
