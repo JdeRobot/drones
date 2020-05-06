@@ -2,8 +2,8 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.2 (2020-05-06)
+------------------
 * New velocity control. Masks modified. The drone now keeps it position when velocities are zero.
 * Added position control.
 * Added mixed control.
