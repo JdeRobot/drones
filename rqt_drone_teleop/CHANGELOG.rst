@@ -2,6 +2,11 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* New GUI for rqt_drone_teleop plugin. Added position and velocity info.
+* Contributors: diegomrt, Pedro Arias
+
 1.3.1 (2020-02-14)
 ------------------
 * Fixing dependency on metapackage

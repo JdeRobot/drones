@@ -2,6 +2,15 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* New velocity control. Masks modified. The drone now keeps it position when velocities are zero.
+* Added position control.
+* Added mixed control.
+* Take off modified: now is done by mixed control. Time to take off reduced. Take off height can be configurable.
+* Added all args to script. Needed to pass arguments to exercises.
+* Contributors: diegomrt, Pedro Arias
+
 1.3.1 (2020-02-14)
 ------------------
 * Fixing dependency on metapackage
