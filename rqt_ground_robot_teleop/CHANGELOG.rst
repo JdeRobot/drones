@@ -2,6 +2,9 @@
 Changelog for package rqt_ground_robot_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.3.1 (2020-02-14)
 ------------------
 * Fixing dependency on metapackage
