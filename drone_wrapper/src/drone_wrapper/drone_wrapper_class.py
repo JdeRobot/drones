@@ -7,8 +7,9 @@ import cv2
 from cv_bridge import CvBridge
 from sensor_msgs.msg import NavSatFix, Image
 from geometry_msgs.msg import PoseStamped
-from mavros_msgs.msg import State, PositionTarget
-from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeRequest, CommandTOL, CommandTOLRequest
+from mavros_msgs.msg import State, PositionTarget, ParamValue
+from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeRequest, CommandTOL, CommandTOLRequest, \
+    ParamSet, ParamGet
 
 EPSILON = 0.01
 CMD = None
@@ -63,6 +64,36 @@ class DroneWrapper():
 
     def get_yaw(self):
         return self.get_orientation()[2]
+
+    def param_set(self, param, value):
+        if isinstance(value, float):
+            val = ParamValue(integer=0, real=value)
+        else:
+            val = ParamValue(integer=value, real=0.0)
+
+        rospy.wait_for_service('/mavros/param/set')
+        try:
+            set_param = rospy.ServiceProxy('/mavros/param/set', ParamSet)
+            resp = set_param(param_id=param, value=val)
+            print("setmode send ok", resp.success)
+        except rospy.ServiceException as e:
+            print("Failed SetMode:", e)
+
+    def param_get(self, param):
+        try:
+            get_param = rospy.ServiceProxy('mavros/param/get', ParamGet)
+            resp = get_param(param_id=param)
+            print("setmode send ok", resp.success)
+        except rospy.ServiceException as e:
+            print("Failed SetMode:", e)
+            return None
+
+        if resp.value.integer != 0:
+            return resp.value.integer
+        elif resp.value.real != 0.0:
+            return resp.value.real
+        else:
+            return 0
 
     def arm(self, value = True):
         req = CommandBoolRequest()
