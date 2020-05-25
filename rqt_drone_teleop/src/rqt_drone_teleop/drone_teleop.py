@@ -126,9 +126,16 @@ class DroneTeleop(Plugin):
 
 	def msg_to_pixmap(self, msg):
 		cv_img = self.bridge.imgmsg_to_cv2(msg)
-		h, w, _ = cv_img.shape
-		bytesPerLine = 3 * w
-		q_img = QImage(cv_img.data, w, h, bytesPerLine, QImage.Format_RGB888)
+		shape = cv_img.shape
+		if len(shape) == 3 and shape[2] == 3:  # RGB888
+			h, w, _ = shape
+			bytesPerLine = 3 * w
+			img_format = QImage.Format_RGB888
+		else:  # Grayscale8
+			h, w = shape[0], shape[1]
+			bytesPerLine = 1 * w
+			img_format = QImage.Format_Grayscale8
+		q_img = QImage(cv_img.data, w, h, bytesPerLine, img_format)
 		return QPixmap.fromImage(q_img).scaled(320, 240)
 
 	def cam_frontal_cb(self, msg):
