@@ -1,0 +1,17 @@
+<library path="src">
+	<class name="CamViewer" type="rqt_cam_viewer.cam_viewer.CamViewer" base_class_type="rqt_gui_py::Plugin">
+		<description>
+			A viewer which shows the cameras from the drone for all drone exercises in the JdeRobot Robotics Academy.
+		</description>
+		<qtgui>
+			<group>
+        		<label>JdeRobot</label>
+        		<icon type="theme">folder</icon>
+        		<statustip>Plugins related to JdeRobot.</statustip>
+      		</group>
+			<label>Cameras Viewer</label>
+			<icon type="theme">image-x-generic</icon>
+			<statustip>Controlling Drones since 2019.</statustip>
+		</qtgui>
+	</class>
+</library>

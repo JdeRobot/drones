@@ -2,9 +2,9 @@
 
 import sys
 
-from rqt_drone_teleop.drone_teleop import DroneTeleop
+from rqt_vel_teleop.vel_teleop import VelTeleop
 from rqt_gui.main import Main
 
-plugin = 'rqt_drone_teleop'
+plugin = 'rqt_vel_teleop'
 main = Main(filename=plugin)
 sys.exit(main.main(standalone=plugin))

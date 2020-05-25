@@ -10,21 +10,18 @@ from python_qt_binding.QtWidgets import QWidget
 from python_qt_binding.QtGui import QIcon, QPixmap, QImage
 from python_qt_binding.QtCore import pyqtSignal, Qt
 
-from sensor_msgs.msg import Image
-import cv2
-from cv_bridge import CvBridge
-from std_msgs.msg import Bool, Float64
+from std_msgs.msg import Bool
 from geometry_msgs.msg import Pose, PoseStamped, Twist, TwistStamped
 
 from teleopWidget import TeleopWidget
 from sensorsWidget import SensorsWidget
 
 
-class DroneTeleop(Plugin):
+class VelTeleop(Plugin):
 	def __init__(self, context):
-		super(DroneTeleop, self).__init__(context)
+		super(VelTeleop, self).__init__(context)
 		# Give QObjects reasonable names
-		self.setObjectName('DroneTeleop')
+		self.setObjectName('VelTeleop')
 
 		# Process standalone plugin command-line arguments
 		from argparse import ArgumentParser
@@ -42,11 +39,11 @@ class DroneTeleop(Plugin):
 		self._widget = QWidget()
 		# Get path to UI file which should be in the "resource" folder of this package
 		ui_file = os.path.join(rospkg.RosPack().get_path(
-			'rqt_drone_teleop'), 'resource', 'DroneTeleop.ui')
+			'rqt_drone_teleop'), 'resource', 'VelocityTeleop.ui')
 		# Extend the widget with all attributes and children from UI file
 		loadUi(ui_file, self._widget)
 		# Give QObjects reasonable names
-		self._widget.setObjectName('DroneTeleopUi')
+		self._widget.setObjectName('VelTeleopUi')
 		# Show _widget.windowTitle on left-top of each plugin (when
 		# it's set in _widget). This is useful when you open multiple
 		# plugins at once. Also if you open multiple instances of your
@@ -92,8 +89,6 @@ class DroneTeleop(Plugin):
 		self.play_icon.addPixmap(QPixmap(os.path.join(rospkg.RosPack().get_path(
 			'rqt_drone_teleop'), 'resource', 'play.png')), QIcon.Normal, QIcon.Off)
 
-		self.bridge = CvBridge()
-
 		self.teleop_stick_1 = TeleopWidget(self, 'set_linear_xy', 151)
 		self._widget.tlLayout.addWidget(self.teleop_stick_1)
 		self.teleop_stick_1.setVisible(True)
@@ -109,12 +104,6 @@ class DroneTeleop(Plugin):
 		context.add_widget(self._widget)
 
 		# Add Subscibers
-		cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
-		cam_ventral_topic = rospy.get_param('cam_ventral_topic', '/iris/cam_ventral/image_raw')
-		rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
-		rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
-		rospy.Subscriber('interface/filtered_img', Image, self.filtered_img_cb)
-		rospy.Subscriber('interface/threshed_img', Image, self.threshed_img_cb)
 		rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
 		rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
 
@@ -124,36 +113,10 @@ class DroneTeleop(Plugin):
 		else:
 			self.sensors_widget.hide()
 
-	def msg_to_pixmap(self, msg):
-		cv_img = self.bridge.imgmsg_to_cv2(msg)
-		shape = cv_img.shape
-		if len(shape) == 3 and shape[2] == 3:  # RGB888
-			h, w, _ = shape
-			bytesPerLine = 3 * w
-			img_format = QImage.Format_RGB888
-		else:  # Grayscale8
-			h, w = shape[0], shape[1]
-			bytesPerLine = 1 * w
-			img_format = QImage.Format_Grayscale8
-		q_img = QImage(cv_img.data, w, h, bytesPerLine, img_format)
-		return QPixmap.fromImage(q_img).scaled(320, 240)
-
-	def cam_frontal_cb(self, msg):
-		self._widget.img_frontal.setPixmap(self.msg_to_pixmap(msg))
-		self.sensors_widget.sensorsUpdate.emit()
-
-	def cam_ventral_cb(self, msg):
-		self._widget.img_ventral.setPixmap(self.msg_to_pixmap(msg))
-
-	def threshed_img_cb(self, msg):
-		self._widget.img_threshed.setPixmap(self.msg_to_pixmap(msg))
-
-	def filtered_img_cb(self, msg):
-		self._widget.img_filtered.setPixmap(self.msg_to_pixmap(msg))
-
 	def pose_stamped_cb(self, msg):
 		self.current_pose = msg.pose
 		self.set_info_pos(self.current_pose, msg.header.frame_id)
+		self.sensors_widget.sensorsUpdate.emit()
 
 	def twist_stamped_cb(self, msg):
 		self.current_twist = msg.twist

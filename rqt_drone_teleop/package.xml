@@ -6,6 +6,7 @@
 
 	<maintainer email="nikhilvkhedekar@gmail.com">Nikhil Khedekar</maintainer>
 	<author email="nikhilvkhedekar@gmail.com">Nikhil Khedekar</author>
+	<author>Pedro Arias</author>
 
 	<license>MIT</license>
 
@@ -22,6 +23,8 @@
 	<export>
 		<!-- Other tools can request additional information be placed here -->
 		<architecture_independent/>
-		<rqt_gui plugin="${prefix}/plugin.xml"/>
+		<rqt_gui plugin="${prefix}/plugin_vel_teleop.xml"/>
+		<rqt_gui plugin="${prefix}/plugin_cam_viewer.xml"/>
+		<rqt_gui plugin="${prefix}/plugin_pos_teleop.xml"/>
 	</export>
 </package>

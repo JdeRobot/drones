@@ -1,0 +1,17 @@
+<library path="src">
+	<class name="PosTeleop" type="rqt_pos_teleop.pos_teleop.PosTeleop" base_class_type="rqt_gui_py::Plugin">
+		<description>
+			A teleop interface to control drones by position for all drone exercises in the JdeRobot Robotics Academy.
+		</description>
+		<qtgui>
+			<group>
+        		<label>JdeRobot</label>
+        		<icon type="theme">folder</icon>
+        		<statustip>Plugins related to JdeRobot.</statustip>
+      		</group>
+			<label>Position Teleop</label>
+			<icon type="theme">applications-internet</icon>
+			<statustip>Controlling Drones since 2019.</statustip>
+		</qtgui>
+	</class>
+</library>

@@ -1,0 +1,17 @@
+<library path="src">
+	<class name="VelTeleop" type="rqt_vel_teleop.vel_teleop.VelTeleop" base_class_type="rqt_gui_py::Plugin">
+		<description>
+			A teleop interface to control drones by velocity for all drone exercises in the JdeRobot Robotics Academy.
+		</description>
+		<qtgui>
+			<group>
+        		<label>JdeRobot</label>
+        		<icon type="theme">folder</icon>
+        		<statustip>Plugins related to JdeRobot.</statustip>
+      		</group>
+			<label>Velocity Teleop</label>
+			<icon type="theme">input-gaming</icon>
+			<statustip>Controlling Drones since 2019.</statustip>
+		</qtgui>
+	</class>
+</library>
