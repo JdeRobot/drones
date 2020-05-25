@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>913</width>
-    <height>922</height>
+    <width>900</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>660</width>
-    <height>370</height>
+    <width>900</width>
+    <height>400</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -38,28 +38,11 @@
     <string>Take off</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="playButton">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>390</y>
-     <width>151</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Play Code</string>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>play.png</normaloff>play.png</iconset>
-   </property>
-  </widget>
   <widget class="QCheckBox" name="sensorsCheck">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>160</y>
+     <x>500</x>
+     <y>140</y>
      <width>94</width>
      <height>26</height>
     </rect>
@@ -203,7 +186,7 @@
    <property name="geometry">
     <rect>
      <x>529</x>
-     <y>239</y>
+     <y>260</y>
      <width>121</width>
      <height>121</height>
     </rect>
@@ -212,117 +195,13 @@
     <string>logo</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>380</y>
-     <width>111</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Camera Frontal</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>650</y>
-     <width>111</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Camera Ventral</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>380</y>
-     <width>111</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Filtered Image</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>650</y>
-     <width>131</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Thresholded Image</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="img_frontal">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>400</y>
-     <width>320</width>
-     <height>240</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Waiting for images to be published by gazebo</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="img_ventral">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>670</y>
-     <width>320</width>
-     <height>240</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Waiting for Images to be published by gazebo</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="img_filtered">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>400</y>
-     <width>320</width>
-     <height>240</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>use set_image_filtered() to display here</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="img_threshed">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>670</y>
-     <width>320</width>
-     <height>240</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>use set_image_threshed() to display here</string>
-   </property>
-  </widget>
   <widget class="QTextEdit" name="term_out">
    <property name="geometry">
     <rect>
      <x>660</x>
      <y>50</y>
      <width>231</width>
-     <height>321</height>
+     <height>331</height>
     </rect>
    </property>
   </widget>
@@ -375,7 +254,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>250</y>
+     <y>260</y>
      <width>411</width>
      <height>121</height>
     </rect>
@@ -504,6 +383,23 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="playButton">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>180</y>
+     <width>161</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Play Code</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>play.png</normaloff>play.png</iconset>
+   </property>
   </widget>
  </widget>
  <resources/>
