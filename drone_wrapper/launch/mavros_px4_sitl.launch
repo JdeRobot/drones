@@ -15,6 +15,8 @@
     <arg name="model" default="iris_dual_cam"/>
     <arg name="world" default="$(find mavlink_sitl_gazebo)/worlds/empty.world"/>
     <arg name="sdf" default="$(find jderobot_assets)/models/$(arg model)/$(arg model).sdf"/>
+	<!-- PX4 param config -->
+	<arg name="config" default="$(find drone_wrapper)/launch/basic_config.yml"/>
 
     <!-- gazebo configs -->
     <arg name="gui" default="true"/>
@@ -52,4 +54,6 @@
         <arg name="fcu_url" value="$(arg fcu_url)"/>
         <arg name="respawn_mavros" value="$(arg respawn_mavros)"/>
     </include>
+	<!-- PX4 param configuration -->
+	<node name="my_params" pkg="drone_wrapper" type="load_parameters" args="$(arg config)"/>
 </launch>
