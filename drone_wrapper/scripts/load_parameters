@@ -1,0 +1,5 @@
+#!/bin/bash
+rosservice call --wait /mavros/param/pull false
+
+rosparam load $1 /mavros/param/
+rosservice call --wait /mavros/param/push

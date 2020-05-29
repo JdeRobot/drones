@@ -18,6 +18,7 @@ catkin_package()
 
 install(PROGRAMS
 	scripts/play_python_code
+	scripts/load_parameters
 	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
