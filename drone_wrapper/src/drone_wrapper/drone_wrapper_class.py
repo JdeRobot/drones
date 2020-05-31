@@ -7,18 +7,21 @@ import cv2
 from cv_bridge import CvBridge
 from sensor_msgs.msg import NavSatFix, Image
 from geometry_msgs.msg import PoseStamped
-from mavros_msgs.msg import State, PositionTarget, ParamValue
+from mavros_msgs.msg import State, ExtendedState, PositionTarget, ParamValue
 from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeRequest, CommandTOL, CommandTOLRequest, \
     ParamSet, ParamGet
 
 EPSILON = 0.01
 CMD = None
 
-
 class DroneWrapper():
     def state_cb(self, msg):
         self.state = msg
         rospy.logdebug('State updated')
+
+    def extended_state_cb(self, msg):
+        self.extended_state = msg
+        rospy.logdebug('Extended State updated')
 
     def pose_stamped_cb(self, msg):
         self.pose_stamped = msg
@@ -64,6 +67,9 @@ class DroneWrapper():
 
     def get_yaw(self):
         return self.get_orientation()[2]
+
+    def get_landed_state(self):
+        return self.extended_state.landed_state
 
     def param_set(self, param, value):
         if isinstance(value, float):
@@ -173,7 +179,7 @@ class DroneWrapper():
             else:
                 self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
                 # self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
-                # self.setpoint_raw.type_mask = 3036 # x y vz yaw -> NOT SUPPORTED
+                # self.setpoint_raw.type_mask = 3036 # x y vz yaw -> NOT SUPPORTED 
         else:
             if self.is_z:
                 self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
@@ -282,6 +288,7 @@ class DroneWrapper():
             rospy.init_node(name)
 
         self.state = State()
+	self.extended_state = ExtendedState()
         self.pose_stamped = PoseStamped()
         self.rate = rospy.Rate(20)
         self.setpoint_raw = PositionTarget()
@@ -312,6 +319,7 @@ class DroneWrapper():
         self.land_client = rospy.ServiceProxy('mavros/cmd/land', CommandTOL)
 
         rospy.Subscriber('mavros/state', State, self.state_cb)
+	rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
         rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
         rospy.Subscriber('mavros/global_position/global', NavSatFix, self.global_position_cb)
         cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
