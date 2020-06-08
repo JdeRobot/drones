@@ -1,6 +1,7 @@
 import os
 import rospy
 import rospkg
+import threading
 
 from qt_gui.plugin import Plugin
 from python_qt_binding import loadUi
@@ -75,7 +76,10 @@ class PosTeleop(Plugin):
         self.shared_pose_msg = Pose()
         self.shared_twist_msg = Twist()
         self.current_pose = Pose()
+        self.pose_frame = ''
         self.current_twist = Twist()
+        self.twist_frame = ''
+        self.is_running = True
         self.stop_icon = QIcon()
         self.stop_icon.addPixmap(QPixmap(os.path.join(rospkg.RosPack().get_path(
             'rqt_drone_teleop'), 'resource', 'stop.png')), QIcon.Normal, QIcon.Off)
@@ -94,6 +98,9 @@ class PosTeleop(Plugin):
         rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
         rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
 
+        # Add Timer
+		self.update_status_info()
+
     def show_sensors_widget(self, state):
         if state == Qt.Checked:
             self.sensors_widget.show()
@@ -102,12 +109,18 @@ class PosTeleop(Plugin):
 
     def pose_stamped_cb(self, msg):
         self.current_pose = msg.pose
-        self.set_info_pos(self.current_pose, msg.header.frame_id)
+        self.pose_frame = msg.header.frame_id
         self.sensors_widget.sensorsUpdate.emit()
 
     def twist_stamped_cb(self, msg):
         self.current_twist = msg.twist
-        self.set_info_vel(self.current_twist, msg.header.frame_id)
+        self.twist_frame = msg.header.frame_id
+
+    def update_status_info(self):
+        threading.Timer(0.5, self.update_status_info).start()
+        if self.is_running:
+            self.set_info_pos(self.current_pose, self.pose_frame)
+            self.set_info_vel(self.current_twist, self.twist_frame)
 
     def set_info_pos(self, pose, frame):
         self._widget.posX.setText(str(round(pose.position.x, 2)))
@@ -179,6 +192,7 @@ class PosTeleop(Plugin):
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here
+        self.is_running = False
         pass
 
     def save_settings(self, plugin_settings, instance_settings):
