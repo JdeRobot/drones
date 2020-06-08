@@ -10,6 +10,7 @@ from python_qt_binding.QtCore import pyqtSignal, Qt
 
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Pose, PoseStamped, Twist, TwistStamped
+from mavros_msgs.msg import ExtendedState
 
 from sensorsWidget import SensorsWidget
 
@@ -72,6 +73,7 @@ class PosTeleop(Plugin):
         self.pose_pub = rospy.Publisher('gui/pose', Pose, queue_size=1)
 
         # Add global variables
+        self.extended_state = ExtendedState()
         self.shared_pose_msg = Pose()
         self.shared_twist_msg = Twist()
         self.current_pose = Pose()
@@ -93,6 +95,7 @@ class PosTeleop(Plugin):
         # Add Subscribers
         rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
         rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
+        rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
 
     def show_sensors_widget(self, state):
         if state == Qt.Checked:
@@ -124,15 +127,21 @@ class PosTeleop(Plugin):
 
         self._widget.velFrame.setText(str(frame))
 
+    def extended_state_cb(self, msg):
+        if self.extended_state.landed_state != msg.landed_state:
+            self.extended_state = msg
+            if self.extended_state.landed_state == 1:  # ON GROUND
+                self._widget.takeoffButton.setText("Take Off")
+            elif self.extended_state.landed_state == 2:  # IN AIR
+                self._widget.takeoffButton.setText("Land")
+
     def call_takeoff_land(self):
         if self.takeoff == True:
-            self._widget.takeoffButton.setText("Take Off")
             rospy.loginfo('Landing')
             self._widget.term_out.append('Landing')
             self.takeoff_pub.publish(Bool(False))
             self.takeoff = False
         else:
-            self._widget.takeoffButton.setText("Land")
             rospy.loginfo('Taking off')
             self._widget.term_out.append('Taking off')
             self.takeoff_pub.publish(Bool(True))
