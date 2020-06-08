@@ -149,6 +149,10 @@ class VelTeleop(Plugin):
 				self._widget.takeoffButton.setText("Land")
 
 	def call_takeoff_land(self):
+		if self.extended_state.landed_state == 0:  # UNDEFINED --> not ready
+			self._widget.term_out.append('Drone not ready')
+			return
+
 		if self.takeoff == True:
 			rospy.loginfo('Landing')
 			self._widget.term_out.append('Landing')
