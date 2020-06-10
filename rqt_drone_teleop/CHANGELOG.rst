@@ -2,8 +2,8 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.3 (2020-06-10)
+------------------
 * Takeoff button disabled until landed state is defined (drone is ready).
 * Takeoff/land button synchronized between vel and pos teleop. 
 * RQT freezing fixed.
