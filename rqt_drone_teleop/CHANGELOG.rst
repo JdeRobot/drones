@@ -2,6 +2,16 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Takeoff button disabled until landed state is defined (drone is ready).
+* Takeoff/land button synchronized between vel and pos teleop. 
+* RQT freezing fixed.
+* Drone teleop pkg modularized into two modules: rqt_vel_teleop and rqt_cam_viewer.
+* One new module is added: rqt_pos_teleop.
+* Added support to greyscale8 images.
+* Contributors: pariaspe
+
 1.3.2 (2020-05-06)
 ------------------
 * New GUI for rqt_drone_teleop plugin. Added position and velocity info.
