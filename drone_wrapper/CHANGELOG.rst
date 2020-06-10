@@ -2,6 +2,15 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added get_velocity() and get_yaw_rate()
+* added method to get landed state
+* Change yaw_rate to yaw in set_cmd_pos()
+* PX4 parameters now can be modified during launching through a config YML file.
+* Methods to get and set parameters implemented.
+* Contributors: Diego Martín, diegomrt, pariaspe
+
 1.3.2 (2020-05-06)
 ------------------
 * New velocity control. Masks modified. The drone now keeps it position when velocities are zero.
