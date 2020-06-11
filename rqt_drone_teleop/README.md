@@ -3,17 +3,19 @@
 This is a common package to provide a teleoperation interface for the drone exercises in the JdeRobot Robotics Academy.
 
 This package contains different RQT plugins:
-* Position Teleop
+* **Position Teleop**
 <details>
 <summary>[See]</summary>
 <img src="https://github.com/JdeRobot/drones/blob/master/rqt_drone_teleop/resource/pos_teleop.png">
 </details>
-* Velocity Teleop
+
+* **Velocity Teleop**
 <details>
 <summary>[See]</summary>
 <img src="https://github.com/JdeRobot/drones/blob/master/rqt_drone_teleop/resource/vel_teleop.png">
 </details>
-* Cameras Viewer
+
+* **Cameras Viewer**
 <details>
 <summary>[See]</summary>
 <img src="https://github.com/JdeRobot/drones/blob/master/rqt_drone_teleop/resource/cam_viewer.png">
