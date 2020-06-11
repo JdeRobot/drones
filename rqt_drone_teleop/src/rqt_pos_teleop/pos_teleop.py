@@ -102,7 +102,7 @@ class PosTeleop(Plugin):
         rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
 
         # Add Timer
-		self.update_status_info()
+        self.update_status_info()
 
     def show_sensors_widget(self, state):
         if state == Qt.Checked:
