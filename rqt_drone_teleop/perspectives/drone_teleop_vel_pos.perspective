@@ -1,0 +1,216 @@
+{
+  "keys": {},
+  "groups": {
+    "pluginmanager": {
+      "keys": {
+        "running-plugins": {
+          "type": "repr",
+          "repr": "{u'rqt_drone_teleop/VelTeleop': [1], u'rqt_drone_teleop/PosTeleop': [1]}"
+        }
+      },
+      "groups": {
+        "plugin__rqt_mypkg__My Plugin 4__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__MyPluginUi4": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "u'true'"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u'Play Code'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        },
+        "plugin__rqt_drone_teleop__PosTeleop__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__PosTeleopUi": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "True"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u'Position Control'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        },
+        "plugin__rqt_mypkg__My Plugin__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__MyPluginUi": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "u'true'"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u'Teleop'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        },
+        "plugin__rqt_drone_teleop__CamViewer__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__CamViewerUi": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "True"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u'Cameras'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        },
+        "plugin__rqt_mypkg__My Plugin 3__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__MyPluginUi3": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "u'true'"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u'Position Control'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        },
+        "plugin__rqt_drone_teleop__VelTeleop__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__VelTeleopUi": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "True"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u'Velocity Control'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        },
+        "plugin__rqt_mypkg__My Plugin 2__1": {
+          "keys": {},
+          "groups": {
+            "dock_widget__MyPluginUi2": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "u'true'"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u'Cameras'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        },
+        "plugin__rqt_drone_teleop__VelTeleop__2": {
+          "keys": {},
+          "groups": {
+            "dock_widget__VelTeleopUi": {
+              "keys": {
+                "dockable": {
+                  "type": "repr",
+                  "repr": "u'true'"
+                },
+                "parent": {
+                  "type": "repr",
+                  "repr": "None"
+                },
+                "dock_widget_title": {
+                  "type": "repr",
+                  "repr": "u'Follow Road (2)'"
+                }
+              },
+              "groups": {}
+            }
+          }
+        }
+      }
+    },
+    "mainwindow": {
+      "keys": {
+        "geometry": {
+          "type": "repr(QByteArray.hex)",
+          "repr(QByteArray.hex)": "QtCore.QByteArray('01d9d0cb00020000000000910000009c000004140000028f00000091000000b8000004140000028f00000001000000000780')",
+          "pretty-print": "                         "
+        },
+        "state": {
+          "type": "repr(QByteArray.hex)",
+          "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000fd000000020000000200000384000001c2fc0100000002fc000000000000038400000384000003e8fa000000000200000002fb00000056007200710074005f00640072006f006e0065005f00740065006c0065006f0070005f005f00560065006c00540065006c0065006f0070005f005f0031005f005f00560065006c00540065006c0065006f007000550069010000015d000002be000001a5000003fdfb00000056007200710074005f00640072006f006e0065005f00740065006c0065006f0070005f005f0050006f007300540065006c0065006f0070005f005f0031005f005f0050006f007300540065006c0065006f0070005500690100000000ffffffff00000155000003fdfb00000056007200710074005f00640072006f006e0065005f00740065006c0065006f0070005f005f00430061006d005600690065007700650072005f005f0031005f005f00430061006d005600690065007700650072005500690100000000000002da00000000000000000000000300000384000001a2fc0100000001fb00000056007200710074005f00640072006f006e0065005f00740065006c0065006f0070005f005f00560065006c00540065006c0065006f0070005f005f0032005f005f00560065006c00540065006c0065006f0070005500690100000000000003840000000000000000000003840000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')",
+          "pretty-print": "                                                                            ]                                                         U                                                                                                                                                                               "
+        }
+      },
+      "groups": {
+        "toolbar_areas": {
+          "keys": {
+            "MinimizedDockWidgetsToolbar": {
+              "type": "repr",
+              "repr": "8"
+            }
+          },
+          "groups": {}
+        }
+      }
+    }
+  }
+}
