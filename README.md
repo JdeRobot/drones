@@ -21,7 +21,7 @@ sudo apt-get install ros-melodic-drone-wrapper ros-melodic-rqt-drone-teleop ros-
 ```
 If you just need one of the packages instead of all, you can install it separately.
 
-### ROS Knetic
+### ROS Kinetic
 
 The kinetic development has reached its End Of Life (EOL) but can still be installed using the command:
 
@@ -31,11 +31,14 @@ sudo apt-get install ros-kinetic-drone-wrapper ros-kinetic-rqt-drone-teleop
 
 ## ROS Distro Support
 
-|         | Kinetic | Melodic |
-| ----- | ----- | ----- |
-| Branch  | [`1.0.1`](https://github.com/JdeRobot/drones/tree/3121c69db0901d5031450bbbd05a8aa4f3f3f341) | [`master`](https://github.com/JdeRobot/drones/tree/master/) |
-| Status  |  EOL | supported |
-| Version | [version](http://repositories.ros.org/status_page/ros_kinetic_default.html?q=jderobot_drones) | [version](http://repositories.ros.org/status_page/ros_melodic_default.html?q=jderobot_drones)
+|         | Noetic | Melodic | Kinetic |
+| ------- | ------ | ------- | ------- |
+| Branch  | - | [`melodic-devel`](https://github.com/JdeRobot/drones/tree/melodic-devel) | [`1.0.1`](https://github.com/JdeRobot/drones/tree/3121c69db0901d5031450bbbd05a8aa4f3f3f341) |
+| Status  | WIP | supported | EOL |
+| Version | -<sup>1</sup> | [1.3.2](http://repositories.ros.org/status_page/ros_melodic_default.html?q=jderobot_drones)<sup>2</sup> | [1.0.1](http://repositories.ros.org/status_page/ros_kinetic_default.html?q=jderobot_drones) |
+
+<sup>1</sup> _Noetic versions: 1.4.X_ --
+<sup>2</sup> _Melodic versions: 1.3.X_
 
 ## ROS Buildfarm
 
