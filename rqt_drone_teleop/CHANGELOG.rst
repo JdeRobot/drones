@@ -2,8 +2,8 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.4 (2020-06-28)
+------------------
 * Added perspectives
 * READMEs updated
 * Added new GUI screenshots
