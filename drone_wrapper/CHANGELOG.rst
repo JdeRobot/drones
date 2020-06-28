@@ -2,6 +2,9 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.3.3 (2020-06-10)
 ------------------
 * Added get_velocity() and get_yaw_rate()

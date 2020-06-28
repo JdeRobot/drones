@@ -2,6 +2,13 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added perspectives
+* READMEs updated
+* Added new GUI screenshots
+* Contributors: pariaspe
+
 1.3.3 (2020-06-10)
 ------------------
 * Takeoff button disabled until landed state is defined (drone is ready).
