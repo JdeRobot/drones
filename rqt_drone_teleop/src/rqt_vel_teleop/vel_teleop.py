@@ -14,13 +14,19 @@ from python_qt_binding.QtCore import pyqtSignal, Qt
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Pose, PoseStamped, Twist, TwistStamped
 from mavros_msgs.msg import ExtendedState
+from nav_msgs.msg import Odometry
 
 from teleopWidget import TeleopWidget
 from sensorsWidget import SensorsWidget
 
+from tello_driver.msg import TelloStatus
+
 
 class VelTeleop(Plugin):
 	def __init__(self, context):
+		global drone_model
+		drone_model = rospy.get_param('drone_model', 'IRIS_PX4_SITL')		
+
 		super(VelTeleop, self).__init__(context)
 		# Give QObjects reasonable names
 		self.setObjectName('VelTeleop')
@@ -81,6 +87,7 @@ class VelTeleop(Plugin):
 
 		# Add global variables
 		self.extended_state = ExtendedState()
+		self.tello_status = TelloStatus()
 		self.shared_twist_msg = Twist()
 		self.current_pose = Pose()
 		self.pose_frame = ''
@@ -109,10 +116,16 @@ class VelTeleop(Plugin):
 		# Add widget to the user interface
 		context.add_widget(self._widget)
 
-		# Add Subscribers
-		rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
-		rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
-		rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
+		# Add Subscribers (different for each model)
+		if drone_model == 'IRIS_PX4_SITL':
+			rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
+			rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
+			rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
+		
+		elif drone_model == 'TELLO_REAL':
+			rospy.Subscriber('tello/odom', Odometry, self.pose_stamped_cb)
+			rospy.Subscriber('tello/odom', Odometry, self.twist_stamped_cb)
+			rospy.Subscriber('tello/status', TelloStatus, self.extended_state_cb)
 
 		# Add Timer
 		self.update_status_info()
@@ -124,13 +137,28 @@ class VelTeleop(Plugin):
 			self.sensors_widget.hide()
 
 	def pose_stamped_cb(self, msg):
-		self.current_pose = msg.pose
-		self.pose_frame = msg.header.frame_id
+		global drone_model		
+		
+		if drone_model == 'IRIS_PX4_SITL':		
+			self.current_pose = msg.pose
+			self.pose_frame = msg.header.frame_id
+		
+		elif drone_model == 'TELLO_REAL':		
+			self.current_pose = msg.pose.pose
+			self.pose_frame = msg.header.frame_id
+		
 		self.sensors_widget.sensorsUpdate.emit()
 
 	def twist_stamped_cb(self, msg):
-		self.current_twist = msg.twist
-		self.twist_frame = msg.header.frame_id
+		global drone_model		
+		
+		if drone_model == 'IRIS_PX4_SITL':			
+			self.current_twist = msg.twist
+			self.twist_frame = msg.header.frame_id
+		
+		elif drone_model == 'TELLO_REAL':		
+			self.current_twist = msg.twist.twist
+			self.twist_frame = msg.header.frame_id
 
 	def update_status_info(self):
 		threading.Timer(0.5, self.update_status_info).start()
@@ -154,17 +182,35 @@ class VelTeleop(Plugin):
 		self._widget.velFrame.setText(str(frame))
 
 	def extended_state_cb(self, msg):
-		if self.extended_state.landed_state != msg.landed_state:
-			self.extended_state = msg
-			if self.extended_state.landed_state == 1:  # ON GROUND
-				self._widget.takeoffButton.setText("Take Off")
-			elif self.extended_state.landed_state == 2:  # IN AIR
-				self._widget.takeoffButton.setText("Land")
+		global drone_model		
+		
+		if drone_model == 'IRIS_PX4_SITL':
+			if self.extended_state.landed_state != msg.landed_state:
+				self.extended_state = msg
+				if self.extended_state.landed_state == 1:  # ON GROUND
+					self._widget.takeoffButton.setText("Take Off")
+				elif self.extended_state.landed_state == 2:  # IN AIR
+					self._widget.takeoffButton.setText("Land")
+		
+		elif drone_model == 'TELLO_REAL':		
+			#self._widget.takeoffButton.setText("Takeoff/Land")			
+			if self.tello_status.is_flying != msg.is_flying:
+				self.tello_status = msg
+				if self.tello_status.is_flying == False:  # ON GROUND
+					self._widget.takeoffButton.setText("Take Off")
+				elif self.tello_status.is_flying == True:  # IN AIR
+					self._widget.takeoffButton.setText("Land")
+
 
 	def call_takeoff_land(self):
-		if self.extended_state.landed_state == 0:  # UNDEFINED --> not ready
-			self._widget.term_out.append('Drone not ready')
-			return
+		global drone_model		
+		
+		if drone_model == 'IRIS_PX4_SITL':	
+			if self.extended_state.landed_state == 0:  # UNDEFINED --> not ready
+				self._widget.term_out.append('Drone not ready')
+				return
+		#elif drone_model == 'TELLO_REAL':
+			# Do nothing 
 
 		if self.takeoff == True:
 			rospy.loginfo('Landing')

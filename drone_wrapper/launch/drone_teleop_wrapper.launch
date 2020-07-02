@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- PX4 param config -->
+    <arg name="config" default="$(find drone_wrapper)/launch/basic_config.yml"/>
+    <arg name="drone_model" default="IRIS_PX4_SITL"/>
+
+    <!-- LOAD DRONE MODEL as PARAM -->
+    <param name="drone_model" type="str" value="$(arg drone_model)" />
+
+    <!-- CHANGE PARAMETERS IN PX4 -->
+    <!-- <node name="my_params" pkg="drone_wrapper" type="load_parameters" args="$(arg config)"/> -->
+
+    <!-- GUI DRONE TELEOP -->
+    <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui" respawn="false" output="screen" args="--perspective-file $(find jderobot_assets)/perspectives/drone_teleop_vel.perspective"/>
+
+    <!-- DRONE WRAPPER NODE -->  
+    <node pkg="drone_wrapper" type="gui_wrapper_connector.py" name="gui_wrapper_connector"  output="screen"/>  
+    <!-- OLD alternative -->  
+    <!-- <node name="drone_wrapper" pkg="drone_wrapper" type="play_python_code" output="screen" args="$(arg file_name)"/> --> 
+
+</launch>
