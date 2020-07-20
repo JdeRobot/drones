@@ -297,10 +297,11 @@ class DroneWrapper():
         self.land_client(req)
 
     def __init__(self, name = 'drone', verbose = False):
-        if verbose:
-            rospy.init_node(name, anonymous = True, log_level = rospy.DEBUG)
-        else:
-            rospy.init_node(name)
+        if name != 'rqt':
+            if verbose:
+                rospy.init_node(name, anonymous = True, log_level = rospy.DEBUG)
+            else:
+                rospy.init_node(name)
 
         self.state = State()
         self.extended_state = ExtendedState()

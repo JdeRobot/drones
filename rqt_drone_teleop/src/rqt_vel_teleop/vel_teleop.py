@@ -18,6 +18,10 @@ from mavros_msgs.msg import ExtendedState
 from teleopWidget import TeleopWidget
 from sensorsWidget import SensorsWidget
 
+from drone_wrapper.drone_wrapper_class import DroneWrapper
+
+drone = DroneWrapper(name='rqt')
+
 
 class VelTeleop(Plugin):
 	def __init__(self, context):
@@ -75,9 +79,7 @@ class VelTeleop(Plugin):
 		self._widget.stopButton.clicked.connect(self.stop_drone)
 
 		# Add Publishers
-		self.takeoff_pub = rospy.Publisher('gui/takeoff_land', Bool, queue_size=1)
 		self.play_stop_pub = rospy.Publisher('gui/play_stop', Bool, queue_size=1)
-		self.twist_pub = rospy.Publisher('gui/twist', Twist, queue_size=1)
 
 		# Add global variables
 		self.extended_state = ExtendedState()
@@ -169,12 +171,14 @@ class VelTeleop(Plugin):
 		if self.takeoff == True:
 			rospy.loginfo('Landing')
 			self._widget.term_out.append('Landing')
-			self.takeoff_pub.publish(Bool(False))
+			global drone
+			drone.land()
 			self.takeoff = False
 		else:
 			rospy.loginfo('Taking off')
 			self._widget.term_out.append('Taking off')
-			self.takeoff_pub.publish(Bool(True))
+			global drone
+			drone.takeoff()
 			self.takeoff = True
 
 	def call_play(self):
@@ -204,7 +208,9 @@ class VelTeleop(Plugin):
 			self.call_play()
 		for i in range(5):
 			self.shared_twist_msg = Twist()
-			self.twist_pub.publish(self.shared_twist_msg)
+			global drone
+			drone.set_cmd_vel(self.shared_twist_msg.linear.x, self.shared_twist_msg.linear.y,
+							  self.shared_twist_msg.linear.z, self.shared_twist_msg.angular.z)
 			rospy.sleep(0.05)
 
 	def set_linear_xy(self, u, v):
@@ -215,7 +221,10 @@ class VelTeleop(Plugin):
 		rospy.logdebug('Stick 2 value changed to - x: %.2f y: %.2f', x, y)
 		self.shared_twist_msg.linear.x = x
 		self.shared_twist_msg.linear.y = y
-		self.twist_pub.publish(self.shared_twist_msg)
+
+		global drone
+		drone.set_cmd_vel(self.shared_twist_msg.linear.x, self.shared_twist_msg.linear.y,
+						  self.shared_twist_msg.linear.z, self.shared_twist_msg.angular.z)
 
 	def set_alt_yawrate(self, u, v):
 		az = -self.vertical_velocity_scaling_factor * u
@@ -225,7 +234,10 @@ class VelTeleop(Plugin):
 		rospy.logdebug('Stick 1 value changed to - az: %.2f z: %.2f', az, z)
 		self.shared_twist_msg.linear.z = z
 		self.shared_twist_msg.angular.z = az
-		self.twist_pub.publish(self.shared_twist_msg)
+
+		global drone
+		drone.set_cmd_vel(self.shared_twist_msg.linear.x, self.shared_twist_msg.linear.y,
+						  self.shared_twist_msg.linear.z, self.shared_twist_msg.angular.z)
 
 	def shutdown_plugin(self):
 		# TODO unregister all publishers here
