@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
 	rqt_gui
 	rqt_gui_py
 	sensor_msgs
+	drone_wrapper
 )
 
 catkin_python_setup()
