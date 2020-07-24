@@ -99,9 +99,9 @@ class PosTeleop(Plugin):
         context.add_widget(self._widget)
 
         # Add Subscribers
-        rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
-        rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
-        rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
+        rospy.Subscriber('drone_wrapper/local_position/pose', PoseStamped, self.pose_stamped_cb)
+        rospy.Subscriber('drone_wrapper/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
+        rospy.Subscriber('drone_wrapper/extended_state', ExtendedState, self.extended_state_cb)
 
         # Add Timer
         self.update_status_info()
