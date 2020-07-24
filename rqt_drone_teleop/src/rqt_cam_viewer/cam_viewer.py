@@ -54,11 +54,11 @@ class CamViewer(Plugin):
 
 		self.bridge = CvBridge()
 
-		# Add Subscibers
-		cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
-		cam_ventral_topic = rospy.get_param('cam_ventral_topic', '/iris/cam_ventral/image_raw')
-		rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
-		rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
+		# Add Subscribers
+		# cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
+		# cam_ventral_topic = rospy.get_param('cam_ventral_topic', '/iris/cam_ventral/image_raw')
+		rospy.Subscriber('drone_wrapper/cam_frontal/image_raw', Image, self.cam_frontal_cb)
+		rospy.Subscriber('drone_wrapper/cam_ventral/image_raw', Image, self.cam_ventral_cb)
 		rospy.Subscriber('interface/filtered_img', Image, self.filtered_img_cb)
 		rospy.Subscriber('interface/threshed_img', Image, self.threshed_img_cb)
 
