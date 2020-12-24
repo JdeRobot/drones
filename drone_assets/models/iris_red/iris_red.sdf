@@ -43,7 +43,7 @@
         </geometry>
         <material>
           <script>
-            <name>Gazebo/DarkGrey</name>
+            <name>Gazebo/Red</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
         </material>
@@ -126,7 +126,7 @@
         </geometry>
         <material>
           <script>
-            <name>Gazebo/Blue</name>
+            <name>Gazebo/Red</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
         </material>
@@ -192,7 +192,7 @@
         </geometry>
         <material>
           <script>
-            <name>Gazebo/DarkGrey</name>
+            <name>Gazebo/Red</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
         </material>
@@ -258,7 +258,7 @@
         </geometry>
         <material>
           <script>
-            <name>Gazebo/Blue</name>
+            <name>Gazebo/Red</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
         </material>
@@ -324,7 +324,7 @@
         </geometry>
         <material>
           <script>
-            <name>Gazebo/DarkGrey</name>
+            <name>Gazebo/Red</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
         </material>
@@ -347,206 +347,6 @@
           <spring_stiffness>0</spring_stiffness>
         </dynamics>
         <use_parent_model_frame>1</use_parent_model_frame>
-      </axis>
-    </joint>
-
-    <link name='cam_frontal'>
-      <pose>0.124 0 0 0 -0 0</pose>
-      <inertial>
-        <mass>0.015</mass>
-        <inertia>
-          <ixx>4.15e-6</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>2.407e-6</iyy>
-          <iyz>0</iyz>
-          <izz>2.407e-6</izz>
-        </inertia>
-      </inertial>
-      <collision name='cam_frontal_collision'>
-        <geometry>
-          <box>
-            <size>0.01 0.01 0.01</size>
-          </box>
-        </geometry>
-        <max_contacts>10</max_contacts>
-        <surface>
-          <contact>
-            <ode/>
-          </contact>
-          <bounce/>
-          <friction>
-            <ode/>
-          </friction>
-        </surface>
-      </collision>
-      <visual name='cam_frontal_visual'>
-        <geometry>
-          <box>
-            <size>0.01 0.01 0.01</size>
-          </box>
-        </geometry>
-      </visual>
-      <sensor name='camera' type='camera'>
-        <camera name='cam_frontal'>
-          <horizontal_fov>1.047</horizontal_fov>
-          <image>
-            <width>320</width>
-            <height>240</height>
-          </image>
-          <clip>
-            <near>0.1</near>
-            <far>100</far>
-          </clip>
-          <lens>
-            <type>custom</type>
-            <custom_function>
-              <c1>1.05</c1>
-              <c2>4</c2>
-              <f>1</f>
-              <fun>tan</fun>
-            </custom_function>
-            <scale_to_hfov>1</scale_to_hfov>
-            <cutoff_angle>3.1415</cutoff_angle>
-            <env_texture_size>1080</env_texture_size>
-          </lens>
-        </camera>
-        <always_on>1</always_on>
-        <update_rate>30</update_rate>
-        <visualize>1</visualize>
-        <plugin name='camera_plugin' filename='libgazebo_ros_camera.so'>
-          <robotNamespace></robotNamespace>
-          <alwaysOn>true</alwaysOn>
-          <imageTopicName>image_raw</imageTopicName>
-          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-          <updateRate>30.0</updateRate>
-          <cameraName>cam_frontal</cameraName>
-          <frameName>/cam_frontal_link</frameName>
-          <CxPrime>320.5</CxPrime>
-          <Cx>320.5</Cx>
-          <Cy>240.5</Cy>
-          <hackBaseline>0</hackBaseline>
-          <focalLength>277.191356</focalLength>
-          <distortionK1>0.0</distortionK1>
-          <distortionK2>0.0</distortionK2>
-          <distortionK3>0.0</distortionK3>
-          <distortionT1>0.0</distortionT1>
-          <distortionT2>0.0</distortionT2>
-        </plugin>
-      </sensor>
-      <self_collide>0</self_collide>
-      <kinematic>0</kinematic>
-    </link>
-
-    <joint name="cam_frontal_joint" type="fixed">
-      <child>cam_frontal</child>
-      <parent>base_link</parent>
-      <axis>
-        <xyz>0 0 1</xyz>
-        <limit>
-          <upper>0</upper>
-          <lower>0</lower>
-        </limit>
-      </axis>
-    </joint>
-
-    <link name='cam_ventral'>
-      <pose>0 0 -0.037 0 1.57 0</pose>
-      <inertial>
-        <mass>0.015</mass>
-        <inertia>
-          <ixx>4.15e-6</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>2.407e-6</iyy>
-          <iyz>0</iyz>
-          <izz>2.407e-6</izz>
-        </inertia>
-      </inertial>
-      <collision name='cam_ventral_collision'>
-        <geometry>
-          <box>
-            <size>0.01 0.01 0.01</size>
-          </box>
-        </geometry>
-        <max_contacts>10</max_contacts>
-        <surface>
-          <contact>
-            <ode/>
-          </contact>
-          <bounce/>
-          <friction>
-            <ode/>
-          </friction>
-        </surface>
-      </collision>
-      <visual name='cam_ventral_visual'>
-        <geometry>
-          <box>
-            <size>0.01 0.01 0.01</size>
-          </box>
-        </geometry>
-      </visual>
-      <sensor name='camera' type='camera'>
-        <camera name='cam_ventral'>
-          <horizontal_fov>1.047</horizontal_fov>
-          <image>
-            <width>320</width>
-            <height>240</height>
-          </image>
-          <clip>
-            <near>0.1</near>
-            <far>100</far>
-          </clip>
-          <lens>
-            <type>custom</type>
-            <custom_function>
-              <c1>1.05</c1>
-              <c2>4</c2>
-              <f>1</f>
-              <fun>tan</fun>
-            </custom_function>
-            <scale_to_hfov>1</scale_to_hfov>
-            <cutoff_angle>3.1415</cutoff_angle>
-            <env_texture_size>1080</env_texture_size>
-          </lens>
-        </camera>
-        <always_on>1</always_on>
-        <update_rate>30</update_rate>
-        <visualize>1</visualize>
-        <plugin name='camera_plugin' filename='libgazebo_ros_camera.so'>
-          <robotNamespace></robotNamespace>
-          <alwaysOn>true</alwaysOn>
-          <imageTopicName>image_raw</imageTopicName>
-          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-          <updateRate>30.0</updateRate>
-          <cameraName>cam_ventral</cameraName>
-          <frameName>/cam_ventral_link</frameName>
-          <CxPrime>320.5</CxPrime>
-          <Cx>320.5</Cx>
-          <Cy>240.5</Cy>
-          <hackBaseline>0</hackBaseline>
-          <focalLength>277.191356</focalLength>
-          <distortionK1>0.0</distortionK1>
-          <distortionK2>0.0</distortionK2>
-          <distortionK3>0.0</distortionK3>
-          <distortionT1>0.0</distortionT1>
-          <distortionT2>0.0</distortionT2>
-        </plugin>
-      </sensor>
-      <self_collide>0</self_collide>
-      <kinematic>0</kinematic>
-    </link>
-    
-    <joint name="cam_ventral_joint" type="fixed">
-      <child>cam_ventral</child>
-      <parent>base_link</parent>
-      <axis>
-        <xyz>0 0 1</xyz>
-        <limit>
-          <upper>0</upper>
-          <lower>0</lower>
-        </limit>
       </axis>
     </joint>
 
