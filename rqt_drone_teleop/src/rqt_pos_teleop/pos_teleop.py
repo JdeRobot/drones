@@ -161,7 +161,6 @@ class PosTeleop(Plugin):
 
             global drone
             drone.land()
-            # self.takeoff_pub.publish(Bool(False))
             self.takeoff = False
         else:
             rospy.loginfo('Taking off')
@@ -169,7 +168,6 @@ class PosTeleop(Plugin):
 
             global drone
             drone.takeoff()
-            # self.takeoff_pub.publish(Bool(True))
             self.takeoff = True
 
     def stop_drone(self):
@@ -183,7 +181,6 @@ class PosTeleop(Plugin):
             global drone
             drone.set_cmd_vel(self.shared_twist_msg.linear.x, self.shared_twist_msg.linear.y,
                               self.shared_twist_msg.linear.z, self.shared_twist_msg.angular.z)
-            # self.twist_pub.publish(self.shared_twist_msg)
             rospy.sleep(0.05)
 
     def call_play(self):
@@ -216,7 +213,6 @@ class PosTeleop(Plugin):
 
         global drone
         drone.set_cmd_pos(self.shared_pose_msg.position.x, self.shared_pose_msg.position.y, self.shared_pose_msg.position.z)
-        # self.pose_pub.publish(self.shared_pose_msg)
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here
