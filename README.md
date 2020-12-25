@@ -5,6 +5,7 @@ This repository contains all the code relevant to the drone exercises in the Jde
 - `drone_wrapper`: Wrapper of the drone that extends its functionalities.
 - `rqt_drone_teleop`: RQT GUI to teleoperate drones.
 - `rqt_ground_robot_teleop`: RQT GUI to teleoperate ground robots.
+- `drone_assets`: Assets needed in Academy exercises.
 
 ## Usage
 
