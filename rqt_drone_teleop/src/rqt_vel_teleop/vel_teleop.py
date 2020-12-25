@@ -163,6 +163,14 @@ class VelTeleop(Plugin):
 			elif self.extended_state.landed_state == 2:  # IN AIR
 				self._widget.takeoffButton.setText("Land")
 
+	def takeoff_drone(self):
+		try:
+			global drone
+			drone.takeoff()
+			self.takeoff = True
+		finally:
+			rospy.loginfo('Takeoff finished')
+
 	def call_takeoff_land(self):
 		if self.extended_state.landed_state == 0:  # UNDEFINED --> not ready
 			self._widget.term_out.append('Drone not ready')
@@ -177,9 +185,9 @@ class VelTeleop(Plugin):
 		else:
 			rospy.loginfo('Taking off')
 			self._widget.term_out.append('Taking off')
-			global drone
-			drone.takeoff()
-			self.takeoff = True
+			x = threading.Thread(target=self.takeoff_drone)
+			x.daemon = True
+			x.start()
 
 	def call_play(self):
 		if not self.play_code_flag:
