@@ -2,8 +2,8 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.5 (2020-12-29)
+------------------
 * Added drone_assets dependency
 * Contributors: pariaspe
 

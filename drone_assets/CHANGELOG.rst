@@ -2,8 +2,8 @@
 Changelog for package drone_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.5 (2020-12-29)
+------------------
 * New drone_assets pkg replacing old jderobot_assets pkg.
 * Fixed new iris models. Added iris base and iris dual cam.
 * Added models and urdf. CMakeLists and package.xml created.
