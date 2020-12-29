@@ -2,6 +2,15 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Removed RQT dependencies with subscribers and topics. These topics are now throttled by new drone_wrapper topics. This allows to make the RQT independent to the kind of drone connected.
+* Template dependency removed from rqt_drone_teleop. The template callbacks are no longer required to send commands to the drone. The command flow goes directly from the rqt to the drone wrapper without passing through the exercise template.
+* New drone_assets pkg replacing old jderobot_assets pkg.
+* Removed RQT dependencies with subscribers and topics. These topics are now throttled by new drone_wrapper topics. This allows to make the RQT independent to the kind of drone connected.
+* Template dependency removed from rqt_drone_teleop. The template callbacks are no longer required to send commands to the drone. The command flow goes directly from the rqt to the drone wrapper without passing through the exercise template.
+* Contributors: pariaspe
+
 1.3.4 (2020-06-28)
 ------------------
 
