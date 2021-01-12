@@ -2,8 +2,8 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.6 (2021-01-12)
+------------------
 * Fixing iris models.
 * Fixing jenkins build.
 * Contributors: pariaspe
