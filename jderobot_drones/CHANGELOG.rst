@@ -2,6 +2,12 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixing iris models.
+* Fixing jenkins build.
+* Contributors: pariaspe
+
 1.3.5 (2020-12-29)
 ------------------
 * Added drone_assets dependency
