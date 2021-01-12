@@ -2,6 +2,9 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.3.5 (2020-12-29)
 ------------------
 * Removed RQT dependencies with subscribers and topics. These topics are now throttled by new drone_wrapper topics. This allows to make the RQT independent to the kind of drone connected.

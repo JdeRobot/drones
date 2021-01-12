@@ -2,6 +2,11 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* New setup.py. Fixing jenkins-build fail.
+* Contributors: pariaspe
+
 1.3.5 (2020-12-29)
 ------------------
 * Freeze fixed using python threadings. Might be improved using a ROS-based solution.

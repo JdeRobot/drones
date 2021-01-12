@@ -2,6 +2,12 @@
 Changelog for package drone_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Removed duplicated jderobot logo
+* Iris models updated
+* Contributors: pariaspe
+
 1.3.5 (2020-12-29)
 ------------------
 * New drone_assets pkg replacing old jderobot_assets pkg.
