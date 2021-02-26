@@ -15,7 +15,7 @@ EPSILON = 0.01
 CMD = None
 
 
-class DroneWrapper():
+class DroneWrapper:
     def state_cb(self, msg):
         self.state = msg
         rospy.logdebug('State updated')
@@ -69,16 +69,23 @@ class DroneWrapper():
         return self.bridge.imgmsg_to_cv2(self.ventral_image)
 
     def get_position(self):
-        return np.array([self.pose_stamped.pose.position.x, self.pose_stamped.pose.position.y, self.pose_stamped.pose.position.z])
+        return np.array([self.pose_stamped.pose.position.x,
+                         self.pose_stamped.pose.position.y,
+                         self.pose_stamped.pose.position.z])
 
     def get_velocity(self):
-        return np.array([self.vel_body_stamped.twist.linear.x, self.vel_body_stamped.twist.linear.y, self.vel_body_stamped.twist.linear.z])
+        return np.array([self.vel_body_stamped.twist.linear.x,
+                         self.vel_body_stamped.twist.linear.y,
+                         self.vel_body_stamped.twist.linear.z])
 
     def get_yaw_rate(self):
         return self.vel_body_stamped.twist.angular.z
 
     def get_orientation(self):
-        return np.array(tf.transformations.euler_from_quaternion([self.pose_stamped.pose.orientation.x, self.pose_stamped.pose.orientation.y, self.pose_stamped.pose.orientation.z, self.pose_stamped.pose.orientation.w]))
+        return np.array(tf.transformations.euler_from_quaternion([self.pose_stamped.pose.orientation.x,
+                                                                  self.pose_stamped.pose.orientation.y,
+                                                                  self.pose_stamped.pose.orientation.z,
+                                                                  self.pose_stamped.pose.orientation.w]))
 
     def get_roll(self):
         return self.get_orientation()[0]
@@ -98,9 +105,9 @@ class DroneWrapper():
         else:
             val = ParamValue(integer=value, real=0.0)
 
-        rospy.wait_for_service('/mavros/param/set')
+        rospy.wait_for_service(self.ns + '/mavros/param/set')
         try:
-            set_param = rospy.ServiceProxy('/mavros/param/set', ParamSet)
+            set_param = rospy.ServiceProxy(self.ns + '/mavros/param/set', ParamSet)
             resp = set_param(param_id=param, value=val)
             print("setmode send ok", resp.success)
         except rospy.ServiceException as e:
@@ -108,7 +115,7 @@ class DroneWrapper():
 
     def param_get(self, param):
         try:
-            get_param = rospy.ServiceProxy('mavros/param/get', ParamGet)
+            get_param = rospy.ServiceProxy(self.ns + 'mavros/param/get', ParamGet)
             resp = get_param(param_id=param)
             print("setmode send ok", resp.success)
         except rospy.ServiceException as e:
@@ -122,7 +129,7 @@ class DroneWrapper():
         else:
             return 0
 
-    def arm(self, value = True):
+    def arm(self, value=True):
         req = CommandBoolRequest()
         req.value = value
         if self.arm_client(req).success:
@@ -132,7 +139,7 @@ class DroneWrapper():
             rospy.logwarn('Arming/Disarming unsuccessful')
             return False
 
-    def request_mode(self, mode = 'OFFBOARD'):
+    def request_mode(self, mode='OFFBOARD'):
         rospy.sleep(2)
         rospy.loginfo('Current mode: %s', self.state.mode)
         req = SetModeRequest()
@@ -302,12 +309,13 @@ class DroneWrapper():
         req.longitude = self.global_position.longitude
         self.land_client(req)
 
-    def __init__(self, name = 'drone', verbose = False):
+    def __init__(self, name='drone', ns='', verbose=False):
         if name != 'rqt':
             if verbose:
-                rospy.init_node(name, anonymous = True, log_level = rospy.DEBUG)
+                rospy.init_node(name, anonymous=True, log_level=rospy.DEBUG)
             else:
                 rospy.init_node(name)
+        self.ns = ns
 
         self.state = State()
         self.extended_state = ExtendedState()
@@ -334,27 +342,33 @@ class DroneWrapper():
         self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(5), self.stay_armed_stay_offboard_cb)
         self.stay_armed_stay_offboard_timer.shutdown()
 
-        rospy.wait_for_service('mavros/cmd/arming')
-        self.arm_client = rospy.ServiceProxy('mavros/cmd/arming', CommandBool)
-        rospy.wait_for_service('mavros/set_mode')
-        self.mode_client = rospy.ServiceProxy('mavros/set_mode', SetMode)
-        rospy.wait_for_service('mavros/cmd/land')
-        self.land_client = rospy.ServiceProxy('mavros/cmd/land', CommandTOL)
+        rospy.wait_for_service(self.ns + 'mavros/cmd/arming')
+        self.arm_client = rospy.ServiceProxy(ns + 'mavros/cmd/arming', CommandBool)
+        rospy.wait_for_service(self.ns + 'mavros/set_mode')
+        self.mode_client = rospy.ServiceProxy(ns + 'mavros/set_mode', SetMode)
+        rospy.wait_for_service(self.ns + 'mavros/cmd/land')
+        self.land_client = rospy.ServiceProxy(ns + 'mavros/cmd/land', CommandTOL)
 
-        self.rqt_extended_state_publisher = rospy.Publisher('drone_wrapper/extended_state', ExtendedState, queue_size=1)
-        self.rqt_pose_publisher = rospy.Publisher('drone_wrapper/local_position/pose', PoseStamped, queue_size=1)
-        self.rqt_velocity_body_publisher = rospy.Publisher('drone_wrapper/local_position/velocity_body', TwistStamped, queue_size=1)
-        self.rqt_cam_frontal_publisher = rospy.Publisher('drone_wrapper/cam_frontal/image_raw', Image, queue_size=1)
-        self.rqt_cam_ventral_publisher = rospy.Publisher('drone_wrapper/cam_ventral/image_raw', Image, queue_size=1)
+        self.rqt_extended_state_publisher = rospy.Publisher(self.ns + 'drone_wrapper/extended_state', ExtendedState,
+                                                            queue_size=1)
+        self.rqt_pose_publisher = rospy.Publisher(self.ns + 'drone_wrapper/local_position/pose', PoseStamped,
+                                                  queue_size=1)
+        self.rqt_velocity_body_publisher = rospy.Publisher(self.ns + 'drone_wrapper/local_position/velocity_body',
+                                                           TwistStamped, queue_size=1)
+        self.rqt_cam_frontal_publisher = rospy.Publisher(self.ns + 'drone_wrapper/cam_frontal/image_raw', Image,
+                                                         queue_size=1)
+        self.rqt_cam_ventral_publisher = rospy.Publisher(self.ns + 'drone_wrapper/cam_ventral/image_raw', Image,
+                                                         queue_size=1)
 
-        rospy.Subscriber('mavros/state', State, self.state_cb)
-        rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
-        rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
-        rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.vel_body_stamped_cb)
-        rospy.Subscriber('mavros/global_position/global', NavSatFix, self.global_position_cb)
+        rospy.Subscriber(self.ns + 'mavros/state', State, self.state_cb)
+        rospy.Subscriber(self.ns + 'mavros/extended_state', ExtendedState, self.extended_state_cb)
+        rospy.Subscriber(self.ns + 'mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
+        rospy.Subscriber(self.ns + 'mavros/local_position/velocity_body', TwistStamped, self.vel_body_stamped_cb)
+        rospy.Subscriber(self.ns + 'mavros/global_position/global', NavSatFix, self.global_position_cb)
         cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
         cam_ventral_topic = rospy.get_param('cam_ventral_topic', '/iris/cam_ventral/image_raw')
         rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
         rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
 
-        self.setpoint_raw_publisher = rospy.Publisher('mavros/setpoint_raw/local', PositionTarget, queue_size=1)
+        self.setpoint_raw_publisher = rospy.Publisher(self.ns + 'mavros/setpoint_raw/local', PositionTarget,
+                                                      queue_size=1)
