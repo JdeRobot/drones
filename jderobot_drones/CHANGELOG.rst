@@ -2,6 +2,11 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* New version of drone_wrapper compatible with web templates.
+* Contributors: pariaspe
+
 1.3.6 (2021-01-12)
 ------------------
 * Fixing iris models.

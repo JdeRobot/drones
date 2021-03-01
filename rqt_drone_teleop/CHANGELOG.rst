@@ -2,6 +2,9 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.3.6 (2021-01-12)
 ------------------
 * New setup.py. Fixing jenkins-build fail.

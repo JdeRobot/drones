@@ -2,6 +2,11 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added namespace to topics and services
+* Contributors: pariaspe
+
 1.3.6 (2021-01-12)
 ------------------
 
