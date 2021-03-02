@@ -46,6 +46,7 @@ which xxd || sudo apt install xxd -y || sudo apt-get install vim-common --no-ins
 ```
 
 5. Required python packages
+
 Install Python 3 pip build dependencies first
 ```bash
 sudo pip3 install wheel setuptools
