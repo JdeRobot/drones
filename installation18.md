@@ -36,7 +36,8 @@ sudo apt-get remove modemmanager
 ```
 sudo apt-get update -y
 sudo apt-get install git zip qtcreator cmake \
-    build-essential genromfs ninja-build exiftool -y
+    build-essential genromfs ninja-build exiftool \
+    python-pip python-dev -y
 ```
 
 4. Install xxd
@@ -45,13 +46,27 @@ which xxd || sudo apt install xxd -y || sudo apt-get install vim-common --no-ins
 ```
 
 5. Required python packages
+Install Python 3 pip build dependencies first
+```bash
+sudo pip3 install wheel setuptools
 ```
-sudo apt-get install python-argparse \
-    python-empy python-toml python-numpy python-yaml \
-    python-dev python-pip -y
-sudo -H pip install --upgrade pip 
-sudo -H pip install pandas jinja2 pyserial cerberus
-sudo -H pip install pyulog
+
+Python 3 dependencies installed by pip
+```bash
+sudo pip3 install argparse argcomplete coverage cerberus empy jinja2 \
+                    matplotlib==3.0.* numpy nunavut packaging pkgconfig pyros-genmsg pyulog \
+                    pyyaml requests serial six toml psutil pyulog wheel
+
+```
+
+Install everything again for Python 2 because we could not get Firmware to compile using catkin without it.
+```bash
+sudo pip install --upgrade pip 
+sudo pip install wheel setuptools
+sudo pip install argcomplete argparse catkin_pkg catkin-tools cerberus coverage \
+    empy jinja2 matplotlib==2.2.* numpy pkgconfig px4tools pygments pymavlink \
+    packaging pyros-genmsg pyulog pyyaml requests rosdep rospkg serial six toml \
+    pandas pyserial
 ```
 
 6. Install ninja
