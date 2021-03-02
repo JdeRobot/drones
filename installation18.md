@@ -193,8 +193,9 @@ The traceback for the exception was written to the log file
 Make sure to export correctly all the envvars. You can use `rospack find <pkg>` to check if a ros package is well installed.
 
 ## Problem with OpenCV
-You might see something like: `rqt_gui process has died`. 
-Make sure that OpenCv version is 3.2.0. Opencv have to be installed with `sudo apt-get install python3-opencv`. Do not install opencv with pip.
+If you have seen something like: `rqt_gui process has died`, you should check that your opencv version is correct.
+
+Make sure that OpenCv version is 3.2.0. Besides, opencv have to be installed with `sudo apt-get install python-opencv`. Do not install opencv with pip.
 
 You can check opencv version with:
 
