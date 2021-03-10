@@ -15,6 +15,11 @@ from mavros_msgs.msg import ExtendedState
 
 from sensorsWidget import SensorsWidget
 
+from drone_wrapper.drone_wrapper_class import DroneWrapper
+
+drone = DroneWrapper(name='rqt')
+
+
 class PosTeleop(Plugin):
 
     def __init__(self, context):
@@ -68,10 +73,7 @@ class PosTeleop(Plugin):
         self._widget.posControlButton.clicked.connect(self.set_pos)
 
         # Add Publishers
-        self.takeoff_pub = rospy.Publisher('gui/takeoff_land', Bool, queue_size=1)
         self.play_stop_pub = rospy.Publisher('gui/play_stop', Bool, queue_size=1)
-        self.twist_pub = rospy.Publisher('gui/twist', Twist, queue_size=1)
-        self.pose_pub = rospy.Publisher('gui/pose', Pose, queue_size=1)
 
         # Add global variables
         self.extended_state = ExtendedState()
@@ -97,9 +99,9 @@ class PosTeleop(Plugin):
         context.add_widget(self._widget)
 
         # Add Subscribers
-        rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
-        rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
-        rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
+        rospy.Subscriber('drone_wrapper/local_position/pose', PoseStamped, self.pose_stamped_cb)
+        rospy.Subscriber('drone_wrapper/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
+        rospy.Subscriber('drone_wrapper/extended_state', ExtendedState, self.extended_state_cb)
 
         # Add Timer
         self.update_status_info()
@@ -148,6 +150,14 @@ class PosTeleop(Plugin):
             elif self.extended_state.landed_state == 2:  # IN AIR
                 self._widget.takeoffButton.setText("Land")
 
+    def takeoff_drone(self):
+        try:
+            global drone
+            drone.takeoff()
+            self.takeoff = True
+        finally:
+            rospy.loginfo('Takeoff finished')
+
     def call_takeoff_land(self):
         if self.extended_state.landed_state == 0:  # UNDEFINED --> not ready
             self._widget.term_out.append('Drone not ready')
@@ -156,13 +166,16 @@ class PosTeleop(Plugin):
         if self.takeoff == True:
             rospy.loginfo('Landing')
             self._widget.term_out.append('Landing')
-            self.takeoff_pub.publish(Bool(False))
+
+            global drone
+            drone.land()
             self.takeoff = False
         else:
             rospy.loginfo('Taking off')
             self._widget.term_out.append('Taking off')
-            self.takeoff_pub.publish(Bool(True))
-            self.takeoff = True
+            x = threading.Thread(target=self.takeoff_drone)
+            x.daemon = True
+            x.start()
 
     def stop_drone(self):
         self._widget.term_out.append('Stopping Drone')
@@ -171,7 +184,10 @@ class PosTeleop(Plugin):
             self.call_play()
         for i in range(5):
             self.shared_twist_msg = Twist()
-            self.twist_pub.publish(self.shared_twist_msg)
+
+            global drone
+            drone.set_cmd_vel(self.shared_twist_msg.linear.x, self.shared_twist_msg.linear.y,
+                              self.shared_twist_msg.linear.z, self.shared_twist_msg.angular.z)
             rospy.sleep(0.05)
 
     def call_play(self):
@@ -201,7 +217,9 @@ class PosTeleop(Plugin):
         self.shared_pose_msg.position.x = x
         self.shared_pose_msg.position.y = y
         self.shared_pose_msg.position.z = z
-        self.pose_pub.publish(self.shared_pose_msg)
+
+        global drone
+        drone.set_cmd_pos(self.shared_pose_msg.position.x, self.shared_pose_msg.position.y, self.shared_pose_msg.position.z)
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here

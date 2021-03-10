@@ -21,13 +21,17 @@ from sensorsWidget import SensorsWidget
 
 from tello_driver.msg import TelloStatus
 
+from drone_wrapper.drone_wrapper_class import DroneWrapper
+
+drone = DroneWrapper(name='rqt')
+
 
 class VelTeleop(Plugin):
 	def __init__(self, context):
-		global drone_model
-		drone_model = rospy.get_param('drone_model', 'IRIS_PX4_SITL')		
+        global drone_model
+        drone_model = rospy.get_param('drone_model', 'IRIS_PX4_SITL')
 
-		super(VelTeleop, self).__init__(context)
+        super(VelTeleop, self).__init__(context)
 		# Give QObjects reasonable names
 		self.setObjectName('VelTeleop')
 
@@ -81,9 +85,7 @@ class VelTeleop(Plugin):
 		self._widget.stopButton.clicked.connect(self.stop_drone)
 
 		# Add Publishers
-		self.takeoff_pub = rospy.Publisher('gui/takeoff_land', Bool, queue_size=1)
 		self.play_stop_pub = rospy.Publisher('gui/play_stop', Bool, queue_size=1)
-		self.twist_pub = rospy.Publisher('gui/twist', Twist, queue_size=1)
 
 		# Add global variables
 		self.extended_state = ExtendedState()
@@ -118,11 +120,10 @@ class VelTeleop(Plugin):
 
 		# Add Subscribers (different for each model)
 		if drone_model == 'IRIS_PX4_SITL':
-			rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
-			rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
-			rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
-		
-		elif drone_model == 'TELLO_REAL':
+            rospy.Subscriber('drone_wrapper/local_position/pose', PoseStamped, self.pose_stamped_cb)
+            rospy.Subscriber('drone_wrapper/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
+            rospy.Subscriber('drone_wrapper/extended_state', ExtendedState, self.extended_state_cb)
+        elif drone_model == 'TELLO_REAL':
 			rospy.Subscriber('tello/odom', Odometry, self.pose_stamped_cb)
 			rospy.Subscriber('tello/odom', Odometry, self.twist_stamped_cb)
 			rospy.Subscriber('tello/status', TelloStatus, self.extended_state_cb)
@@ -137,26 +138,23 @@ class VelTeleop(Plugin):
 			self.sensors_widget.hide()
 
 	def pose_stamped_cb(self, msg):
-		global drone_model		
-		
-		if drone_model == 'IRIS_PX4_SITL':		
+		global drone_model
+		if drone_model == 'IRIS_PX4_SITL':
 			self.current_pose = msg.pose
 			self.pose_frame = msg.header.frame_id
-		
-		elif drone_model == 'TELLO_REAL':		
+
+		elif drone_model == 'TELLO_REAL':
 			self.current_pose = msg.pose.pose
 			self.pose_frame = msg.header.frame_id
-		
+
 		self.sensors_widget.sensorsUpdate.emit()
 
 	def twist_stamped_cb(self, msg):
-		global drone_model		
-		
-		if drone_model == 'IRIS_PX4_SITL':			
+		global drone_model
+		if drone_model == 'IRIS_PX4_SITL':
 			self.current_twist = msg.twist
 			self.twist_frame = msg.header.frame_id
-		
-		elif drone_model == 'TELLO_REAL':		
+		elif drone_model == 'TELLO_REAL':
 			self.current_twist = msg.twist.twist
 			self.twist_frame = msg.header.frame_id
 
@@ -182,8 +180,7 @@ class VelTeleop(Plugin):
 		self._widget.velFrame.setText(str(frame))
 
 	def extended_state_cb(self, msg):
-		global drone_model		
-		
+		global drone_model
 		if drone_model == 'IRIS_PX4_SITL':
 			if self.extended_state.landed_state != msg.landed_state:
 				self.extended_state = msg
@@ -191,9 +188,8 @@ class VelTeleop(Plugin):
 					self._widget.takeoffButton.setText("Take Off")
 				elif self.extended_state.landed_state == 2:  # IN AIR
 					self._widget.takeoffButton.setText("Land")
-		
-		elif drone_model == 'TELLO_REAL':		
-			#self._widget.takeoffButton.setText("Takeoff/Land")			
+		elif drone_model == 'TELLO_REAL':
+			#self._widget.takeoffButton.setText("Takeoff/Land")
 			if self.tello_status.is_flying != msg.is_flying:
 				self.tello_status = msg
 				if self.tello_status.is_flying == False:  # ON GROUND
@@ -201,27 +197,35 @@ class VelTeleop(Plugin):
 				elif self.tello_status.is_flying == True:  # IN AIR
 					self._widget.takeoffButton.setText("Land")
 
+	def takeoff_drone(self):
+		try:
+			global drone
+			drone.takeoff()
+			self.takeoff = True
+		finally:
+			rospy.loginfo('Takeoff finished')
 
 	def call_takeoff_land(self):
-		global drone_model		
-		
-		if drone_model == 'IRIS_PX4_SITL':	
+		global drone_model
+		if drone_model == 'IRIS_PX4_SITL':
 			if self.extended_state.landed_state == 0:  # UNDEFINED --> not ready
 				self._widget.term_out.append('Drone not ready')
 				return
 		#elif drone_model == 'TELLO_REAL':
-			# Do nothing 
+			# Do nothing
 
 		if self.takeoff == True:
 			rospy.loginfo('Landing')
 			self._widget.term_out.append('Landing')
-			self.takeoff_pub.publish(Bool(False))
+			global drone
+			drone.land()
 			self.takeoff = False
 		else:
 			rospy.loginfo('Taking off')
 			self._widget.term_out.append('Taking off')
-			self.takeoff_pub.publish(Bool(True))
-			self.takeoff = True
+			x = threading.Thread(target=self.takeoff_drone)
+			x.daemon = True
+			x.start()
 
 	def call_play(self):
 		if not self.play_code_flag:
@@ -250,7 +254,9 @@ class VelTeleop(Plugin):
 			self.call_play()
 		for i in range(5):
 			self.shared_twist_msg = Twist()
-			self.twist_pub.publish(self.shared_twist_msg)
+			global drone
+			drone.set_cmd_vel(self.shared_twist_msg.linear.x, self.shared_twist_msg.linear.y,
+							  self.shared_twist_msg.linear.z, self.shared_twist_msg.angular.z)
 			rospy.sleep(0.05)
 
 	def set_linear_xy(self, u, v):
@@ -261,7 +267,10 @@ class VelTeleop(Plugin):
 		rospy.logdebug('Stick 2 value changed to - x: %.2f y: %.2f', x, y)
 		self.shared_twist_msg.linear.x = x
 		self.shared_twist_msg.linear.y = y
-		self.twist_pub.publish(self.shared_twist_msg)
+
+		global drone
+		drone.set_cmd_vel(self.shared_twist_msg.linear.x, self.shared_twist_msg.linear.y,
+						  self.shared_twist_msg.linear.z, self.shared_twist_msg.angular.z)
 
 	def set_alt_yawrate(self, u, v):
 		az = -self.vertical_velocity_scaling_factor * u
@@ -271,7 +280,10 @@ class VelTeleop(Plugin):
 		rospy.logdebug('Stick 1 value changed to - az: %.2f z: %.2f', az, z)
 		self.shared_twist_msg.linear.z = z
 		self.shared_twist_msg.angular.z = az
-		self.twist_pub.publish(self.shared_twist_msg)
+
+		global drone
+		drone.set_cmd_vel(self.shared_twist_msg.linear.x, self.shared_twist_msg.linear.y,
+						  self.shared_twist_msg.linear.z, self.shared_twist_msg.angular.z)
 
 	def shutdown_plugin(self):
 		# TODO unregister all publishers here

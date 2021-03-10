@@ -15,7 +15,8 @@ from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeReq
 EPSILON = 0.01
 CMD = None
 
-class DroneWrapper():
+
+class DroneWrapper:
     def state_cb(self, msg):
         self.state = msg
         rospy.logdebug('State updated')
@@ -24,17 +25,19 @@ class DroneWrapper():
         self.extended_state = msg
         rospy.logdebug('Extended State updated')
 
+        self.rqt_extended_state_publisher.publish(self.extended_state)
+
     def pose_stamped_cb(self, msg):
         self.pose_stamped = msg
         rospy.logdebug('Pose updated')
+
+        self.rqt_pose_publisher.publish(self.pose_stamped)
 
     def vel_body_stamped_cb(self, msg):
         self.vel_body_stamped = msg
         rospy.logdebug('Velocity (body) updated')
 
-    def pose_stamped_cb(self, msg):
-        self.pose_stamped = msg
-        rospy.logdebug('Pose updated')
+        self.rqt_velocity_body_publisher.publish(self.vel_body_stamped)
 
     def global_position_cb(self, msg):
         self.global_position = msg
@@ -44,9 +47,13 @@ class DroneWrapper():
         self.frontal_image = msg
         rospy.logdebug('Frontal image updated')
 
+        self.rqt_cam_frontal_publisher.publish(self.frontal_image)
+
     def cam_ventral_cb(self, msg):
         self.ventral_image = msg
         rospy.logdebug('Ventral image updated')
+
+        self.rqt_cam_ventral_publisher.publish(self.ventral_image)
 
     def stay_armed_stay_offboard_cb(self, event):
         if self.state.mode != 'OFFBOARD':
@@ -63,16 +70,23 @@ class DroneWrapper():
         return self.bridge.imgmsg_to_cv2(self.ventral_image)
 
     def get_position(self):
-        return np.array([self.pose_stamped.pose.position.x, self.pose_stamped.pose.position.y, self.pose_stamped.pose.position.z])
+        return np.array([self.pose_stamped.pose.position.x,
+                         self.pose_stamped.pose.position.y,
+                         self.pose_stamped.pose.position.z])
 
     def get_velocity(self):
-        return np.array([self.vel_body_stamped.twist.linear.x, self.vel_body_stamped.twist.linear.y, self.vel_body_stamped.twist.linear.z])
+        return np.array([self.vel_body_stamped.twist.linear.x,
+                         self.vel_body_stamped.twist.linear.y,
+                         self.vel_body_stamped.twist.linear.z])
 
     def get_yaw_rate(self):
         return self.vel_body_stamped.twist.angular.z
 
     def get_orientation(self):
-        return np.array(tf.transformations.euler_from_quaternion([self.pose_stamped.pose.orientation.x, self.pose_stamped.pose.orientation.y, self.pose_stamped.pose.orientation.z, self.pose_stamped.pose.orientation.w]))
+        return np.array(tf.transformations.euler_from_quaternion([self.pose_stamped.pose.orientation.x,
+                                                                  self.pose_stamped.pose.orientation.y,
+                                                                  self.pose_stamped.pose.orientation.z,
+                                                                  self.pose_stamped.pose.orientation.w]))
 
     def get_roll(self):
         return self.get_orientation()[0]
@@ -92,9 +106,9 @@ class DroneWrapper():
         else:
             val = ParamValue(integer=value, real=0.0)
 
-        rospy.wait_for_service('/mavros/param/set')
+        rospy.wait_for_service(self.ns + '/mavros/param/set')
         try:
-            set_param = rospy.ServiceProxy('/mavros/param/set', ParamSet)
+            set_param = rospy.ServiceProxy(self.ns + '/mavros/param/set', ParamSet)
             resp = set_param(param_id=param, value=val)
             print("setmode send ok", resp.success)
         except rospy.ServiceException as e:
@@ -102,7 +116,7 @@ class DroneWrapper():
 
     def param_get(self, param):
         try:
-            get_param = rospy.ServiceProxy('mavros/param/get', ParamGet)
+            get_param = rospy.ServiceProxy(self.ns + 'mavros/param/get', ParamGet)
             resp = get_param(param_id=param)
             print("setmode send ok", resp.success)
         except rospy.ServiceException as e:
@@ -116,7 +130,7 @@ class DroneWrapper():
         else:
             return 0
 
-    def arm(self, value = True):
+    def arm(self, value=True):
         req = CommandBoolRequest()
         req.value = value
         if self.arm_client(req).success:
@@ -126,7 +140,7 @@ class DroneWrapper():
             rospy.logwarn('Arming/Disarming unsuccessful')
             return False
 
-    def request_mode(self, mode = 'OFFBOARD'):
+    def request_mode(self, mode='OFFBOARD'):
         rospy.sleep(2)
         rospy.loginfo('Current mode: %s', self.state.mode)
         req = SetModeRequest()
@@ -160,63 +174,62 @@ class DroneWrapper():
         self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
     def set_cmd_vel(self, vx=0, vy=0, vz=0, az=0):
-	global drone_model
-	if drone_model == 'IRIS_PX4_SITL':
-		self.setpoint_raw.coordinate_frame = 8
-		self.setpoint_raw.yaw_rate = az
+        global drone_model
+        if drone_model == 'IRIS_PX4_SITL':
+            self.setpoint_raw.coordinate_frame = 8
+            self.setpoint_raw.yaw_rate = az
 
-		self.posx = self.pose_stamped.pose.position.x
-		self.posy = self.pose_stamped.pose.position.y
-		self.height = self.pose_stamped.pose.position.z
-		self.vx = -vy
-		self.vy = vx
-		self.vz = vz
+            self.posx = self.pose_stamped.pose.position.x
+            self.posy = self.pose_stamped.pose.position.y
+            self.height = self.pose_stamped.pose.position.z
+            self.vx = -vy
+            self.vy = vx
+            self.vz = vz
 
-		global CMD
-		CMD = 1  # VEL
+            global CMD
+            CMD = 1  # VEL
 
-		if abs(vx) <= EPSILON and abs(vy) <= EPSILON:
-		    self.is_xy = True
-		else:
-		    self.setpoint_raw.velocity.x = -vy
-		    self.setpoint_raw.velocity.y = vx
+            if abs(vx) <= EPSILON and abs(vy) <= EPSILON:
+                self.is_xy = True
+            else:
+                self.setpoint_raw.velocity.x = -vy
+                self.setpoint_raw.velocity.y = vx
 
-		    self.is_xy = False
+                self.is_xy = False
 
-		if abs(vz) <= EPSILON:
-		    self.is_z = True
-		else:
-		    self.setpoint_raw.velocity.z = vz
-		    self.is_z = False
+            if abs(vz) <= EPSILON:
+                self.is_z = True
+            else:
+                self.setpoint_raw.velocity.z = vz
+                self.is_z = False
 
-		if self.is_xy:
-		    if self.is_z:
-		        self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
-		        # self.setpoint_raw.type_mask = 3064 # xyz yaw
-		    else:
-		        self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
-		        # self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
-		        # self.setpoint_raw.type_mask = 3036 # x y vz yaw -> NOT SUPPORTED 
-		else:
-		    if self.is_z:
-		        self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
-		        # self.setpoint_raw.type_mask = 2019  # vx vy z yaw_rate -> NOT SUPPORTED
-		        # self.setpoint_raw.type_mask = 3011  # vx vy vz z yaw
-		        # self.setpoint_raw.type_mask = 3043  # vx vy z yaw -> NOT SUPPORTED
-		    else:
-		        self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
-		        # self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+            if self.is_xy:
+                if self.is_z:
+                    self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
+                    # self.setpoint_raw.type_mask = 3064 # xyz yaw
+                else:
+                    self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
+                    # self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
+                    # self.setpoint_raw.type_mask = 3036 # x y vz yaw -> NOT SUPPORTED
+            else:
+                if self.is_z:
+                    self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
+                    # self.setpoint_raw.type_mask = 2019  # vx vy z yaw_rate -> NOT SUPPORTED
+                    # self.setpoint_raw.type_mask = 3011  # vx vy vz z yaw
+                    # self.setpoint_raw.type_mask = 3043  # vx vy z yaw -> NOT SUPPORTED
+                else:
+                    self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
+                    # self.setpoint_raw.type_mask = 3015  # vx vy vz yaw
 
-		self.setpoint_raw_publisher.publish(self.setpoint_raw)
-	
-	elif drone_model == 'TELLO_REAL':
-		self.twist_msg.linear.x = -vy		
-		self.twist_msg.linear.y = vx
-		self.twist_msg.linear.z = vz
-		self.twist_msg.angular.z = az
-		
-		self.vel_tello_pub.publish(self.twist_msg)
-		
+            self.setpoint_raw_publisher.publish(self.setpoint_raw)
+
+        elif drone_model == 'TELLO_REAL':
+            self.twist_msg.linear.x = -vy
+            self.twist_msg.linear.y = vx
+            self.twist_msg.linear.z = vz
+            self.twist_msg.angular.z = az
+
+            self.vel_tello_pub.publish(self.twist_msg)
 
     def set_cmd_mix(self, vx=0, vy=0, z=0, az=0):
         self.setpoint_raw.coordinate_frame = 8
@@ -275,31 +288,31 @@ class DroneWrapper():
             self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
 
     def takeoff(self, h=3):
-	global drone_model
-	
-	if drone_model == 'IRIS_PX4_SITL':        
-		self.set_cmd_pos(0, 0, 0, 0)
-		self.hold_setpoint_raw()
-		self.arm(True)
-		self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(3), self.stay_armed_stay_offboard_cb)
-		while True:
-		    while not (self.state.armed and self.state.mode == 'OFFBOARD'):
-		        self.rate.sleep()
-		    rospy.loginfo('Sleeping 1 secs to confirm change')
-		    rospy.sleep(1)
-		    if self.state.mode == 'OFFBOARD':
-		        break
-		self.set_cmd_mix(z=h)
-		rospy.loginfo('Taking off!!!')
-		while True:
-		    if round(self.pose_stamped.pose.position.z, 1) == h:
-		        break
-		self.set_cmd_vel()
-	
-	elif drone_model == 'TELLO_REAL':
-		self.takeoff_tello_pub.publish(self.empty_msg)
-		rospy.loginfo('TELLO Taking off! Waiting 4 sec')
-		rospy.sleep(4)
+        global drone_model
+
+        if drone_model == 'IRIS_PX4_SITL':
+            self.set_cmd_pos(0, 0, 0, 0)
+            self.hold_setpoint_raw()
+            self.arm(True)
+            self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(3), self.stay_armed_stay_offboard_cb)
+            while True:
+                while not (self.state.armed and self.state.mode == 'OFFBOARD'):
+                    self.rate.sleep()
+                rospy.loginfo('Sleeping 1 secs to confirm change')
+                rospy.sleep(1)
+                if self.state.mode == 'OFFBOARD':
+                    break
+            self.set_cmd_mix(z=h)
+            rospy.loginfo('Taking off!!!')
+            while True:
+                if round(self.pose_stamped.pose.position.z, 1) == h:
+                    break
+            self.set_cmd_vel()
+
+        elif drone_model == 'TELLO_REAL':
+            self.takeoff_tello_pub.publish(self.empty_msg)
+            rospy.loginfo('TELLO Taking off! Waiting 4 sec')
+            rospy.sleep(4)
 
     def take_control(self):
         self.set_cmd_pos(0, 0, 0, 0)
@@ -308,87 +321,99 @@ class DroneWrapper():
         self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(3), self.stay_armed_stay_offboard_cb)
 
     def land(self):
-	global drone_model
-	
-	if drone_model == 'IRIS_PX4_SITL':         
-		self.setpoint_raw_timer.shutdown()
-		self.stay_armed_stay_offboard_timer.shutdown()
-		req = CommandTOLRequest()
-		req.latitude = self.global_position.latitude
-		req.longitude = self.global_position.longitude
-		self.land_client(req)
+        global drone_model
 
-	elif drone_model == 'TELLO_REAL':
-		self.land_tello_pub.publish(self.empty_msg)
-		rospy.loginfo('TELLO Landing. Waiting 4 sec')
-		rospy.sleep(4)
-
-    def __init__(self, name = 'drone', verbose = False):
-        if verbose:
-            rospy.init_node(name, anonymous = True, log_level = rospy.DEBUG)
-        else:
-            rospy.init_node(name)
-	
-	global drone_model
-	drone_model = rospy.get_param('drone_model', 'IRIS_PX4_SITL')
-
-	if drone_model == 'IRIS_PX4_SITL':
-        
-		self.state = State()
-		self.extended_state = ExtendedState()
-		self.pose_stamped = PoseStamped()
-		self.vel_body_stamped = TwistStamped()
-		self.rate = rospy.Rate(20)
-		self.setpoint_raw = PositionTarget()
-		self.setpoint_raw_flag = False
-		self.vz_factor = 0.4
-		self.bridge = CvBridge()
-
-		self.is_z = False
-		self.is_xy = False
-
-		self.posx = 0
-		self.posy = 0
-		self.height = 0
-		self.vx = 0
-		self.vy = 0
-		self.vz = 0
-
-		self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
-		self.setpoint_raw_timer.shutdown()
-		self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(5), self.stay_armed_stay_offboard_cb)
-		self.stay_armed_stay_offboard_timer.shutdown()
-
-		rospy.wait_for_service('mavros/cmd/arming')
-		self.arm_client = rospy.ServiceProxy('mavros/cmd/arming', CommandBool)
-		rospy.wait_for_service('mavros/set_mode')
-		self.mode_client = rospy.ServiceProxy('mavros/set_mode', SetMode)
-		rospy.wait_for_service('mavros/cmd/land')
-		self.land_client = rospy.ServiceProxy('mavros/cmd/land', CommandTOL)
-
-		rospy.Subscriber('mavros/state', State, self.state_cb)
-		rospy.Subscriber('mavros/extended_state', ExtendedState, self.extended_state_cb)
-		rospy.Subscriber('mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
-		rospy.Subscriber('mavros/local_position/velocity_body', TwistStamped, self.vel_body_stamped_cb)
-		rospy.Subscriber('mavros/global_position/global', NavSatFix, self.global_position_cb)
-		cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
-		cam_ventral_topic = rospy.get_param('cam_ventral_topic', '/iris/cam_ventral/image_raw')
-		rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
-		rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
-
-		self.setpoint_raw_publisher = rospy.Publisher('mavros/setpoint_raw/local', PositionTarget, queue_size=1)
-
+        if drone_model == 'IRIS_PX4_SITL':
+            self.setpoint_raw_timer.shutdown()
+            self.stay_armed_stay_offboard_timer.shutdown()
+            req = CommandTOLRequest()
+            req.latitude = self.global_position.latitude
+            req.longitude = self.global_position.longitude
+            self.land_client(req)
 
         elif drone_model == 'TELLO_REAL':
-                
-		self.empty_msg = Empty()
-		self.twist_msg = Twist()
+            self.land_tello_pub.publish(self.empty_msg)
+            rospy.loginfo('TELLO Landing. Waiting 4 sec')
+            rospy.sleep(4)
 
-		self.takeoff_tello_pub = rospy.Publisher('tello/takeoff', Empty, queue_size = 3, latch=True)
-		self.land_tello_pub = rospy.Publisher('tello/land', Empty, queue_size = 3, latch=True)
-		self.vel_tello_pub = rospy.Publisher('tello/cmd_vel', Twist, queue_size = 3)
-        
+    def __init__(self, name='drone', ns='', verbose=False):
+        if name != 'rqt':
+            if verbose:
+                rospy.init_node(name, anonymous=True, log_level=rospy.DEBUG)
+            else:
+                rospy.init_node(name)
+        self.ns = ns
+
+        global drone_model
+        drone_model = rospy.get_param('drone_model', 'IRIS_PX4_SITL')
+
+        if drone_model == 'IRIS_PX4_SITL':
+            self.state = State()
+            self.extended_state = ExtendedState()
+            self.pose_stamped = PoseStamped()
+            self.vel_body_stamped = TwistStamped()
+            self.rate = rospy.Rate(20)
+            self.setpoint_raw = PositionTarget()
+            self.setpoint_raw_flag = False
+            self.vz_factor = 0.4
+            self.bridge = CvBridge()
+
+            self.is_z = False
+            self.is_xy = False
+
+            self.posx = 0
+            self.posy = 0
+            self.height = 0
+            self.vx = 0
+            self.vy = 0
+            self.vz = 0
+
+            self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
+            self.setpoint_raw_timer.shutdown()
+            self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(5), self.stay_armed_stay_offboard_cb)
+            self.stay_armed_stay_offboard_timer.shutdown()
+
+            rospy.wait_for_service(self.ns + 'mavros/cmd/arming')
+            self.arm_client = rospy.ServiceProxy(ns + 'mavros/cmd/arming', CommandBool)
+            rospy.wait_for_service(self.ns + 'mavros/set_mode')
+            self.mode_client = rospy.ServiceProxy(ns + 'mavros/set_mode', SetMode)
+            rospy.wait_for_service(self.ns + 'mavros/cmd/land')
+            self.land_client = rospy.ServiceProxy(ns + 'mavros/cmd/land', CommandTOL)
+
+            self.rqt_extended_state_publisher = rospy.Publisher(self.ns + 'drone_wrapper/extended_state', ExtendedState,
+                                                                queue_size=1)
+            self.rqt_pose_publisher = rospy.Publisher(self.ns + 'drone_wrapper/local_position/pose', PoseStamped,
+                                                      queue_size=1)
+            self.rqt_velocity_body_publisher = rospy.Publisher(self.ns + 'drone_wrapper/local_position/velocity_body',
+                                                               TwistStamped, queue_size=1)
+            self.rqt_cam_frontal_publisher = rospy.Publisher(self.ns + 'drone_wrapper/cam_frontal/image_raw', Image,
+                                                             queue_size=1)
+            self.rqt_cam_ventral_publisher = rospy.Publisher(self.ns + 'drone_wrapper/cam_ventral/image_raw', Image,
+                                                             queue_size=1)
+
+            rospy.Subscriber(self.ns + 'mavros/state', State, self.state_cb)
+            rospy.Subscriber(self.ns + 'mavros/extended_state', ExtendedState, self.extended_state_cb)
+            rospy.Subscriber(self.ns + 'mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
+            rospy.Subscriber(self.ns + 'mavros/local_position/velocity_body', TwistStamped, self.vel_body_stamped_cb)
+            rospy.Subscriber(self.ns + 'mavros/global_position/global', NavSatFix, self.global_position_cb)
+            cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
+            cam_ventral_topic = rospy.get_param('cam_ventral_topic', '/iris/cam_ventral/image_raw')
+            rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
+            rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
+
+            self.setpoint_raw_publisher = rospy.Publisher(self.ns + 'mavros/setpoint_raw/local', PositionTarget,
+                                                      queue_size=1)
+
+        elif drone_model == 'TELLO_REAL':
+
+            self.empty_msg = Empty()
+            self.twist_msg = Twist()
+
+            self.takeoff_tello_pub = rospy.Publisher('tello/takeoff', Empty, queue_size = 3, latch=True)
+            self.land_tello_pub = rospy.Publisher('tello/land', Empty, queue_size = 3, latch=True)
+            self.vel_tello_pub = rospy.Publisher('tello/cmd_vel', Twist, queue_size = 3)
+
         else:
-		rospy.loginfo("Drone model not known. Please restart and use a valid name")
-	
+            rospy.loginfo("Drone model not known. Please restart and use a valid name")
+
 
