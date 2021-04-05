@@ -3,10 +3,8 @@
 import rospy
 import tf
 import numpy as np
-import cv2
 from cv_bridge import CvBridge
-from std_msgs.msg import Empty
-from sensor_msgs.msg import NavSatFix, Image
+from sensor_msgs.msg import NavSatFix, Image, BatteryState
 from geometry_msgs.msg import PoseStamped, TwistStamped, Twist
 from mavros_msgs.msg import State, ExtendedState, PositionTarget, ParamValue
 from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeRequest, CommandTOL, CommandTOLRequest, \
@@ -26,6 +24,12 @@ class DroneWrapper:
         rospy.logdebug('Extended State updated')
 
         self.rqt_extended_state_publisher.publish(self.extended_state)
+
+    def battery_state_cb(self, msg):
+        self.battery_state = msg
+        rospy.logdebug('Battery State updated')
+
+        self.battery_state_publisher.publish(self.battery_state)
 
     def pose_stamped_cb(self, msg):
         self.pose_stamped = msg
@@ -322,6 +326,7 @@ class DroneWrapper:
 
         self.state = State()
         self.extended_state = ExtendedState()
+        self.battery_state = BatteryState()
         self.pose_stamped = PoseStamped()
         self.vel_body_stamped = TwistStamped()
         self.rate = rospy.Rate(20)
@@ -354,6 +359,7 @@ class DroneWrapper:
 
         self.rqt_extended_state_publisher = rospy.Publisher(self.ns + 'drone_wrapper/extended_state', ExtendedState,
                                                             queue_size=1)
+        self.battery_state_publisher = rospy.Publisher(self.ns + 'drone_wrapper/battery', BatteryState, queue_size=1)
         self.rqt_pose_publisher = rospy.Publisher(self.ns + 'drone_wrapper/local_position/pose', PoseStamped,
                                                   queue_size=1)
         self.rqt_velocity_body_publisher = rospy.Publisher(self.ns + 'drone_wrapper/local_position/velocity_body',
@@ -365,6 +371,7 @@ class DroneWrapper:
 
         rospy.Subscriber(self.ns + 'mavros/state', State, self.state_cb)
         rospy.Subscriber(self.ns + 'mavros/extended_state', ExtendedState, self.extended_state_cb)
+        rospy.Subscriber(self.ns + 'mavros/battery', BatteryState, self.battery_state_cb)
         rospy.Subscriber(self.ns + 'mavros/local_position/pose', PoseStamped, self.pose_stamped_cb)
         rospy.Subscriber(self.ns + 'mavros/local_position/velocity_body', TwistStamped, self.vel_body_stamped_cb)
         rospy.Subscriber(self.ns + 'mavros/global_position/global', NavSatFix, self.global_position_cb)
