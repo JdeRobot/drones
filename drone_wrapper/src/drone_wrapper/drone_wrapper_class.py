@@ -417,3 +417,6 @@ class DroneWrapper:
             rospy.loginfo("Drone model not known. Please restart and use a valid name")
 
 
+if __name__ == "__main__":
+    drone = DroneWrapper()
+    rospy.spin()

@@ -17,6 +17,7 @@ catkin_python_setup()
 catkin_package()
 
 install(PROGRAMS
+	src/drone_tello_class.py
 	scripts/play_python_code
 	scripts/load_parameters
 	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
