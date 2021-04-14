@@ -2,6 +2,11 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added urdf dir to drone_assets
+* Contributors: pariaspe
+
 1.3.7 (2021-03-01)
 ------------------
 * New version of drone_wrapper compatible with web templates.

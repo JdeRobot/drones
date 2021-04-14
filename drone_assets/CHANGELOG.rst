@@ -2,6 +2,11 @@
 Changelog for package drone_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added urdf as installed dir
+* Contributors: pariaspe
+
 1.3.7 (2021-03-01)
 ------------------
 
