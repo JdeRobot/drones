@@ -9,6 +9,6 @@ include_directories()
 
 install(DIRECTORY
   models
-#  urdf
+  urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
