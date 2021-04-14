@@ -2,8 +2,8 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.8 (2021-04-14)
+------------------
 * Added urdf dir to drone_assets
 * Contributors: pariaspe
 
