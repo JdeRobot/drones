@@ -9,7 +9,6 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   tf
   mavros
-  gazebo_ros
 )
 
 catkin_python_setup()
