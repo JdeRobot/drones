@@ -2,8 +2,8 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.0 (2021-04-23)
+------------------
 * Noetic release
 * Removed unused dependency.
 * Contributors: pariaspe

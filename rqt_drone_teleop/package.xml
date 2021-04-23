@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
 	<name>rqt_drone_teleop</name>
-	<version>1.3.8</version>
+	<version>1.4.0</version>
 	<description>A common drone teleop interface for all drone exercises in the JdeRobot Robotics Academy</description>
 
 	<maintainer email="nikhilvkhedekar@gmail.com">Nikhil Khedekar</maintainer>

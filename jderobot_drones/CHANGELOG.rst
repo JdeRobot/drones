@@ -2,8 +2,8 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.0 (2021-04-23)
+------------------
 * Noetic release
 * Contributors: pariaspe
 

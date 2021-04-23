@@ -2,8 +2,8 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.0 (2021-04-23)
+------------------
 * Noetic release
 * Contributors: pariaspe
 
