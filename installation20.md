@@ -27,12 +27,7 @@ sudo ./install_geographiclib_datasets.sh
 rm ./install_geographiclib_datasets.sh  # optional
 ```
 
-2. Remove modemmanager
-```
-sudo apt-get remove modemmanager
-```
-
-3. Install common dependencies
+2. Install common dependencies
 ```
 sudo apt-get update -y
 sudo apt-get install git zip qtcreator cmake \
@@ -40,85 +35,51 @@ sudo apt-get install git zip qtcreator cmake \
     python-pip python-dev -y
 ```
 
-4. Install xxd
+3. Install xxd
 ```
 which xxd || sudo apt install xxd -y || sudo apt-get install vim-common --no-install-recommends -y
-```
-
-5. Required python packages
-
-Install Python 3 pip build dependencies first
-```bash
-sudo pip3 install wheel setuptools
-```
-
-Python 3 dependencies installed by pip
-```bash
-sudo pip3 install argparse argcomplete coverage cerberus empy jinja2 \
-                    matplotlib==3.0.* numpy nunavut packaging pkgconfig pyros-genmsg pyulog \
-                    pyyaml requests serial six toml psutil pyulog wheel
-
-```
-
-Install everything again for Python 2 because we could not get Firmware to compile using catkin without it.
-```bash
-sudo pip install --upgrade pip 
-sudo pip install wheel setuptools
-sudo pip install argcomplete argparse catkin_pkg catkin-tools cerberus coverage \
-    empy jinja2 matplotlib==2.2.* numpy pkgconfig px4tools pygments pymavlink \
-    packaging pyros-genmsg pyulog pyyaml requests rosdep rospkg serial six toml \
-    pandas pyserial
-```
-
-6. Install ninja
-```
-sudo apt-get install ninja-build -y
-```
-
-7. Get FastRTPS and FastCDR
-```
-wget https://www.eprosima.com/index.php/component/ars/repository/eprosima-fast-rtps/eprosima-fast-rtps-1-7-1/eprosima_fastrtps-1-7-1-linux-tar-gz -O eprosima_fastrtps-1-7-1-linux.tar.gz
-tar -xzf eprosima_fastrtps-1-7-1-linux.tar.gz eProsima_FastRTPS-1.7.1-Linux/
-tar -xzf eprosima_fastrtps-1-7-1-linux.tar.gz requiredcomponents
-tar -xzf requiredcomponents/eProsima_FastCDR-1.0.8-Linux.tar.gz
-```
-
-8. Build FastRTPS and FastCDR
-```
-(cd eProsima_FastCDR-1.0.8-Linux && ./configure --libdir=/usr/lib && make -j2 && sudo make install)
-(cd eProsima_FastRTPS-1.7.1-Linux && ./configure --libdir=/usr/lib && make -j2 && sudo make install)
-rm -rf requiredcomponents eprosima_fastrtps-1-7-1-linux.tar.gz
 ```
 
 ### 2.4. PX4 source installation
 
 1. Get PX4 source (v1.11.3)
 ```bash
-cd ~/repos
-git clone https://github.com/PX4/Firmware.git
-cd Firmware && git checkout v1.11.3
-git checkout -b v1.11.3
+mkdir ~/repos && cd repos
+git clone https://github.com/PX4/PX4-Autopilot.git --recursive
+cd PX4-Autopilot && git checkout -b v1.11.3
 ```
 
-2. Build PX4
-```bash
-cd ~/repos/Firmware
-DONT_RUN=1 make px4_sitl_default gazebo
+2. Run PX4 installation script
+```
+cd Tools/setup/
+bash ubuntu.sh --no-nuttx --no-sim-tools
 ```
 
-3. Export environment variables
+3. Install gstreamer
+```
+sudo apt install libgstreamer1.0-dev
+sudo apt install gstreamer1.0-plugins-bad
+```
+
+4. Build PX4
 ```bash
-echo 'export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:~/repos/Firmware/build/px4_sitl_default/build_gazebo' >> ~/.bashrc
-echo 'export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:~/repos/Firmware/Tools/sitl_gazebo/models' >> ~/.bashrc
-echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/repos/Firmware/build/px4_sitl_default/build_gazebo' >> ~/.bashrc
+cd ~/repos/PX4-Autopilot
+DONT_RUN=1 make px4_sitl gazebo
+```
+
+5. Export environment variables
+```bash
+echo 'export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:~/repos/PX4-Autopilot/build/px4_sitl_default/build_gazebo' >> ~/.bashrc
+echo 'export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:~/repos/PX4-Autopilot/Tools/sitl_gazebo/models' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/repos/PX4-Autopilot/build/px4_sitl_default/build_gazebo' >> ~/.bashrc
     
-echo 'export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/repos/Firmware' >> ~/.bashrc
-echo 'export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/repos/Firmware/Tools/sitl_gazebo' >> ~/.bashrc
+echo 'export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/repos/PX4-Autopilot' >> ~/.bashrc
+echo 'export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/repos/PX4-Autopilot/Tools/sitl_gazebo' >> ~/.bashrc
     
 source ~/.bashrc
 ```
 
-4. Try PX4 (optional)
+6. Try PX4 (optional)
 ```bash
 roslaunch px4 mavros_posix_sitl.launch
 pxh> commander arm # when launching finishes
