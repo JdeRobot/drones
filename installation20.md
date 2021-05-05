@@ -5,7 +5,7 @@ This file explains how to install all the software infrastructure related to Jde
 - Install ROS Noetic (ros-noetic-desktop-full): [Link](https://wiki.ros.org/noetic/Installation/Ubuntu).
 - Install gazebo11 (alternative installation): [Link](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install).
 - Clone JdeRobot Academy (git required): 
-```
+```bash
 git clone https://github.com/JdeRobot/Academy.git
 ```
 
@@ -13,14 +13,14 @@ git clone https://github.com/JdeRobot/Academy.git
 
 ## Step 2: MavROS and PX4.
 ### 2.1. Install MAVROS (v1.7.0)
-```
+```bash
 sudo apt-get install ros-noetic-mavros ros-noetic-mavros-extras
 ```
 
 ### 2.2. Install PX4 dependencies 
 
 1. Download and install Geographiclib
-```
+```bash
 wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
 chmod +x install_geographiclib_datasets.sh
 sudo ./install_geographiclib_datasets.sh
@@ -28,35 +28,29 @@ rm ./install_geographiclib_datasets.sh  # optional
 ```
 
 2. Install common dependencies
-```
+```bash
 sudo apt-get update -y
 sudo apt-get install git zip qtcreator cmake \
     build-essential genromfs ninja-build exiftool \
-    python-pip python-dev -y
+    python3-pip python3-dev python-is-python3 -y
 ```
 
-3. Install xxd
-```
-which xxd || sudo apt install xxd -y || sudo apt-get install vim-common --no-install-recommends -y
-```
-
-### 2.4. PX4 source installation
+### 2.3. PX4 source installation
 
 1. Get PX4 source (v1.11.3)
 ```bash
 mkdir ~/repos && cd repos
-git clone https://github.com/PX4/PX4-Autopilot.git --recursive
-cd PX4-Autopilot && git checkout -b v1.11.3
+git clone --recursive https://github.com/PX4/PX4-Autopilot.git -b v1.11.3
 ```
 
 2. Run PX4 installation script
-```
-cd Tools/setup/
+```bash
+cd ~/repos/PX4-Autopilot/Tools/setup/
 bash ubuntu.sh --no-nuttx --no-sim-tools
 ```
 
 3. Install gstreamer
-```
+```bash
 sudo apt install libgstreamer1.0-dev
 sudo apt install gstreamer1.0-plugins-bad
 ```
@@ -87,20 +81,19 @@ pxh> commander arm # when launching finishes
 
 ## Step 3: JdeRobot-drones
 ### A. Binary installation
-```
+```bash
 sudo apt-get install ros-noetic-jderobot-drones
 ```
 
 ### B. Source installation
 1. Install catkin tools
 ```bash
-sudo apt install python-catkin-tools
+sudo apt install python3-catkin-tools python3-osrf-pycommon
 ```
 
 2. Set up catkin workspace
 ```bash
-mkdir -p ~/catkin_ws/src
-cd ~/catkin_ws
+mkdir -p ~/catkin_ws/src && cd ~/catkin_ws
 catkin init
 echo 'export ROS_WORKSPACE=~/catkin_ws' >> ~/.bashrc # points roscd dir
 source ~/.bashrc
@@ -108,8 +101,8 @@ source ~/.bashrc
 
 3. Get jderobot-drones repository that contains ros pkgs
 ```bash
-cd && mkdir repos && cd repos
-git clone https://github.com/JdeRobot/drones.git
+cd ~/repos
+git clone https://github.com/JdeRobot/drones.git -b noetic-devel
 ```
 
 4. Link drone source to catkin_ws
@@ -124,7 +117,8 @@ ln -s ~/repos/drones/rqt_drone_teleop .
 ```bash
 roscd
 rosdep init  # needs to be called ONLY once after installation. sudo might be required
-rosdep update && rosdep install --from-paths . --ignore-src --rosdistro noetic -y  #sudo might be required
+rosdep update # do not run with sudo
+# rosdep install --from-paths . --ignore-src --rosdistro noetic -y  # sudo might be required
 ```
 
 6. Build 
@@ -142,7 +136,7 @@ source ~/.bashrc
 ```
 
 ## 4. Try it!
-Test an exercise. E.g. At academy/exercises/follow_road run `roslaunch follow_road.launch`.
+Test an exercise. E.g. At RoboticsAcademy/exercises/static/exercises/follow_road `roslaunch follow_road.launch`.
 
 ***
 
@@ -168,28 +162,6 @@ The traceback for the exception was written to the log file
 ```
 
 Make sure to export correctly all the envvars. You can use `rospack find <pkg>` to check if a ros package is well installed.
-
-## Problem with OpenCV
-If you have seen something like: `rqt_gui process has died`, you should check that your opencv version is correct.
-
-Make sure that OpenCv version is 3.2.0. Besides, opencv have to be installed with `sudo apt-get install python-opencv`. Do not install opencv with pip.
-
-You can check opencv version with:
-
-```bash
-$ apt list python-opencv -a
-Listando... Hecho
-python-opencv/bionic-updates,bionic-security,now 3.2.0+dfsg-4ubuntu0.1 amd64 [instalado]
-python-opencv/bionic 3.2.0+dfsg-4build2 amd64
-
-$ python2
-Python 2.7.17 (default, Feb 25 2021, 14:02:55) 
-[GCC 7.5.0] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
->>> import cv2
->>> print cv2.__version__
-3.2.0
-```
 
 ## Problem with mavros_msgs
 Traceback:
@@ -217,14 +189,14 @@ If you have installed jderobot-drones from source, make sure that your repo is u
 
 ## Problem with gazebo (_ignite-tool_, _ignite-fuel_, _ignite-math_, _ignite-*_...)
 Make sure to be updated and upgraded.
-```
+```bash
 sudo apt update
 sudo apt upgrade
 ```
 
 ## Problem with catkin_ws dependencies
 As it had been explained, make sure to have updated ROS dependencies.
-```
+```bash
 rosdep update
 rosdep check --from-paths . --ignore-src --rosdistro noetic
 rosdep install --from-paths . --ignore-src --rosdistro noetic -y
@@ -239,4 +211,3 @@ Make sure to run last instruction with superuser priviledges (´sudo make instal
 
 ## During qfi installation, _unknown module in QT: svg_
 Check [this](https://stackoverflow.com/questions/21098805/unknown-modules-in-qt-svg) out.
-
