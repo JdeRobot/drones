@@ -1,17 +1,13 @@
 # Installation Guide
 This file explains how to install all the software infrastructure related to JdeRobot Academy drones on Ubuntu 20.04.2.0 (Focal Fossa).
 
-## Step 1: ROS Noetic, gazebo11, JdeRobot Academy.
-- Install ROS Noetic (ros-noetic-desktop-full): [Link](https://wiki.ros.org/noetic/Installation/Ubuntu).
+## Step 1: ROS Noetic, gazebo11
+- Install ROS Noetic (ros-noetic-desktop-full & dependencies for building packages): [Link](https://wiki.ros.org/noetic/Installation/Ubuntu).
 - Install gazebo11 (alternative installation): [Link](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install).
-- Clone JdeRobot Academy (git required): 
-```bash
-git clone https://github.com/JdeRobot/Academy.git
-```
 
 **_Note:_** At this point you should try `roscore &` and `rosrun gazebo_ros gazebo` to test if the basic infrastructure works.
 
-## Step 2: MavROS and PX4.
+## Step 2: MavROS and PX4
 ### 2.1. Install MAVROS (v1.7.0)
 ```bash
 sudo apt-get install ros-noetic-mavros ros-noetic-mavros-extras
