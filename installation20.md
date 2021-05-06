@@ -88,7 +88,7 @@ sudo apt-get install ros-noetic-jderobot-drones
 ### B. Source installation
 1. Install catkin tools
 ```bash
-sudo apt install python3-catkin-tools python3-osrf-pycommon
+sudo apt install python3-catkin-tools python3-osrf-pycommon python3-rosdep
 ```
 
 2. Set up catkin workspace
