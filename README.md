@@ -45,11 +45,11 @@ sudo apt-get install ros-kinetic-drone-wrapper ros-kinetic-rqt-drone-teleop
 
 ## ROS Distro Support
 
-|         | Noetic | Melodic |
-| ------- | ------ | ------- |
-| Branch  | [`noetic-devel`](https://github.com/JdeRobot/drones/tree/noetic-devel) | [`melodic-devel`](https://github.com/JdeRobot/drones/tree/melodic-devel) |
-| Status  | supported | supported |
-| Version | [1.4.0](http://repositories.ros.org/status_page/ros_noetic_default.html?q=jderobot_drones)<sup>1</sup> | [1.3.2](http://repositories.ros.org/status_page/ros_melodic_default.html?q=jderobot_drones)<sup>2</sup> |
+|         | Noetic | Melodic | Kinetic |
+| ------- | ------ | ------- | ------- |
+| Branch  | [`noetic-devel`](https://github.com/JdeRobot/drones/tree/noetic-devel) | [`melodic-devel`](https://github.com/JdeRobot/drones/tree/melodic-devel) | [`1.0.1`](https://github.com/JdeRobot/drones/tree/3121c69db0901d5031450bbbd05a8aa4f3f3f341)
+| Status  | supported | supported | EOL |
+| Version | [1.4.0](http://repositories.ros.org/status_page/ros_noetic_default.html?q=jderobot_drones)<sup>1</sup> | [1.3.8](http://repositories.ros.org/status_page/ros_melodic_default.html?q=jderobot_drones)<sup>2</sup> | [1.0.1](http://repositories.ros.org/status_page/ros_kinetic_default.html?q=jderobot_drones)
 
 <sup>1</sup> _Noetic versions: 1.4.X_ --
 <sup>2</sup> _Melodic versions: 1.3.X_
