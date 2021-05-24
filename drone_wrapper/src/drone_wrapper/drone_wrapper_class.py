@@ -104,6 +104,9 @@ class DroneWrapper:
     def get_landed_state(self):
         return self.extended_state.landed_state
 
+    def get_bat_percentage(self):
+        return self.battery_state.percentage
+
     def param_set(self, param, value):
         if isinstance(value, float):
             val = ParamValue(integer=0, real=value)
