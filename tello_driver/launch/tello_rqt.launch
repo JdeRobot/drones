@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+    <!--    Drone model param   -->
+    <arg name="drone_model" default="tello"/>
+    <param name="drone_model" type="str" value="$(arg drone_model)" />
+
+    <arg name="perspective" default="$(find rqt_drone_teleop)/perspectives/drone_teleop_vel_cam.perspective"/>
+
+	<node name="tello_driver_node" pkg="tello_driver" type="tello_driver_node.py" output="screen"/>
+    <node pkg="drone_wrapper" type="drone_wrapper_class.py" name="drone_wrapper_node" output="screen"/>
+    <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui" respawn="false" output="screen" args="--perspective-file $(arg perspective)"/>
+</launch>
