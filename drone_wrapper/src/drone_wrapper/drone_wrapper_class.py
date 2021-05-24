@@ -379,6 +379,10 @@ class DroneWrapper:
         # cam_frontal_topic = rospy.get_param('cam_frontal_topic', None)
         # cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
 
+        drone_model = rospy.get_param('drone_model', 'iris')  # default --> iris
+
+        self.frontal_image = Image()
+        self.ventral_image = Image()
         cam_frontal_topic = '/' + drone_model + '/cam_frontal/image_raw'
         cam_ventral_topic = '/' + drone_model + '/cam_ventral/image_raw'
         rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
