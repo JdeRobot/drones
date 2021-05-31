@@ -105,7 +105,7 @@ class TelloDriver:
         self.__send_cmd("battery?")
 
     def __send_cmd(self, cmd, blocking=True, timeout=RESP_TIMEOUT):
-        print("Sending... {}".format(cmd))
+        print("Sending... {}".format(cmd))  # DEBUG
         self.sock.sendto(cmd.encode(encoding="utf-8"), self.CMD_ADDRESS)
 
         if blocking:
@@ -230,24 +230,24 @@ class TelloDriver:
         offset = False  # TODO, offset not used
         if frame == 1:
             # FRAME_LOCAL_NED = 1 --> Local coordinate frame, Z-down (x: North, y: East, z: Down).
-            rospy.logwarn("Compass data not known. Using FRD as NED frame.")
+            rospy.logwarn_once("Compass data not known. Using FRD as NED frame.")
             frame = 20
             offset = False
         elif frame == 7:
             # FRAME_LOCAL_OFFSET_NED = 7 --> Offset to the current local frame.
             # Anything expressed in this frame should be added to the current local frame position.
-            rospy.logwarn("Compass data not known. Using FRD as NED frame.")
+            rospy.logwarn_once("Compass data not known. Using FRD as NED frame.")
             frame = 20
             offset = True
         elif frame == 8:
             # FRAME_BODY_NED = 8 --> DEPRECATED: MAV_FRAME_BODY_FRD: Body fixed frame of reference,
             # Z-down (x: Forward, y: Right, z: Down).
-            rospy.logwarn("Coordination frame FRAME_BODY_NED deprecated. Using MAV_FRAME_BODY_FRD.")
+            rospy.logwarn_once("Coordination frame FRAME_BODY_NED deprecated. Using MAV_FRAME_BODY_FRD.")
             frame = 12
             offset = False
         elif frame == 9:
             # FRAME_BODY_OFFSET_NED = 9  --> DEPRECATED
-            rospy.logwarn("Coordination frame FRAME_BODY_NED deprecated. Using MAV_FRAME_BODY_FRD.")
+            rospy.logwarn_once("Coordination frame FRAME_BODY_NED deprecated. Using MAV_FRAME_BODY_FRD.")
             frame = 12
             offset = True
         elif frame == 12:
@@ -369,6 +369,7 @@ class TelloDriver:
 
         self.__send_cmd("rc {} {} {} {}".format(self.__vy, self.__vx, self.__vz, self.__yaw_rate), blocking=False)
 
+        # DEBUG
         print(msg.header.seq)
         print("pos", msg.position.x, msg.position.y, msg.position.z)
         print("vel", msg.velocity.x, msg.velocity.y, msg.velocity.z)
