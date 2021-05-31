@@ -4,7 +4,7 @@
     <arg name="drone_model" default="tello"/>
     <param name="drone_model" type="str" value="$(arg drone_model)" />
 
-    <arg name="solution_file_name" default="$(eval env('PWD') + '/test/my_solution.py')"/>
+    <arg name="solution_file_name" default="$(find tello_driver)/test/my_solution.py"/>
     <arg name="perspective" default="$(find rqt_drone_teleop)/perspectives/drone_teleop_vel_cam.perspective"/>
 
 	<node name="tello_driver_node" pkg="tello_driver" type="tello_driver_node.py" output="screen"/>
