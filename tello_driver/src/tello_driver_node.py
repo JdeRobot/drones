@@ -265,6 +265,7 @@ class TelloDriver:
 
         is_abs = True if (frame == 20 or frame == 21) else False
         is_frd = True if (frame == 12 or frame == 20) else False
+        is_vel = False
 
         mask = msg.type_mask
         mask = "{0:012b}".format(int(mask))
@@ -306,10 +307,10 @@ class TelloDriver:
             target_z = msg.position.z*100  # cm
             if is_abs:
                 z = target_z - self.__h
-                self.__h = target_z
+                # self.__h = target_z  # barometer
             else:
                 z = target_z
-                self.__h += target_z
+                # self.__h += target_z  # barometer
 
             cmd_down = "down" if is_frd else "up"
             cmd_up = "up" if is_frd else "down"
@@ -323,18 +324,24 @@ class TelloDriver:
         if not bool(int(mask[-4])):
             vx = msg.velocity.x*100  # cm/s
             self.__vx = vx
+            if vx != 0:
+                is_vel = True
         if not bool(int(mask[-5])):
             vy = msg.velocity.y*100  # cm/s
             if is_frd:
                 self.__vy = -vy
             else:
                 self.__vy = vy
+            if vy != 0:
+                is_vel = True
         if not bool(int(mask[-6])):
             vz = msg.velocity.z*100  # cm/s
             if is_frd:
                 self.__vz = -vz
             else:
                 self.__vz = vz
+            if vz != 0:
+                is_vel = True
         if not bool(int(mask[-7])):
             pass
             rospy.logwarn("AFX target not supported.")
@@ -366,8 +373,11 @@ class TelloDriver:
         if not bool(int(mask[-12])):
             yaw_rate = degrees(msg.yaw_rate)  # degrees/s
             self.__yaw_rate = yaw_rate
+            if yaw_rate != 0:
+                is_vel = True
 
-        self.__send_cmd("rc {} {} {} {}".format(self.__vy, self.__vx, self.__vz, self.__yaw_rate), blocking=False)
+        if is_vel:
+            self.__send_cmd("rc {} {} {} {}".format(self.__vy, self.__vx, self.__vz, self.__yaw_rate), blocking=False)
 
         # DEBUG
         print(msg.header.seq)
