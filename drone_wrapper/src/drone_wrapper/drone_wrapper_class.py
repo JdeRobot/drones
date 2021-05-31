@@ -284,7 +284,7 @@ class DroneWrapper:
         if not self.setpoint_raw_flag:
             self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
 
-    def takeoff(self, h=3):
+    def takeoff(self, h=3, precision=0.05):
         self.set_cmd_pos(0, 0, 0, 0)
         self.hold_setpoint_raw()
         self.arm(True)
@@ -299,7 +299,7 @@ class DroneWrapper:
         self.set_cmd_mix(z=h)
         rospy.loginfo('Taking off!!!')
         while True:
-            if round(self.pose_stamped.pose.position.z, 1) == h:
+            if abs(self.pose_stamped.pose.position.z - h) < precision:
                 break
         self.set_cmd_vel()
 
