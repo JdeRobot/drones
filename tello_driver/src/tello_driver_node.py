@@ -16,6 +16,17 @@ import socket
 import time
 
 
+def process_mask(mask):
+    if mask == 3064:  # xyz yaw
+        return mask
+    elif mask == 1991:  # vx vy vz yaw_rate
+        return mask
+    elif mask == 1987:  # vx vy vz z yaw_rate
+        return mask
+    else:
+        return 1991  # vx vy vz yaw_rate
+
+
 class TelloConnectionError(Exception):
     pass
 
@@ -267,7 +278,7 @@ class TelloDriver:
         is_frd = True if (frame == 12 or frame == 20) else False
         is_vel = False
 
-        mask = msg.type_mask
+        mask = process_mask(msg.type_mask)  # filter valid mask, else vel control
         mask = "{0:012b}".format(int(mask))
         if not bool(int(mask[-1])):
             target_x = msg.position.x*100  # cm
