@@ -274,6 +274,8 @@ class TelloDriver:
             rospy.logerr("Unknown Coordinate Frame. Setpoint skipped.")
             return
 
+        # TODO: overriding frame
+        frame = 21
         is_abs = True if (frame == 20 or frame == 21) else False
         is_frd = True if (frame == 12 or frame == 20) else False
         is_vel = False
