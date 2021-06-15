@@ -11,7 +11,6 @@
 
 	<node name="tello_driver_node" pkg="tello_driver" type="tello_driver_node.py" output="screen"/>
 
-    <include file="$(find drone_wrapper)/launch/mavros_px4_sitl.launch"/>
     <node pkg="drone_wrapper" type="drone_wrapper_class.py" name="drone_wrapper_node" output="screen"/>
 
     <include file="$(find rqt_drone_teleop)/launch/rqt_drone_teleop.launch">
