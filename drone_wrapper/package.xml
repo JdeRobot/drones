@@ -18,7 +18,6 @@
 	<depend>rospy</depend>
 	<depend>sensor_msgs</depend>
 	<depend>tf</depend>
-	<depend>gazebo_ros</depend>
 	<depend>mavros</depend>
 
 	<!-- The export tag contains other, unspecified, tags -->

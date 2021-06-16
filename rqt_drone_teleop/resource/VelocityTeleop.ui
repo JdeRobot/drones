@@ -34,6 +34,9 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::CustomContextMenu</enum>
+   </property>
    <property name="text">
     <string>Take off</string>
    </property>
