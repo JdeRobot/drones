@@ -95,8 +95,8 @@ class PosTeleop(Plugin):
         # Set Variables
         self.play_code_flag = False
         self.takeoff = False
-        self.takeoff_height = rospy.get_param("/rqt_drone_teleop/height")
-        self.takeoff_precision = rospy.get_param("/rqt_drone_teleop/precision")
+        self.takeoff_height = rospy.get_param("/rqt_drone_teleop/height", 3.0)
+        self.takeoff_precision = rospy.get_param("/rqt_drone_teleop/precision", 0.05)
         self._widget.term_out.setReadOnly(True)
         self._widget.term_out.setLineWrapMode(self._widget.term_out.NoWrap)
 
