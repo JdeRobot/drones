@@ -32,7 +32,6 @@ sudo apt-get install git zip qtcreator cmake \
 ```
 
 ### 2.3. PX4 source installation
-
 1. Get PX4 source (v1.11.3)
 ```bash
 mkdir ~/repos && cd repos
