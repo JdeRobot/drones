@@ -2,6 +2,31 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.4.0 (2021-04-23)
+------------------
+* Noetic release
+* Contributors: pariaspe
+
+1.3.8 (2021-04-14)
+------------------
+
+1.3.7 (2021-03-01)
+------------------
+
+1.3.6 (2021-01-12)
+------------------
+* New setup.py. Fixing jenkins-build fail.
+* Contributors: pariaspe
+
+1.3.5 (2020-12-29)
+------------------
+* Freeze fixed using python threadings. Might be improved using a ROS-based solution.
+* Removed RQT dependencies with subscribers and topics. These topics are now throttled by new drone_wrapper topics. This allows to make the RQT independent to the kind of drone connected. 
+* Template dependency removed from rqt_drone_teleop. The template callbacks are no longer required to send commands to the drone. The command flow goes directly from the rqt to the drone wrapper without passing through the exercise template.
+* Removed RQT dependencies with subscribers and topics. These topics are now throttled by new drone_wrapper topics. This allows to make the RQT independent to the kind of drone connected. 
+* Template dependency removed from rqt_drone_teleop. The template callbacks are no longer required to send commands to the drone. The command flow goes directly from the rqt to the drone wrapper without passing through the exercise template.
+* Contributors: pariaspe
+
 1.3.4 (2020-06-28)
 ------------------
 * Added perspectives

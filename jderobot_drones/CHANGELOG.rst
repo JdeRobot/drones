@@ -2,6 +2,32 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.4.0 (2021-04-23)
+------------------
+* Noetic release
+* Contributors: pariaspe
+
+1.3.8 (2021-04-14)
+------------------
+* Added urdf dir to drone_assets
+* Contributors: pariaspe
+
+1.3.7 (2021-03-01)
+------------------
+* New version of drone_wrapper compatible with web templates.
+* Contributors: pariaspe
+
+1.3.6 (2021-01-12)
+------------------
+* Fixing iris models.
+* Fixing jenkins build.
+* Contributors: pariaspe
+
+1.3.5 (2020-12-29)
+------------------
+* Added drone_assets dependency
+* Contributors: pariaspe
+
 1.3.4 (2020-06-28)
 ------------------
 
