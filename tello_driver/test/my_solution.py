@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 
 import rospy
-import numpy as np
-import cv2
 from drone_wrapper import DroneWrapper
-from std_msgs.msg import Bool, Float64
+from std_msgs.msg import Bool
 from sensor_msgs.msg import Image
-from geometry_msgs.msg import Twist, Pose
 
 code_live_flag = False
 
@@ -31,21 +28,6 @@ def set_image_threshed(img):
 	gui_threshed_img_pub.publish(drone.bridge.cv2_to_imgmsg(img))
 
 
-# ====== P CONTROLLER =======
-def p_controller(Kp, error):
-	up = Kp * error
-	return up
-
-
-# ====== D CONTROLLER =======
-def d_controller(Kd, error):
-	global error_prev
-	de = error - error_prev
-	error_prev = error
-	ud = Kd * de
-	return ud
-
-
 def execute(event):
 	global drone
 	img_frontal = drone.get_frontal_image()
@@ -63,8 +45,8 @@ def execute(event):
 if __name__ == "__main__":
 	drone = DroneWrapper()
 	rospy.Subscriber('gui/play_stop', Bool, gui_play_stop_cb)
-	gui_filtered_img_pub = rospy.Publisher('interface/filtered_img', Image, queue_size = 1)
-	gui_threshed_img_pub = rospy.Publisher('interface/threshed_img', Image, queue_size = 1)
+	gui_filtered_img_pub = rospy.Publisher('interface/filtered_img', Image, queue_size=1)
+	gui_threshed_img_pub = rospy.Publisher('interface/threshed_img', Image, queue_size=1)
 	code_live_flag = False
 
 	error_prev = 0.0
