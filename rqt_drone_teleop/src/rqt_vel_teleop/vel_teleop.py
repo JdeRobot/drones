@@ -14,12 +14,9 @@ from python_qt_binding.QtCore import pyqtSignal, Qt
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Pose, PoseStamped, Twist, TwistStamped
 from mavros_msgs.msg import ExtendedState
-from nav_msgs.msg import Odometry
 
 from teleopWidget import TeleopWidget
 from sensorsWidget import SensorsWidget
-
-# from tello_driver.msg import TelloStatus
 
 from drone_wrapper.drone_wrapper_class import DroneWrapper
 
