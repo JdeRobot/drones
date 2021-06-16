@@ -1,0 +1,2 @@
+#! /bin/sh
+rosservice call /mavros/cmd/takeoff 0.0 0.0 0.0 0.0 0.0

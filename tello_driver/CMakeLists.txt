@@ -1,25 +1,30 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(drone_wrapper)
+project(tello_driver)
 
 find_package(catkin REQUIRED COMPONENTS
+  rospy
   cv_bridge
   geometry_msgs
   mavros_msgs
-  rospy
-  sensor_msgs
-  tf
   mavros
+  sensor_msgs
 )
 
 catkin_python_setup()
-
 catkin_package()
 
+
+include_directories(
+# include
+  ${catkin_INCLUDE_DIRS}
+)
+
 install(PROGRAMS
-	src/drone_tello_class.py
-	scripts/play_python_code
-	scripts/load_parameters
-	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  src/tello_driver_node.py
+  scripts/tello_land
+  scripts/tello_quit
+  scripts/tello_takeoff
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY launch

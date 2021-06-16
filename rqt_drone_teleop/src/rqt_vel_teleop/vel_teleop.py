@@ -7,7 +7,7 @@ import threading
 
 from qt_gui.plugin import Plugin
 from python_qt_binding import loadUi
-from python_qt_binding.QtWidgets import QWidget
+from python_qt_binding.QtWidgets import QWidget, QMenu, QAction, QDialog, QLabel, QVBoxLayout, QDialogButtonBox, QDoubleSpinBox
 from python_qt_binding.QtGui import QIcon, QPixmap, QImage
 from python_qt_binding.QtCore import pyqtSignal, Qt
 
@@ -21,6 +21,38 @@ from sensorsWidget import SensorsWidget
 from drone_wrapper.drone_wrapper_class import DroneWrapper
 
 drone = DroneWrapper(name='rqt')
+
+
+class TakeoffConfig(QDialog):
+	def __init__(self, parent, height, precision, *args, **kwargs):
+		super(TakeoffConfig, self).__init__(parent, *args, **kwargs)
+		self.setWindowTitle("Takeoff Settings")
+
+		label_height = QLabel("Takeoff Height:")
+		self.spin_height = QDoubleSpinBox()
+		self.spin_height.setValue(float(height))
+		self.spin_height.setSingleStep(0.1)
+		self.spin_height.setMinimum(0.0)
+		label_precision = QLabel("Takeoff Precision:")
+		self.spin_precision = QDoubleSpinBox()
+		self.spin_precision.setValue(precision)
+		self.spin_precision.setSingleStep(0.1)
+		self.spin_precision.setMinimum(0.0)
+		self.spin_precision.setMaximum(1.0)
+
+		btn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+		self.btn_box = QDialogButtonBox(btn)
+		self.btn_box.accepted.connect(self.accept)
+		self.btn_box.rejected.connect(self.reject)
+
+		layout = QVBoxLayout()
+		layout.addWidget(label_height)
+		layout.addWidget(self.spin_height)
+		layout.addWidget(label_precision)
+		layout.addWidget(self.spin_precision)
+		layout.addWidget(QLabel())
+		layout.addWidget(self.btn_box)
+		self.setLayout(layout)
 
 
 class VelTeleop(Plugin):
@@ -67,11 +99,20 @@ class VelTeleop(Plugin):
 		# Set Variables
 		self.play_code_flag = False
 		self.takeoff = False
+		self.takeoff_height = rospy.get_param("/rqt_drone_teleop/height", 3.0)
+		self.takeoff_precision = rospy.get_param("/rqt_drone_teleop/precision", 0.05)
 		self.linear_velocity_scaling_factor = 1
 		self.vertical_velocity_scaling_factor = 0.8
 		self.angular_velocity_scaling_factor = 0.5
 		self._widget.term_out.setReadOnly(True)
 		self._widget.term_out.setLineWrapMode(self._widget.term_out.NoWrap)
+
+		self._widget.takeoffButton.customContextMenuRequested.connect(self.on_context_menu)
+
+		self.pop_menu = QMenu()
+		self.tk_config_action = QAction("Takeoff Config", self)
+		self.tk_config_action.triggered.connect(self.open_config_dialog)
+		self.pop_menu.addAction(self.tk_config_action)
 
 		# Set functions for each GUI Item
 		self._widget.takeoffButton.clicked.connect(self.call_takeoff_land)
@@ -111,13 +152,22 @@ class VelTeleop(Plugin):
 		# Add widget to the user interface
 		context.add_widget(self._widget)
 
-		# Add Subscribers
+		# Add Subscribers (different for each model)
 		rospy.Subscriber('drone_wrapper/local_position/pose', PoseStamped, self.pose_stamped_cb)
 		rospy.Subscriber('drone_wrapper/local_position/velocity_body', TwistStamped, self.twist_stamped_cb)
 		rospy.Subscriber('drone_wrapper/extended_state', ExtendedState, self.extended_state_cb)
 
 		# Add Timer
 		self.update_status_info()
+
+	def on_context_menu(self, point):
+		self.pop_menu.exec_(self._widget.takeoffButton.mapToGlobal(point))
+
+	def open_config_dialog(self):
+		settings_window = TakeoffConfig(self._widget, self.takeoff_height, self.takeoff_precision)
+		if settings_window.exec_():
+			self.takeoff_height = settings_window.spin_height.value()
+			self.takeoff_precision = settings_window.spin_precision.value()
 
 	def show_sensors_widget(self, state):
 		if state == Qt.Checked:
@@ -166,7 +216,7 @@ class VelTeleop(Plugin):
 	def takeoff_drone(self):
 		try:
 			global drone
-			drone.takeoff()
+			drone.takeoff(h=self.takeoff_height, precision=self.takeoff_precision)
 			self.takeoff = True
 		finally:
 			rospy.loginfo('Takeoff finished')
@@ -206,7 +256,7 @@ class VelTeleop(Plugin):
 			self._widget.term_out.append('Stopping student code')
 			self.play_stop_pub.publish(Bool(False))
 			self.play_code_flag = False
-		
+
 	def stop_drone(self):
 		self._widget.term_out.append('Stopping Drone')
 		rospy.loginfo('Stopping Drone')
