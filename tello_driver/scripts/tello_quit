@@ -1,2 +1,0 @@
-#! /bin/sh
-rosservice call /tello/emergency True
