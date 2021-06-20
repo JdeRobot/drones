@@ -5,7 +5,7 @@ import tf
 import numpy as np
 from cv_bridge import CvBridge
 from sensor_msgs.msg import NavSatFix, Image, BatteryState
-from geometry_msgs.msg import PoseStamped, TwistStamped, Twist
+from geometry_msgs.msg import PoseStamped, TwistStamped
 from mavros_msgs.msg import State, ExtendedState, PositionTarget, ParamValue
 from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeRequest, CommandTOL, CommandTOLRequest, \
     ParamSet, ParamGet
@@ -187,8 +187,8 @@ class DroneWrapper:
         self.posx = self.pose_stamped.pose.position.x
         self.posy = self.pose_stamped.pose.position.y
         self.height = self.pose_stamped.pose.position.z
-        self.vx = -vy
-        self.vy = vx
+        self.vx = vx
+        self.vy = vy
         self.vz = vz
 
         global CMD
@@ -197,8 +197,8 @@ class DroneWrapper:
         if abs(vx) <= EPSILON and abs(vy) <= EPSILON:
             self.is_xy = True
         else:
-            self.setpoint_raw.velocity.x = -vy
-            self.setpoint_raw.velocity.y = vx
+            self.setpoint_raw.velocity.x = vx
+            self.setpoint_raw.velocity.y = vy
 
             self.is_xy = False
 
@@ -235,13 +235,13 @@ class DroneWrapper:
         self.posx = self.pose_stamped.pose.position.x
         self.posy = self.pose_stamped.pose.position.y
         self.height = z
-        self.vx = -vy
-        self.vy = vx
+        self.vx = vx
+        self.vy = vy
         self.vz = 0
 
         self.setpoint_raw.position.z = z
-        self.setpoint_raw.velocity.x = -vy
-        self.setpoint_raw.velocity.y = vx
+        self.setpoint_raw.velocity.x = vx
+        self.setpoint_raw.velocity.y = vy
 
         global CMD
         CMD = 2  # MIX

@@ -49,8 +49,6 @@ if __name__ == "__main__":
 	gui_threshed_img_pub = rospy.Publisher('interface/threshed_img', Image, queue_size = 1)
 	code_live_flag = False
 
-	error_prev = 0.0
-
 	code_live_timer = rospy.Timer(rospy.Duration(nsecs=50000000), execute)
 	code_live_timer.shutdown()
 	while not rospy.is_shutdown():
