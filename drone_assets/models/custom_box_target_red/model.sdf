@@ -15,7 +15,7 @@
       <visual name="visual">
         <geometry>
           <mesh>
-            <uri>model://box_target_red/meshes/mesh.dae</uri>
+            <uri>model://custom_box_target_red/meshes/mesh.dae</uri>
 			<scale>0.16666 0.16666 0.5</scale>
           </mesh>
         </geometry>
