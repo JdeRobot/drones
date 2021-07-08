@@ -26,7 +26,7 @@ configure_file (
     assets-setup.sh
 )
 
-install(DIRECTORY models worlds launch
+install(DIRECTORY ../drone_assets/models worlds launch
 DESTINATION gazebo)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/assets-setup.sh 
 DESTINATION gazebo)
