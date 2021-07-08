@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(jderobot_assets)
+project(drone_circuit_assets)
 
 ## ROS INSTALL ##
 
@@ -7,7 +7,7 @@ find_package(catkin REQUIRED COMPONENTS)
 
 catkin_package()
 
-install(DIRECTORY models worlds
+install(DIRECTORY ../drone_assets/models worlds
  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

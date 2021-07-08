@@ -6,7 +6,7 @@
 <!-- Updates According to Package format 3 https://www.ros.org/reps/rep-0149.html -->
 <package format="3">
 
-  <name>jderobot_assets</name>
+	<name>drone_circuit_assets</name>
   <version>1.0.0</version>
   <description>The JdeRobot Behavior Metrics drone assets package</description>
 
