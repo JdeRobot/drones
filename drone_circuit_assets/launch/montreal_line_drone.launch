@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="x" default="200.88"/>
+    <arg name="y" default="-90.72"/>
+    <arg name="z" default="0"/>
+    <arg name="R" default="0"/>
+    <arg name="P" default="0"/>
+    <arg name="Y" default="-2.83"/>
+    <arg name="world" default="simple_circuit_drone.world"/>
+
+    <include file="$(find drone_wrapper)/launch/mavros_px4_sitl.launch">
+        <arg name="x" value="$(arg x)"/>
+        <arg name="y" value="$(arg y)"/>
+        <arg name="z" value="$(arg z)"/>
+        <arg name="R" value="$(arg R)"/>
+        <arg name="P" value="$(arg P)"/>
+        <arg name="Y" value="$(arg Y)"/>
+        <arg name="world" value="$(arg world)"/>
+    </include>
+</launch>
