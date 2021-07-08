@@ -6,10 +6,6 @@
     <arg name="R" default="0"/>
     <arg name="P" default="0"/>
     <arg name="Y" default="-1.73"/>
-    <!-- vehicle model and world -->
-    <arg name="est" default="ekf2"/>
-    <arg name="vehicle" default="iris"/>
-    <arg name="model" default="iris_dual_cam"/>
     <arg name="world" default="many_curves_drone.world"/>
 
     <include file="$(find drone_wrapper)/launch/mavros_px4_sitl.launch">
