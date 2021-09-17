@@ -2,8 +2,8 @@
 Changelog for package drone_circuit_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.1 (2021-09-17)
+------------------
 * Added drone circuit assets for Behavior Metrics
 * Contributors: Utkarsh Mishra, pariaspe
 

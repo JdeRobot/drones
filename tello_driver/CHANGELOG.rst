@@ -2,8 +2,8 @@
 Changelog for package tello_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.1 (2021-09-17)
+------------------
 * Added tello_driver v1
 * Contributors: pariaspe
 
