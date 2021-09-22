@@ -160,4 +160,4 @@ If you just need one of the packages instead of all, you can install it separate
 
 ## Installation
 
-An installation guide to Ubuntu 20.04.2 LTS (Focal Fosaa) can be found [here](https://github.com/JdeRobot/drones/blob/master/installation20.md).
+An installation guide to Ubuntu 20.04.2 LTS (Focal Fosaa) can be found [here](https://github.com/JdeRobot/drones/blob/noetic-devel/installation20.md).
