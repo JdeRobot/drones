@@ -7,7 +7,7 @@ find_package(catkin REQUIRED COMPONENTS)
 
 catkin_package()
 
-install(DIRECTORY ../drone_assets/models worlds
+install(DIRECTORY worlds
  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
@@ -26,7 +26,7 @@ configure_file (
     assets-setup.sh
 )
 
-install(DIRECTORY ../drone_assets/models worlds launch
+install(DIRECTORY worlds launch
 DESTINATION gazebo)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/assets-setup.sh 
 DESTINATION gazebo)
