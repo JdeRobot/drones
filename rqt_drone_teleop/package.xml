@@ -16,7 +16,7 @@
 	<depend>rqt_gui</depend>
 	<depend>rqt_gui_py</depend>
 	<depend>sensor_msgs</depend>
-	<depend>python-rospkg</depend>
+	<depend>python3-rospkg</depend>
 	<depend>roslib</depend>
 	<depend>drone_wrapper</depend>
 
