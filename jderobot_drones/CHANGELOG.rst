@@ -2,8 +2,8 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.2 (2021-10-04)
+------------------
 * Fixing Jenkins Build errors
 * Contributors: pariaspe
 

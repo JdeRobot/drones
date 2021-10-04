@@ -2,8 +2,8 @@
 Changelog for package drone_circuit_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.2 (2021-10-04)
+------------------
 * Removed drone_assets reference from drone_circuit_assets CMakeLists
 * Contributors: pariaspe
 

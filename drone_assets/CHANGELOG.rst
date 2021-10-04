@@ -2,8 +2,8 @@
 Changelog for package drone_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.2 (2021-10-04)
+------------------
 * Added gazebo_ros dependency to drone_assets
 * Contributors: pariaspe
 

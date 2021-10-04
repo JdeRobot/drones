@@ -2,8 +2,8 @@
 Changelog for package tello_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.2 (2021-10-04)
+------------------
 * Tello driver is not used as python package, fixed
 * Contributors: pariaspe
 
