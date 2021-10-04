@@ -2,6 +2,11 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixing Jenkins Build errors
+* Contributors: pariaspe
+
 1.4.1 (2021-09-17)
 ------------------
 * Added drone circuit assets for Behavior Metrics

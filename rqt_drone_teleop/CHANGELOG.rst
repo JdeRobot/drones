@@ -2,6 +2,12 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* python-rospkg doesn't exist in noetic release, replacing with python3-rospkg
+* corrected maintainer
+* Contributors: Nikhil Khedekar, pariaspe
+
 1.4.0 (2021-04-23)
 ------------------
 * Noetic release

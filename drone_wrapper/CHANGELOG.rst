@@ -2,6 +2,12 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Removed old file from drone_wrapper CMakeLists
+* corrected maintainer
+* Contributors: Nikhil Khedekar, pariaspe
+
 1.4.0 (2021-04-23)
 ------------------
 * Noetic release
