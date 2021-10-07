@@ -1,0 +1,41 @@
+<?xml version='1.0'?>
+<sdf version='1.7'>
+  <model name='box'>
+    <link name='box_link'>
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>0.00002311</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00002924</iyy>
+          <iyz>0</iyz>
+          <izz>0.00003030</izz>
+        </inertia>
+      </inertial>
+      <pose>0 0 0.055 0 -0 0</pose>
+      <gravity>1</gravity>
+      <visual name='visual'>
+        <geometry>
+          <box>
+            <size>0.14 0.12 0.11</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Grey</name>
+          </script>
+        </material>
+      </visual>
+      <collision name='collision'>
+        <geometry>
+          <box>
+            <size>0.14 0.12 0.11</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+    <static>0</static>
+  </model>
+</sdf>
