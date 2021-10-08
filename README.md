@@ -19,7 +19,7 @@ sudo apt-get install ros-melodic-jderobot-drones
 
 Notice that the previous command is equal to install each package separately:
 ```bash
-sudo apt-get install ros-melodic-drone-wrapper ros-melodic-rqt-drone-teleop ros-melodic-rqt-ground-robot-teleop
+sudo apt-get install ros-melodic-drone-assets ros-melodic-drone-wrapper ros-melodic-rqt-drone-teleop ros-melodic-rqt-ground-robot-teleop ros-melodic-tello-driver
 ```
 If you just need one of the packages instead of all, you can install it separately.
 
@@ -45,6 +45,23 @@ If you just need one of the packages instead of all, you can install it separate
 | dev amd64 | [![Build Status](http://build.ros.org/buildStatus/icon?job=Mdev__jderobot_drones__ubuntu_bionic_amd64)](http://build.ros.org/job/Mdev__jderobot_drones__ubuntu_bionic_amd64/) |
 | bin arm64 | [![Build Status](http://build.ros.org/buildStatus/icon?job=Mbin_ubv8_uBv8__jderobot_drones__ubuntu_bionic_arm64__binary)](http://build.ros.org/job/Mbin_ubv8_uBv8__jderobot_drones__ubuntu_bionic_arm64__binary/) |
 | bin armhf | [![Build Status](http://build.ros.org/buildStatus/icon?job=Mbin_ubhf_uBhf__jderobot_drones__ubuntu_bionic_armhf__binary)](http://build.ros.org/job/Mbin_ubhf_uBhf__jderobot_drones__ubuntu_bionic_armhf__binary/) |
+
+
+<details>
+<summary><b>drone_assets</b></summary>
+<br>
+  
+| `drone_assets` |  Melodic Bionic |
+|:-------:|:-------------------:|
+| source | [![Build Status](https://build.ros.org/buildStatus/icon?job=Msrc_uB__drone_assets__ubuntu_bionic__source)](https://build.ros.org/job/Msrc_uB__drone_assets__ubuntu_bionic__source/) | 
+| bin amd64 | [![Build Status](https://build.ros.org/buildStatus/icon?job=Mbin_uB64__drone_assets__ubuntu_bionic_amd64__binary)](https://build.ros.org/job/Mbin_uB64__drone_assets__ubuntu_bionic_amd64__binary/) |
+| bin i386 | n/a | 
+| dev amd64 | n/a |
+| bin arm64 | [![Build Status](https://build.ros.org/buildStatus/icon?job=Mbin_ubv8_uBv8__drone_assets__ubuntu_bionic_arm64__binary)](https://build.ros.org/job/Mbin_ubv8_uBv8__drone_assets__ubuntu_bionic_arm64__binary/) |
+| bin armhf |  [![Build Status](https://build.ros.org/buildStatus/icon?job=Mbin_ubhf_uBhf__drone_assets__ubuntu_bionic_armhf__binary)](https://build.ros.org/job/Mbin_ubhf_uBhf__drone_assets__ubuntu_bionic_armhf__binary/) |
+
+</details>
+
 
 <details>
 <summary><b>drone_wrapper</b></summary>
@@ -92,6 +109,22 @@ If you just need one of the packages instead of all, you can install it separate
   
 </details>
 
+
+<details>
+<summary><b>tello_driver</b></summary>
+<br>
+  
+| `tello_driver` |  Melodic Bionic |
+|:-------:|:-------------------:|
+| source | - | 
+| bin amd64 | - |
+| bin i386 | n/a | 
+| dev amd64 | n/a |
+| bin arm64 | - |
+| bin armhf | - |
+
+</details>
+
 ### Debian
 
 | `jderobot_drones` |  Melodic Stretch   | 
@@ -99,6 +132,20 @@ If you just need one of the packages instead of all, you can install it separate
 | source | [![Build Status](http://build.ros.org/buildStatus/icon?job=Msrc_dS__jderobot_drones__debian_stretch__source)](http://build.ros.org/job/Msrc_dS__jderobot_drones__debian_stretch__source/) | 
 | bin amd64 | [![Build Status](http://build.ros.org/buildStatus/icon?job=Mbin_ds_dS64__jderobot_drones__debian_stretch_amd64__binary)](http://build.ros.org/job/Mbin_ds_dS64__jderobot_drones__debian_stretch_amd64__binary/) | 
 | bin arm64 | [![Build Status](http://build.ros.org/buildStatus/icon?job=Mbin_dsv8_dSv8__jderobot_drones__debian_stretch_arm64__binary)](http://build.ros.org/job/Mbin_dsv8_dSv8__jderobot_drones__debian_stretch_arm64__binary/) | 
+
+
+<details>
+<summary><b>drone_assets</b></summary>
+<br>
+  
+| `drone_assets` |  Melodic Stretch   | 
+|:-------:|:-------------------:|
+| source | n/a | 
+| bin amd64 | n/a | 
+| bin arm64 | n/a | 
+  
+</details>
+
 
 <details>
 <summary><b>drone_wrapper</b></summary>
@@ -133,6 +180,18 @@ If you just need one of the packages instead of all, you can install it separate
 | source | [![Build Status](http://build.ros.org/buildStatus/icon?job=Msrc_dS__rqt_ground_robot_teleop__debian_stretch__source)](http://build.ros.org/job/Msrc_dS__rqt_ground_robot_teleop__debian_stretch__source/) | 
 | bin amd64 | [![Build Status](http://build.ros.org/buildStatus/icon?job=Mbin_ds_dS64__rqt_ground_robot_teleop__debian_stretch_amd64__binary)](http://build.ros.org/job/Mbin_ds_dS64__rqt_ground_robot_teleop__debian_stretch_amd64__binary/) | 
 | bin arm64 | [![Build Status](http://build.ros.org/buildStatus/icon?job=Mbin_dsv8_dSv8__rqt_ground_robot_teleop__debian_stretch_arm64__binary)](http://build.ros.org/job/Mbin_dsv8_dSv8__rqt_ground_robot_teleop__debian_stretch_arm64__binary/) | 
+  
+</details>
+
+<details>
+<summary><b>tello_driver</b></summary>
+<br>
+  
+| `tello_driver` |  Melodic Stretch   | 
+|:-------:|:-------------------:|
+| source | - | 
+| bin amd64 | - | 
+| bin arm64 | - | 
   
 </details>
 
