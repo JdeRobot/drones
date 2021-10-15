@@ -2,6 +2,14 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added tello driver
+* Drone wrapper is now compatible with tello driver
+* New models in drone_assets
+* Corrected maintainer for drone packages
+* Contributors: pariaspe
+
 1.3.8 (2021-04-14)
 ------------------
 * Added urdf dir to drone_assets

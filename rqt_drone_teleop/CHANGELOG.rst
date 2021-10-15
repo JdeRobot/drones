@@ -2,6 +2,15 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added default values to ensure retro-compatibility
+* Added takeoff config to rqt_pos_teleop
+* Customizable takeoff height and precision from launch and during running
+* RQT widgets are model dependant free.
+* Added Tello compatibility basics
+* Contributors: Diego Martín, Nikhil Khedekar, pariaspe
+
 1.3.8 (2021-04-14)
 ------------------
 

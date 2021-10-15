@@ -2,6 +2,11 @@
 Changelog for package rqt_ground_robot_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Corrected maintainer
+* Contributors: Nikhil Khedekar, pariaspe
+
 1.3.8 (2021-04-14)
 ------------------
 

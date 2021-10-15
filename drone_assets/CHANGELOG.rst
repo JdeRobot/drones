@@ -2,6 +2,16 @@
 Changelog for package drone_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix path of custom_box_target
+* Added new ocean model
+* Added a new model slab
+* Added new simple_labyrinth_green
+* Added plugins
+* Added gas_station model
+* Contributors: Arka, RUFFY-369, iamarkaj, pariaspe
+
 1.3.8 (2021-04-14)
 ------------------
 * Added urdf as installed dir
