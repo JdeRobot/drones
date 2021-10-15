@@ -2,8 +2,8 @@
 Changelog for package drone_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.9 (2021-10-15)
+------------------
 * Fix path of custom_box_target
 * Added new ocean model
 * Added a new model slab

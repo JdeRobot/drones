@@ -2,8 +2,8 @@
 Changelog for package rqt_drone_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.9 (2021-10-15)
+------------------
 * Added default values to ensure retro-compatibility
 * Added takeoff config to rqt_pos_teleop
 * Customizable takeoff height and precision from launch and during running

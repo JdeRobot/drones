@@ -2,8 +2,8 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.9 (2021-10-15)
+------------------
 * Removed old reference to non-existing file
 * Drone wrapper takeoff adjusted. Added precision error to decided when takeoff is over.
 * Added get_battery to drone_warpper api
