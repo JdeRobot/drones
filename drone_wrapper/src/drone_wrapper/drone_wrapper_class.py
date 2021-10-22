@@ -285,6 +285,10 @@ class DroneWrapper:
             self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
 
     def takeoff(self, h=3, precision=0.05):
+        if self.extended_state.landed_state == 2 or self.extended_state.landed_state == 3:
+            rospy.loginfo('Drone is already flying!')
+            return
+
         self.set_cmd_pos(0, 0, 0, 0)
         self.hold_setpoint_raw()
         self.arm(True)
