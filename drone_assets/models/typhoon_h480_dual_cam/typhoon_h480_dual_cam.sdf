@@ -888,7 +888,7 @@
         </joint>
 
         <link name='cam_ventral'>
-            <pose>0 0 -0.037 0 1.57 0</pose>
+            <pose>0.104 0 -0.015 0 1.57 0</pose>
             <inertial>
                 <mass>0.00001</mass>
                 <inertia>
