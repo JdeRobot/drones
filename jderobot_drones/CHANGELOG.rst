@@ -2,8 +2,8 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.10 (2021-11-04)
+-------------------
 * Fix jenkins builb in drone_assets
 * Made takeoff idempotent
 * Contributors: pariaspe
