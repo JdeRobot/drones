@@ -2,6 +2,11 @@
 Changelog for package drone_wrapper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Takeoff returns if drone is flying or taking off
+* Contributors: pariaspe
+
 1.3.9 (2021-10-15)
 ------------------
 * Removed old reference to non-existing file

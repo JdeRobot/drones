@@ -2,6 +2,12 @@
 Changelog for package jderobot_drones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix jenkins builb in drone_assets
+* Made takeoff idempotent
+* Contributors: pariaspe
+
 1.3.9 (2021-10-15)
 ------------------
 * Added tello driver

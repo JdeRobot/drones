@@ -2,6 +2,11 @@
 Changelog for package drone_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Adding gazebo_ros dependency
+* Contributors: pariaspe
+
 1.3.9 (2021-10-15)
 ------------------
 * Fix path of custom_box_target
