@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="cmd-bash" default="gnome-terminal --command"/>
+
+    <include file="$(find drone_wrapper)/launch/mavros_px4_sitl.launch"/>
+
+    <node pkg="cl_drone_teleop" type="cl_drone_teleop.py" name="cl_drone_teleop" launch-prefix="$(arg cmd-bash)"/>
+</launch>
