@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(drone_assets)
 
-find_package(catkin REQUIRED COMPONENTS)
+find_package(catkin REQUIRED COMPONENTS gazebo_ros)
 
 find_package(gazebo REQUIRED)
 
