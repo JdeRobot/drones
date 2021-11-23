@@ -60,12 +60,15 @@ class DroneWrapper:
         self.rqt_cam_ventral_publisher.publish(self.ventral_image)
 
     def stay_armed_stay_offboard_cb(self, event):
-        if self.state.mode != 'OFFBOARD':
-            if self.request_mode('OFFBOARD'):
-                rospy.loginfo("OFFBOARD requested")
-        elif not self.state.armed:
-            if self.arm(True):
-                rospy.loginfo("Vehicle Armed")
+        try:
+            if self.state.mode != 'OFFBOARD':
+                if self.request_mode('OFFBOARD'):
+                    rospy.loginfo("OFFBOARD requested")
+            elif not self.state.armed:
+                if self.arm(True):
+                    rospy.loginfo("Vehicle Armed")
+        except rospy.ROSTimeMovedBackwardsException:
+            pass
 
     def get_frontal_image(self):
         return self.bridge.imgmsg_to_cv2(self.frontal_image)
