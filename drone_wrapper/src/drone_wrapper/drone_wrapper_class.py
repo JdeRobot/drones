@@ -3,6 +3,7 @@
 import rospy
 import tf
 import numpy as np
+import time
 from cv_bridge import CvBridge
 from sensor_msgs.msg import NavSatFix, Image, BatteryState
 from geometry_msgs.msg import PoseStamped, TwistStamped
@@ -298,7 +299,7 @@ class DroneWrapper:
         self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(3), self.stay_armed_stay_offboard_cb)
         while True:
             while not (self.state.armed and self.state.mode == 'OFFBOARD'):
-                self.rate.sleep()
+                time.sleep(0.05)  # 20 Hz
             rospy.loginfo('Sleeping 1 secs to confirm change')
             rospy.sleep(1)
             if self.state.mode == 'OFFBOARD':
@@ -339,7 +340,6 @@ class DroneWrapper:
         self.battery_state = BatteryState()
         self.pose_stamped = PoseStamped()
         self.vel_body_stamped = TwistStamped()
-        self.rate = rospy.Rate(20)
         self.setpoint_raw = PositionTarget()
         self.setpoint_raw_flag = False
         self.vz_factor = 0.4
