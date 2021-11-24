@@ -254,35 +254,38 @@ class DroneWrapper:
         self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
     def repeat_setpoint_raw(self, event):
-        self.setpoint_raw.coordinate_frame = 8
+        try:
+            self.setpoint_raw.coordinate_frame = 8
 
-        self.setpoint_raw.position.x = self.posx
-        self.setpoint_raw.position.y = self.posy
-        self.setpoint_raw.position.z = self.height
-        self.setpoint_raw.velocity.x = self.vx
-        self.setpoint_raw.velocity.y = self.vy
-        self.setpoint_raw.velocity.z = self.vz
+            self.setpoint_raw.position.x = self.posx
+            self.setpoint_raw.position.y = self.posy
+            self.setpoint_raw.position.z = self.height
+            self.setpoint_raw.velocity.x = self.vx
+            self.setpoint_raw.velocity.y = self.vy
+            self.setpoint_raw.velocity.z = self.vz
 
-        if CMD == 0:  # POS
-            self.setpoint_raw.type_mask = 3064  # xyz yaw
-        elif CMD == 1:  # VEL
-            if self.is_xy:
-                if self.is_z:
-                    self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
+            if CMD == 0:  # POS
+                self.setpoint_raw.type_mask = 3064  # xyz yaw
+            elif CMD == 1:  # VEL
+                if self.is_xy:
+                    if self.is_z:
+                        self.setpoint_raw.type_mask = 2040  # xyz yaw_rate
+                    else:
+                        self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
                 else:
-                    self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
+                    if self.is_z:
+                        self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
+                    else:
+                        self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
+            elif CMD == 2:  # MIX
+                self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
             else:
-                if self.is_z:
-                    self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
-                else:
-                    self.setpoint_raw.type_mask = 1991  # vx vy vy yaw_rate
-        elif CMD == 2:  # MIX
-            self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
-        else:
-            self.setpoint_raw.type_mask = 3064  # xyz yaw
-            print("[CMD error]: Mask set to position control")
+                self.setpoint_raw.type_mask = 3064  # xyz yaw
+                print("[CMD error]: Mask set to position control")
 
-        self.setpoint_raw_publisher.publish(self.setpoint_raw)
+            self.setpoint_raw_publisher.publish(self.setpoint_raw)
+        except rospy.ROSTimeMovedBackwardsException:
+            pass
 
     def hold_setpoint_raw(self):
         if not self.setpoint_raw_flag:
