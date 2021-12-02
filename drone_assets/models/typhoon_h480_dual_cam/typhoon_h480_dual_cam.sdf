@@ -140,6 +140,7 @@
                         </ode>
                     </friction>
                     <contact>
+                        <collide_bitmask>0xfe</collide_bitmask>
                         <ode>
                             <kp>1e+8</kp>
                             <kd>1</kd>
@@ -165,6 +166,7 @@
                         </ode>
                     </friction>
                     <contact>
+                        <collide_bitmask>0xfe</collide_bitmask>
                         <ode>
                             <kp>1e+8</kp>
                             <kd>1</kd>
@@ -246,6 +248,7 @@
                         </ode>
                     </friction>
                     <contact>
+                        <collide_bitmask>0xfe</collide_bitmask>
                         <ode>
                             <kp>1e+8</kp>
                             <kd>1</kd>
@@ -271,6 +274,7 @@
                         </ode>
                     </friction>
                     <contact>
+                        <collide_bitmask>0xfe</collide_bitmask>
                         <ode>
                             <kp>1e+8</kp>
                             <kd>1</kd>

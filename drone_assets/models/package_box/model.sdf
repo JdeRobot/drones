@@ -35,6 +35,11 @@
             <size>0.14 0.12 0.11</size>
           </box>
         </geometry>
+        <surface>
+          <contact>
+            <collide_bitmask>0x01</collide_bitmask>
+          </contact>
+        </surface>
       </collision>
     </link>
     <static>0</static>
