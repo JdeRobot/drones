@@ -9,7 +9,7 @@
                 <!-- rear reference point X: -100.044mm, CAD offset: 1001.049mm -->
                 <!-- top reference point Z: 33.8663mm, CAD offset: 42.8698mm -->
                 <pose>0.001005 0 -0.0090035 0 0 0</pose>
-                <mass>1.5</mass>
+                <mass>2.02</mass>
                 <inertia>
                     <ixx>0.05892500</ixx>
                     <ixy>0</ixy>
