@@ -116,21 +116,18 @@ class DroneWrapper:
         else:
             val = ParamValue(integer=value, real=0.0)
 
-        rospy.wait_for_service(self.ns + '/mavros/param/set')
         try:
-            set_param = rospy.ServiceProxy(self.ns + '/mavros/param/set', ParamSet)
-            resp = set_param(param_id=param, value=val)
-            print("setmode send ok", resp.success)
+            resp = self.set_param(param_id=param, value=val)
+            rospy.loginfo("ParamSet:", resp.success)
         except rospy.ServiceException as e:
-            print("Failed SetMode:", e)
+            rospy.logwarn("Failed ParamSet:", e)
 
     def param_get(self, param):
         try:
-            get_param = rospy.ServiceProxy(self.ns + 'mavros/param/get', ParamGet)
-            resp = get_param(param_id=param)
-            print("setmode send ok", resp.success)
+            resp = self.get_param(param_id=param)
+            rospy.loginfo("ParamGet:", resp.success)
         except rospy.ServiceException as e:
-            print("Failed SetMode:", e)
+            rospy.logwarn("Failed ParamGet:", e)
             return None
 
         if resp.value.integer != 0:
@@ -162,7 +159,7 @@ class DroneWrapper:
             rospy.logwarn('Mode change request unsuccessful')
             return False
 
-    def set_cmd_pos(self, x=0, y=0, z=0, az=0):
+    def set_cmd_pos(self, x=0, y=0, z=0, az=0, max_vel=12.0):
         self.setpoint_raw.coordinate_frame = 8
         self.setpoint_raw.yaw = az
 
@@ -181,6 +178,7 @@ class DroneWrapper:
         CMD = 0  # POS
         self.setpoint_raw.type_mask = 3064  # xyz yaw
 
+        self.param_set(param="MPC_XY_VEL_MAX", value=float(max_vel))
         self.setpoint_raw_publisher.publish(self.setpoint_raw)
 
     def set_cmd_vel(self, vx=0, vy=0, vz=0, az=0):
@@ -366,6 +364,10 @@ class DroneWrapper:
         self.mode_client = rospy.ServiceProxy(ns + 'mavros/set_mode', SetMode)
         rospy.wait_for_service(self.ns + 'mavros/cmd/land')
         self.land_client = rospy.ServiceProxy(ns + 'mavros/cmd/land', CommandTOL)
+        rospy.wait_for_service(self.ns + '/mavros/param/set')
+        self.set_param = rospy.ServiceProxy(self.ns + '/mavros/param/set', ParamSet)
+        rospy.wait_for_service(self.ns + '/mavros/param/get')
+        self.get_param = rospy.ServiceProxy(self.ns + 'mavros/param/get', ParamGet)
 
         self.rqt_extended_state_publisher = rospy.Publisher(self.ns + 'drone_wrapper/extended_state', ExtendedState,
                                                             queue_size=1)
