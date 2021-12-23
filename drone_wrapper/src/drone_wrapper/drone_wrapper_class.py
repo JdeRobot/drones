@@ -118,16 +118,16 @@ class DroneWrapper:
 
         try:
             resp = self.set_param(param_id=param, value=val)
-            rospy.loginfo("ParamSet:", resp.success)
+            rospy.loginfo("ParamSet: %s", resp.success)
         except rospy.ServiceException as e:
-            rospy.logwarn("Failed ParamSet:", e)
+            rospy.logwarn("Failed ParamSet: %s", e)
 
     def param_get(self, param):
         try:
             resp = self.get_param(param_id=param)
-            rospy.loginfo("ParamGet:", resp.success)
+            rospy.loginfo("ParamGet: %s", resp.success)
         except rospy.ServiceException as e:
-            rospy.logwarn("Failed ParamGet:", e)
+            rospy.logwarn("Failed ParamGet: %s", e)
             return None
 
         if resp.value.integer != 0:
