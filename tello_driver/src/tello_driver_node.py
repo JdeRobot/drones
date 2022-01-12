@@ -6,6 +6,7 @@ from mavros_msgs.msg import State, ExtendedState, PositionTarget, ParamValue
 from sensor_msgs.msg import BatteryState, NavSatFix, Image, NavSatStatus
 from geometry_msgs.msg import PoseStamped, TwistStamped, Pose, Point, Quaternion, Twist, Vector3
 from cv_bridge import CvBridge
+import tf
 from tf.transformations import quaternion_from_euler
 
 import cv2
@@ -35,6 +36,7 @@ class TelloConnectionError(Exception):
 class TelloDriver:
     STILL_ALIVE_RATE = 10  # sec
     PUB_RATE = 100000000  # nsec --> 0.1 secs
+    TF_RATE = 100000000  # nsec --> 0.1 secs
     RESP_TIMEOUT = 7  # sec
     CMD_ADDRESS = ('192.168.10.1', 8889)
     STATE_ADDRESS = ('0.0.0.0', 8890)
@@ -108,9 +110,15 @@ class TelloDriver:
             rospy.logerr(ex)
             self.shutdown()
 
-        rospy.Timer(rospy.Duration(nsecs=self.PUB_RATE), self.send_data)
+        self.pub_timer = rospy.Timer(rospy.Duration(nsecs=self.PUB_RATE), self.send_data)
+        
+        self.tb_map = tf.TransformBroadcaster()
+        self.tb_map_timer = rospy.Timer(rospy.Duration(nsecs=self.TF_RATE), self.br_map2ned)
+        self.tb_base = tf.TransformBroadcaster()
+        self.tb_base_timer = rospy.Timer(rospy.Duration(nsecs=self.TF_RATE), self.br_base2frd)
+
         if emergency_disabled:
-            rospy.Timer(rospy.Duration(secs=self.STILL_ALIVE_RATE), self.__still_alive)
+            self.still_alive_timer = rospy.Timer(rospy.Duration(secs=self.STILL_ALIVE_RATE), self.__still_alive)
 
     def __still_alive(self, event):
         self.__send_cmd("battery?")
@@ -549,6 +557,12 @@ class TelloDriver:
         cap.release()
         cv2.destroyAllWindows()
 
+    def br_map2ned(self, event):
+        self.tb_map.sendTransform((0,0,0), (0.707, 0.707, 0.000, 0.000), rospy.Time.now(), "map_ned", "map")
+
+    def br_base2frd(self, event):
+        self.tb_base.sendTransform((0,0,0), (1, 0, 0, 0), rospy.Time.now(), "base_link_frd", "base_link")
+
     def shutdown(self):
         if self.__is_flying:
             self.tello_land(CommandTOL())
@@ -570,6 +584,15 @@ class TelloDriver:
             self.data_handler.join()
         if self.video_handler.is_alive():
             self.video_handler.join()
+
+        try:
+            self.pub_timer.shutdown()
+            self.tb_map_timer.shutdown()
+            self.tb_base_timer.shutdown()
+            if emergency_disabled:
+                self.still_alive_timer.shutdown()
+        except AttributeError:
+            pass
 
         rospy.loginfo("Tello driver shutting down")
 
