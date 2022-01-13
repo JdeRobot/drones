@@ -437,7 +437,7 @@ class DroneWrapper:
         if abs(vz) <= EPSILON:
             self.is_z = True
         else:
-            self.setpoint_raw.velocity.z = vtwist.linear.z
+            self.setpoint_raw.velocity.z = twist.linear.z
             self.is_z = False
 
         if self.is_xy:
