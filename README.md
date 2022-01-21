@@ -11,8 +11,7 @@ This repository contains all the code relevant to the drone exercises in the Jde
 ## Usage
 
 ### ROS Melodic
-
-The packages provided here depend on the PX4 Firmware and SITL. Packages can be installed through:
+Melodic development has reached its End Of Life (EOL) but can still be installed using the command:
 ```bash
 sudo apt-get install ros-melodic-jderobot-drones
 ```
@@ -28,8 +27,8 @@ If you just need one of the packages instead of all, you can install it separate
 |         | Melodic |
 | ------- |:-------:|
 | Branch  | [`melodic-devel`](https://github.com/JdeRobot/drones/tree/melodic-devel) |
-| Status  | supported |
-| Version | [1.3.8](http://repositories.ros.org/status_page/ros_melodic_default.html?q=jderobot_drones)<sup>1</sup> |
+| Status  | EOL |
+| Version | [1.3.10](http://repositories.ros.org/status_page/ros_melodic_default.html?q=jderobot_drones)<sup>1</sup> |
 
 <sup>1</sup> _Melodic versions: 1.3.X_
 
