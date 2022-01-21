@@ -25,7 +25,7 @@ If you just need one of the packages instead of all, you can install it separate
 
 ### ROS Melodic
 
-The packages provided here depend on the PX4 Firmware and SITL. Packages can be installed through:
+The melodic development has reached its End Of Life (EOL) but can still be installed using the command:
 ```bash
 sudo apt-get install ros-melodic-jderobot-drones
 ```
@@ -49,8 +49,7 @@ sudo apt-get install ros-kinetic-drone-wrapper ros-kinetic-rqt-drone-teleop
 |         | Noetic | Melodic | Kinetic |
 | ------- | ------ | ------- | ------- |
 | Branch  | [`noetic-devel`](https://github.com/JdeRobot/drones/tree/noetic-devel) | [`melodic-devel`](https://github.com/JdeRobot/drones/tree/melodic-devel) | [`kinetic-devel`](https://github.com/JdeRobot/drones/tree/kinetic-devel)
-| Status  | supported | supported | EOL |
-| Version | [1.4.0](http://repositories.ros.org/status_page/ros_noetic_default.html?q=jderobot_drones)<sup>1</sup> | [1.3.8](http://repositories.ros.org/status_page/ros_melodic_default.html?q=jderobot_drones)<sup>2</sup> | [1.0.1](http://repositories.ros.org/status_page/ros_kinetic_default.html?q=jderobot_drones)
+| Status  | supported | EOL | EOL |
+| Version | [1.4.2](http://repositories.ros.org/status_page/ros_noetic_default.html?q=jderobot_drones)<sup>1</sup> | [1.3.10](http://repositories.ros.org/status_page/ros_melodic_default.html?q=jderobot_drones) | [1.0.1](http://repositories.ros.org/status_page/ros_kinetic_default.html?q=jderobot_drones)
 
-<sup>1</sup> _Noetic versions: 1.4.X_ --
-<sup>2</sup> _Melodic versions: 1.3.X_
+<sup>1</sup> _Noetic versions: 1.4.X_
