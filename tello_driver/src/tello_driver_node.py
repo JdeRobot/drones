@@ -28,6 +28,18 @@ def process_mask(mask):
         return 1991  # vx vy vz yaw_rate
 
 
+class TelloConstraints:
+    MIN_SPEED = 10
+    MAX_SPEED = 100
+
+    def constraint_speed(self, s):
+        '''
+        s: speed (cm/s)
+        '''
+        return self.MIN_SPEED if s < self.MIN_SPEED else self.MAX_SPEED if s > self.MAX_SPEED else s
+
+
+
 class TelloConnectionError(Exception):
     pass
 
@@ -42,6 +54,7 @@ class TelloDriver:
     STATE_ADDRESS = ('0.0.0.0', 8890)
     VIDEO_ADDRESS = ('0.0.0.0', 11111)
     LOCAL_ADDRESS = ('0.0.0.0', 9000)
+    CONSTRAINTS = TelloConstraints()
 
     def __init__(self, emergency_disabled=False):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -65,6 +78,7 @@ class TelloDriver:
         self.__vy = 0.0  # cm/s
         self.__vz = 0.0  # cm/s
         self.__yaw_rate = 0.0  # degrees/s
+        self.__speed = 100.0  # cm/s (DEFAULT VALUE)
 
         self.state_pub = rospy.Publisher('mavros/state', State, queue_size=10)
         self.ext_state_pub = rospy.Publisher('mavros/extended_state', ExtendedState, queue_size=10)
@@ -123,7 +137,7 @@ class TelloDriver:
     def __still_alive(self, event):
         self.__send_cmd("battery?")
 
-    def __send_cmd(self, cmd, blocking=True, timeout=RESP_TIMEOUT):
+    def __send_cmd(self, cmd, reading=False, blocking=True, timeout=RESP_TIMEOUT):
         print("Sending... {}".format(cmd))  # DEBUG
         self.sock.sendto(cmd.encode(encoding="utf-8"), self.CMD_ADDRESS)
 
@@ -136,6 +150,8 @@ class TelloDriver:
                 time.sleep(0.1)  # waits a bit
 
             resp = self.__responses.pop(0).decode("utf-8")
+            if reading:
+                return resp
             if resp.lower() == "ok":
                 return True
             else:
@@ -221,12 +237,35 @@ class TelloDriver:
         else:
             return False, 1
 
+    def tello_change_speed(self, speed):
+        '''speed in m/s'''
+        speed = self.CONSTRAINTS.constraint_speed(speed*100)  # to cm/s
+
+        if self.__send_cmd("speed {}".format(str(speed))):
+            rospy.loginfo("Tello speed updated to " + str(speed))
+            rospy.set_param("/tello/speed", speed)
+            return True
+        else:
+            return False
+
     def tello_param_set(self, req):
         # string param_id
         # mavros_msgs/ParamValue value
         # ----
         # bool success
         # mavros_msgs/ParamValue value
+
+        if req.param_id == "MPC_XY_VEL_MAX":
+            if req.value.integer != 0:
+                speed = req.value.integer
+            elif req.value.real != 0.0:
+                speed = req.value.real
+            else:
+                speed = 0
+
+            self.tello_change_speed(int(speed))
+            return True, req.value
+
         return False, ParamValue(integer=0, real=0.0)
 
     def tello_param_get(self, req):
@@ -300,9 +339,9 @@ class TelloDriver:
                 self.__x += target_x
 
             if x > 0:
-                self.__send_cmd("forward {}".format(abs(x)), False)  # cm
+                self.__send_cmd("forward {}".format(abs(x)), blocking=False)  # cm
             elif x < 0:
-                self.__send_cmd("back {}".format(abs(x)), False)  # cm
+                self.__send_cmd("back {}".format(abs(x)), blocking=False)  # cm
             else:
                 pass  # already at target x
                 # print("Already at target x")
@@ -318,9 +357,9 @@ class TelloDriver:
             cmd_right = "right" if is_frd else "left"
             cmd_left = "left" if is_frd else "right"
             if y > 0:
-                self.__send_cmd(cmd_right + " {}".format(abs(y)), False)  # cm
+                self.__send_cmd(cmd_right + " {}".format(abs(y)), blocking=False)  # cm
             elif y < 0:
-                self.__send_cmd(cmd_left + " {}".format(abs(y)), False)  # cm
+                self.__send_cmd(cmd_left + " {}".format(abs(y)), blocking=False)  # cm
             else:
                 pass  # already at target y
                 # print("Already at target y")
@@ -336,9 +375,9 @@ class TelloDriver:
             cmd_down = "down" if is_frd else "up"
             cmd_up = "up" if is_frd else "down"
             if z > 0:
-                self.__send_cmd(cmd_down + " {}".format(abs(z)), False)  # cm
+                self.__send_cmd(cmd_down + " {}".format(abs(z)), blocking=False)  # cm
             elif z < 0:
-                self.__send_cmd(cmd_up + " {}".format(abs(z)), False)  # cm
+                self.__send_cmd(cmd_up + " {}".format(abs(z)), blocking=False)  # cm
             else:
                 pass  # already at target z
                 # print("Already at target z")
@@ -385,9 +424,9 @@ class TelloDriver:
                 self.__yaw += target_yaw
 
             if yaw > 0:
-                self.__send_cmd("cw {}".format(abs(yaw)), False)  # degrees
+                self.__send_cmd("cw {}".format(abs(yaw)), blocking=False)  # degrees
             elif yaw < 0:
-                self.__send_cmd("ccw {}".format(abs(yaw)), False)  # degrees
+                self.__send_cmd("ccw {}".format(abs(yaw)), blocking=False)  # degrees
             else:
                 pass  # already at target yaw
                 # print("Already at target yaw")
@@ -589,7 +628,7 @@ class TelloDriver:
             self.pub_timer.shutdown()
             self.tb_map_timer.shutdown()
             self.tb_base_timer.shutdown()
-            if emergency_disabled:
+            if self.__emergency_disabled:
                 self.still_alive_timer.shutdown()
         except AttributeError:
             pass
