@@ -567,12 +567,15 @@ class DroneWrapper:
         self.land_client(req)
 
     def br_base2map(self, event):
-        my_pose = self.get_position(frame="map")
-        my_orientation = self.get_orientation(frame="map")
-        my_orientation[2] += radians(-90)
-        q = tf.transformations.quaternion_from_euler(*my_orientation)
-        self.br.sendTransform(my_pose, 
-                              q, rospy.Time.now(), "base_link", "map")
+        now = rospy.Time.now()
+        if self.last_pub_tf < now:
+            my_pose = self.get_position(frame="map")
+            my_orientation = self.get_orientation(frame="map")
+            my_orientation[2] += radians(-90)
+            q = tf.transformations.quaternion_from_euler(*my_orientation)
+            self.br.sendTransform(my_pose, 
+                                q, now, "base_link", "map")
+            self.last_pub_tf = now
 
     def shutdown(self):
         self.br_timer.shutdown()
@@ -615,6 +618,7 @@ class DroneWrapper:
         self.frames_tf = FRAMES()
         self.br = tf.TransformBroadcaster()
         self.br_timer = rospy.Timer(rospy.Duration(nsecs=10000000), self.br_base2map)
+        self.last_pub_tf = rospy.Time(0)
 
         self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
         self.setpoint_raw_timer.shutdown()
