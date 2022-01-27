@@ -614,7 +614,7 @@ class DroneWrapper:
 
         self.frames_tf = FRAMES()
         self.br = tf.TransformBroadcaster()
-        self.br_timer = rospy.Timer(rospy.Duration(nsecs=1000000), self.br_base2map)
+        self.br_timer = rospy.Timer(rospy.Duration(nsecs=10000000), self.br_base2map)
 
         self.setpoint_raw_timer = rospy.Timer(rospy.Duration(nsecs=50000000), self.repeat_setpoint_raw)
         self.setpoint_raw_timer.shutdown()
