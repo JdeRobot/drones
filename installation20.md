@@ -7,13 +7,65 @@ This file explains how to install all the software infrastructure related to Jde
 
 **_Note:_** At this point you should try `roscore &` and `rosrun gazebo_ros gazebo` to test if the basic infrastructure works.
 
-## Step 2: MavROS and PX4
-### 2.1. Install MAVROS (v1.7.0)
+## Step 2: MavROS and JdeRobot-drones
+### A. Binary installation
+Not available due to incompatibility with newest versions of mavros.
+
+<!-- ```bash
+sudo apt-get install ros-noetic-jderobot-drones
+``` -->
+
+### B. Source installation
+1. Install catkin tools
 ```bash
-sudo apt-get install ros-noetic-mavros ros-noetic-mavros-extras
+sudo apt-get update -y
+sudo apt-get install python3-catkin-tools python3-osrf-pycommon python3-rosdep python3-vcstool git
 ```
 
-### 2.2. Install PX4 dependencies 
+2. Set up catkin workspace
+```bash
+mkdir -p ~/catkin_ws/src && cd ~/catkin_ws
+catkin init
+echo 'export ROS_WORKSPACE=~/catkin_ws' >> ~/.bashrc # points roscd dir
+source ~/.bashrc
+```
+
+3. Get jderobot-drones repository that contains ros pkgs
+```bash
+roscd && cd src
+git clone https://github.com/JdeRobot/drones.git -b noetic-devel
+```
+
+4. Link drone source to catkin_ws
+```bash
+roscd && cd src
+vcs import < "drones/.rosinstall"
+```
+
+5. Update ros dependencies
+```bash
+roscd
+rosdep init  # needs to be called ONLY once after installation. sudo might be required
+rosdep update # do not run with sudo
+# rosdep install --from-paths . --ignore-src --rosdistro noetic -y  # sudo might be required
+```
+
+6. Build 
+```bash
+ roscd && catkin build
+```
+
+7. Export environment variables
+```bash
+roscd
+echo 'source '$PWD'/devel/setup.bash' >> ~/.bashrc
+echo 'export GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}:/usr/share/gazebo-11' >> ~/.bashrc
+echo 'export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:~/repos/drones/drone_assets/models' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## Step 3: PX4
+### 3.1. Install PX4 dependencies 
 
 1. Download and install Geographiclib
 ```bash
@@ -31,7 +83,7 @@ sudo apt-get install git zip qtcreator cmake \
     python3-pip python3-dev python-is-python3 -y
 ```
 
-### 2.3. PX4 source installation
+### 3.2. PX4 source installation
 1. Get PX4 source (v1.11.3)
 ```bash
 mkdir ~/repos && cd repos
@@ -72,62 +124,6 @@ source ~/.bashrc
 ```bash
 roslaunch px4 mavros_posix_sitl.launch
 pxh> commander arm # when launching finishes
-```
-
-## Step 3: JdeRobot-drones
-### A. Binary installation
-```bash
-sudo apt-get install ros-noetic-jderobot-drones
-```
-
-### B. Source installation
-1. Install catkin tools
-```bash
-sudo apt install python3-catkin-tools python3-osrf-pycommon python3-rosdep
-```
-
-2. Set up catkin workspace
-```bash
-mkdir -p ~/catkin_ws/src && cd ~/catkin_ws
-catkin init
-echo 'export ROS_WORKSPACE=~/catkin_ws' >> ~/.bashrc # points roscd dir
-source ~/.bashrc
-```
-
-3. Get jderobot-drones repository that contains ros pkgs
-```bash
-cd ~/repos
-git clone https://github.com/JdeRobot/drones.git -b noetic-devel
-```
-
-4. Link drone source to catkin_ws
-```bash
-roscd && cd src
-ln -s ~/repos/drones/drone_wrapper .
-ln -s ~/repos/drones/drone_assets .
-ln -s ~/repos/drones/rqt_drone_teleop .
-```
-
-5. Update ros dependencies
-```bash
-roscd
-rosdep init  # needs to be called ONLY once after installation. sudo might be required
-rosdep update # do not run with sudo
-# rosdep install --from-paths . --ignore-src --rosdistro noetic -y  # sudo might be required
-```
-
-6. Build 
-```bash
- roscd && catkin build
-```
-
-7. Export environment variables
-```bash
-roscd
-echo 'source '$PWD'/devel/setup.bash' >> ~/.bashrc
-echo 'export GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}:/usr/share/gazebo-11' >> ~/.bashrc
-echo 'export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:~/repos/drones/drone_assets/models' >> ~/.bashrc
-source ~/.bashrc
 ```
 
 ## 4. Try it!
