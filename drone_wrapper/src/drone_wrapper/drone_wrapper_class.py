@@ -655,7 +655,7 @@ class DroneWrapper:
         rospy.Subscriber(self.ns + 'mavros/local_position/velocity_body', TwistStamped, self.vel_body_stamped_cb)
         rospy.Subscriber(self.ns + 'mavros/global_position/global', NavSatFix, self.global_position_cb)
 
-
+        #right now irrelevant
         rospy.Subscriber(self.ns + '/crazyflie2/ground_truth/imu', State, self.state_cb)
         rospy.Subscriber(self.ns + '/crazyflie2/ground_truth/odometry', State, self.state_cb)
         rospy.Subscriber(self.ns + '/crazyflie2/ground_truth/pose', State, self.state_cb)
