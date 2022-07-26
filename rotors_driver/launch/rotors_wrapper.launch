@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <!--    Drone model param   -->
-    <arg name="drone_model" default="tello"/>
+    <arg name="drone_model" default="firefly"/>
     <param name="drone_model" type="str" value="$(arg drone_model)" />
 
 	<node name="rotors_driver_node" pkg="rotors_driver" type="rotors_driver_node.py" output="screen"/>
