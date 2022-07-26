@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<package format="2">
-  <name>tello_driver</name>
+<package format="3">
+  <name>rotors_driver</name>
   <version>1.4.2</version>
-  <description>The tello_driver package</description>
+  <description>The rotors_driver package</description>
 
   <maintainer email="pedroariasperez96@gmail.com">Pedro Arias</maintainer>
-  <author email="pedroariasperez96@gmail.com">Pedro Arias</author>
+  <author email="prakarshkaushik369@gmail.com">Prakarsh Kaushik</author>
 
   <license>MIT</license>
 
@@ -13,11 +13,14 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>rospy</depend>
-  <depend>cv_bridge</depend>
   <depend>geometry_msgs</depend>
   <depend>mavros_msgs</depend>
   <depend>mavros</depend>
+  <depend>nav_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>tf</depend>
+  <depend>trajectory_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

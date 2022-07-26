@@ -3,11 +3,14 @@ project(rotors_driver)
 
 find_package(catkin REQUIRED COMPONENTS
   rospy
-  cv_bridge
   geometry_msgs
   mavros_msgs
   mavros
+  nav_msgs
   sensor_msgs
+  std_msgs
+  trajectory_msgs
+  tf
 )
 
 catkin_package()
@@ -19,10 +22,9 @@ include_directories(
 )
 
 install(PROGRAMS
-  src/tello_driver_node.py
-  scripts/tello_land
-  scripts/tello_quit
-  scripts/tello_takeoff
+  src/rotors_driver_node.py
+  scripts/rotors_land
+  scripts/rotors_takeoff
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
