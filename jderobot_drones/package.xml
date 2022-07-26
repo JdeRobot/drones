@@ -19,6 +19,7 @@
   <exec_depend>drone_assets</exec_depend>
   <exec_depend>drone_circuit_assets</exec_depend>
   <exec_depend>tello_driver</exec_depend>
+  <exec_depend>rotors_driver</exec_depend>
 
   <export>
     <metapackage/>
