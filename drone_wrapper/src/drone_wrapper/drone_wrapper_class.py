@@ -100,7 +100,6 @@ class FRAMES:
             r --> rotations
             t --> translations
             s --> scale
-
         vin = np.array([twist.linear.x, twist.linear.y, twist.linear.z])
         result = np.dot(vin, H[:3, :3])
         """
@@ -655,17 +654,10 @@ class DroneWrapper:
         rospy.Subscriber(self.ns + 'mavros/local_position/velocity_body', TwistStamped, self.vel_body_stamped_cb)
         rospy.Subscriber(self.ns + 'mavros/global_position/global', NavSatFix, self.global_position_cb)
 
-        #right now irrelevant
-        rospy.Subscriber(self.ns + '/crazyflie2/ground_truth/imu', State, self.state_cb)
-        rospy.Subscriber(self.ns + '/crazyflie2/ground_truth/odometry', State, self.state_cb)
-        rospy.Subscriber(self.ns + '/crazyflie2/ground_truth/pose', State, self.state_cb)
-        rospy.Subscriber(self.ns + '/crazyflie2/ground_truth/position', State, self.state_cb)
-        rospy.Subscriber(self.ns + '/crazyflie2/ground_truth/transform', State, self.state_cb)
-        rospy.Subscriber(self.ns + '/crazyflie2/joint_states', State, self.state_cb)
         # cam_frontal_topic = rospy.get_param('cam_frontal_topic', None)
         # cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
 
-        drone_model = rospy.get_param('drone_model', 'crazyfile2')  # default --> iris
+        drone_model = rospy.get_param('drone_model', 'iris')  # default --> iris
 
         self.frontal_image = Image()
         self.ventral_image = Image()

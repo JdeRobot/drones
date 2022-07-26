@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<launch>
+	<node name="rotors_driver_node" pkg="rotors_driver" type="rotors_driver_node.py" output="screen"/>
+</launch>
