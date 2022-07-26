@@ -4,7 +4,7 @@ import rospy
 import tf
 from trajectory_msgs.msg import MultiDOFJointTrajectory, MultiDOFJointTrajectoryPoint
 from geometry_msgs.msg import Point,Transform, Quaternion, Twist ,PoseStamped, TwistStamped, Pose, Vector3
-import std_msgs.msg
+from std_msgs.msg import Header
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import NavSatFix, Image, BatteryState, NavSatStatus
 from mavros_msgs.msg import State, ExtendedState, PositionTarget, ParamValue
@@ -56,7 +56,7 @@ class Rotors_Driver():
                                                          queue_size=1)
 
 
-		rospy.Timer(rospy.Duration(1.0/10.0), self.timer_callback)
+		
 		
 		
 		rospy.Subscriber("mavros/setpoint_raw/local", PositionTarget, self.publish_position_desired)
@@ -66,8 +66,10 @@ class Rotors_Driver():
 		rospy.Subscriber("/firefly/frontal_cam/camera_nadir/image_raw", Image, self.cam_frontal)
 		rospy.Subscriber("/firefly/ventral_cam/camera_nadir/image_raw", Image, self.cam_ventral)
 		self.firefly_command_publisher = rospy.Publisher('/firefly/command/trajectory', MultiDOFJointTrajectory, queue_size=10)
+		time.sleep(1.0)
+		rospy.Timer(rospy.Duration(1.0/10.0), self.timer_callback)
 		
-	def timer_callback(self):
+	def timer_callback(self, event=None):
 		landed_state = 2 if self.__is_flying else 1
 		ext_state = ExtendedState(vtol_state=0, landed_state=landed_state)
 		self.rqt_extended_state_publisher.publish(ext_state)
@@ -82,7 +84,7 @@ class Rotors_Driver():
 			bat_percent = int(self.__state_dict["bat"])
 		except KeyError:
 			bat_percent = float('nan')
-			rospy.logwarn("Battery state unknown.")
+			# rospy.logwarn("Battery state unknown.")
 		bat = BatteryState(voltage=0.0, current=float('nan'), charge=float('nan'),
                            capacity=float('nan'), design_capacity=float('nan'), percentage=bat_percent,
                            power_supply_status=0, power_supply_health=0, power_supply_technology=0, present=True,
@@ -93,7 +95,7 @@ class Rotors_Driver():
 
 		pose = PoseStamped(pose=Pose(position=Point(x=self.current_x, y=self.current_y, z=self.current_z),
                                      orientation=Quaternion(x=float(self.quaternion[0]), y=float(self.quaternion[1]), z=float(self.quaternion[2]),
-                                                            w=float(self.quaternion[3]))))
+                                                            w=float(self.quaternion[3]))),header = Header(frame_id = self.frame_id))
 		self.rqt_pose_publisher.publish(pose)
 
 
@@ -105,7 +107,8 @@ class Rotors_Driver():
 
 
 		twist = TwistStamped(twist=Twist(linear=Vector3(x=self.current_vx, y=self.current_vy, z=self.current_vz),
-                                         angular=Vector3(x=self.current_ang_vx, y=self.current_ang_vy, z=self.current_ang_vz)))
+                                         angular=Vector3(x=self.current_ang_vx, y=self.current_ang_vy, z=self.current_ang_vz)),
+										 header = Header(frame_id = self.frame_id))
 		self.rqt_velocity_body_publisher.publish(twist)
 
 
@@ -138,11 +141,13 @@ class Rotors_Driver():
 		self.current_roll, self.current_pitch, self.current_yaw = tf.transformations.euler_from_quaternion(self.quaternion)
 		self.current_yaw_rate = msg.twist.twist.angular.z
 
+		self.frame_id = msg.header.frame_id
+
 	def rotors_takeoff_land(self,req):
 		quaternion = tf.transformations.quaternion_from_euler(0, 0, 0.0)
 		traj = MultiDOFJointTrajectory()
 		
-		header = std_msgs.msg.Header()
+		header = Header()
 		header.stamp = rospy.Time()
 		header.frame_id = 'frame'
 		traj.joint_names.append('base_link')
@@ -208,9 +213,9 @@ class Rotors_Driver():
 		success, result = self.rotors_takeoff_land(0)
 		return success, result
 		
-	def rotors_change_speed(self):
+	def rotors_change_speed(self, speed):
 		'''speed in m/s'''
-		speed = self.CONSTRAINTS.constraint_speed(speed*100)  # to cm/s
+		speed = self.CONSTRAINTS.constraint_speed(int(speed)*100)  # to cm/s
 
 		# if self.__send_cmd("speed {}".format(str(speed))):
 		# 	rospy.loginfo("Rotors drone speed updated to " + str(speed))
@@ -219,25 +224,25 @@ class Rotors_Driver():
 		# else:
 		# 	return False
 
-	def rotors_param_set(self, req):
+	def rotors_param_set(self, param_id, value=float(12.0)):
         # string param_id
         # mavros_msgs/ParamValue value
         # ----
         # bool success
         # mavros_msgs/ParamValue value
 
-		if req.param_id == "MPC_XY_VEL_MAX":
-			if req.value.integer != 0:
-				speed = req.value.integer
-			elif req.value.real != 0.0:
-				speed = req.value.real
+		if param_id == "MPC_XY_VEL_MAX":
+			if value.integer != 0:
+				speed = value.integer
+			elif value.real != 0.0:
+				speed = value.real
 			else:
 				speed = 0
 
-			self.rotors_change_speed(int(speed))
-			return True, req.value
+			self.rotors_change_speed(speed)
+			return True, value
 
-		return False, ParamValue(integer=0, real=0.0)			
+		return False, ParamValue(integer=0, real=0.0)		
 	
 	def rotors_param_get(self, req):
         # string param_id
@@ -260,24 +265,31 @@ class Rotors_Driver():
 		yaw_des = msg.yaw
 		yaw_rate_des = msg.yaw_rate
 
-		if vx_des >=0.0 and vy_des >=0.0 and vz_des >=0.0 and yaw_rate_des>=0:
+		if (desired_x_to_go ==0.0 and desired_y_to_go ==0.0 and yaw_des == 0.0) and (vx_des >0.0 or vy_des >0.0  or yaw_rate_des>0) and vz_des >=0.0:
 			desired_x_to_go=self.current_x+(vx_des*self.sample_time)
 			desired_y_to_go=self.current_y+(vy_des*self.sample_time)
 			desired_z_to_go=self.current_z+(vz_des*self.sample_time)
 			desired_yaw_to_go = self.current_yaw +(yaw_rate_des*self.sample_time)
 			print("Vel control")
-		elif vx_des >=0.0 and vy_des >=0.0 and desired_z_to_go>=0.0 and vz_des ==0.0 and yaw_rate_des>=0:
+		elif (desired_x_to_go ==0.0 and desired_y_to_go ==0.0 and vz_des ==0.0 and yaw_des == 0.0) and ((vx_des >0.0 or vy_des >0.0 or yaw_rate_des>0)and desired_z_to_go>0.0 ):
 			desired_x_to_go=self.current_x+(vx_des*self.sample_time)
 			desired_y_to_go=self.current_y+(vy_des*self.sample_time)
 			desired_z_to_go= desired_z_to_go
 			desired_yaw_to_go = self.current_yaw +(yaw_rate_des*self.sample_time)
 			print("Mixed control")
-		elif (vx_des ==0.0 and vy_des ==0.0 and vz_des ==0.0) or (desired_x_to_go >=0.0 and desired_y_to_go >=0.0 and desired_z_to_go >=0.0 and yaw_des>=0.0):
+		elif (vx_des ==0.0 and vy_des ==0.0 and vz_des ==0.0 and yaw_rate_des ==0.0) and (desired_x_to_go >0.0 or desired_y_to_go >0.0 or desired_z_to_go >0.0 or yaw_des>0.0):
 			desired_x_to_go=desired_x_to_go
 			desired_y_to_go=desired_y_to_go
 			desired_z_to_go=desired_z_to_go
 			desired_yaw_to_go=yaw_des
 			print("Pos control")
+		else:
+			desired_x_to_go=self.current_x
+			desired_y_to_go=self.current_y
+			desired_z_to_go=self.current_z
+			desired_yaw_to_go = self.current_yaw 
+			print("no motion asked")
+
 
 
 		
@@ -287,7 +299,7 @@ class Rotors_Driver():
 
 		traj = MultiDOFJointTrajectory()
 		
-		header = std_msgs.msg.Header()
+		header = Header()
 		header.stamp = rospy.Time()
 		header.frame_id = 'frame'
 		traj.joint_names.append('base_link')
