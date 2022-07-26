@@ -123,20 +123,20 @@ class Rotors_Driver():
 
 	def get_pose(self,msg):
 		
-		self.current_x=msg.pose.position.x
-		self.current_y=msg.pose.position.y
-		self.current_z=msg.pose.position.z
-		self.current_vx=msg.twist.linear.x
-		self.current_vy=msg.twist.linear.y
-		self.current_vz=msg.twist.linear.z
-		self.current_ang_vx=msg.twist.angular.x
-		self.current_ang_vy=msg.twist.angular.y
-		self.current_ang_vz=msg.twist.angular.z
-		self.quaternion = [msg.pose.orientation.x, msg.pose.orientation.y,
-					msg.pose.orientation.z, msg.pose.orientation.w
+		self.current_x=msg.pose.pose.position.x
+		self.current_y=msg.pose.pose.position.y
+		self.current_z=msg.pose.pose.position.z
+		self.current_vx=msg.twist.twist.linear.x
+		self.current_vy=msg.twist.twist.linear.y
+		self.current_vz=msg.twist.twist.linear.z
+		self.current_ang_vx=msg.twist.twist.angular.x
+		self.current_ang_vy=msg.twist.twist.angular.y
+		self.current_ang_vz=msg.twist.twist.angular.z
+		self.quaternion = [msg.pose.pose.orientation.x, msg.pose.pose.orientation.y,
+					msg.pose.pose.orientation.z, msg.pose.pose.orientation.w
 				]
 		self.current_roll, self.current_pitch, self.current_yaw = tf.transformations.euler_from_quaternion(self.quaternion)
-		self.current_yaw_rate = msg.twist.angular.z
+		self.current_yaw_rate = msg.twist.twist.angular.z
 
 	def rotors_takeoff_land(self,req):
 		quaternion = tf.transformations.quaternion_from_euler(0, 0, 0.0)
