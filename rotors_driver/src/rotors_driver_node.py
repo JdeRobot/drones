@@ -32,6 +32,23 @@ class Rotors_Driver():
 		self.__is_armed = False
 		self.__is_flying = False
 		self.__state_dict = {}
+		self.current_state = Odometry()
+		self.current_x=self.current_state.pose.pose.position.x
+		self.current_y=self.current_state.pose.pose.position.y
+		self.current_z=self.current_state.pose.pose.position.z
+		self.current_vx=self.current_state.twist.twist.linear.x
+		self.current_vy=self.current_state.twist.twist.linear.y
+		self.current_vz=self.current_state.twist.twist.linear.z
+		self.current_ang_vx=self.current_state.twist.twist.angular.x
+		self.current_ang_vy=self.current_state.twist.twist.angular.y
+		self.current_ang_vz=self.current_state.twist.twist.angular.z
+		self.quaternion = [self.current_state.pose.pose.orientation.x, self.current_state.pose.pose.orientation.y,
+					self.current_state.pose.pose.orientation.z, self.current_state.pose.pose.orientation.w
+				]
+		self.current_roll, self.current_pitch, self.current_yaw = tf.transformations.euler_from_quaternion(self.quaternion)
+		self.current_yaw_rate = self.current_state.twist.twist.angular.z
+
+		self.frame_id = self.current_state.header.frame_id
 		
 		self.arm_client = rospy.Service('mavros/cmd/arming', CommandBool, self.rotors_arm)
 		self.mode_client = rospy.Service('mavros/set_mode', SetMode, self.rotors_set_mode)
@@ -125,23 +142,25 @@ class Rotors_Driver():
 		rospy.logdebug('Ventral image updated')
 
 	def get_pose(self,msg):
+
+		self.current_state = msg
 		
-		self.current_x=msg.pose.pose.position.x
-		self.current_y=msg.pose.pose.position.y
-		self.current_z=msg.pose.pose.position.z
-		self.current_vx=msg.twist.twist.linear.x
-		self.current_vy=msg.twist.twist.linear.y
-		self.current_vz=msg.twist.twist.linear.z
-		self.current_ang_vx=msg.twist.twist.angular.x
-		self.current_ang_vy=msg.twist.twist.angular.y
-		self.current_ang_vz=msg.twist.twist.angular.z
-		self.quaternion = [msg.pose.pose.orientation.x, msg.pose.pose.orientation.y,
-					msg.pose.pose.orientation.z, msg.pose.pose.orientation.w
+		self.current_x=self.current_state.pose.pose.position.x
+		self.current_y=self.current_state.pose.pose.position.y
+		self.current_z=self.current_state.pose.pose.position.z
+		self.current_vx=self.current_state.twist.twist.linear.x
+		self.current_vy=self.current_state.twist.twist.linear.y
+		self.current_vz=self.current_state.twist.twist.linear.z
+		self.current_ang_vx=self.current_state.twist.twist.angular.x
+		self.current_ang_vy=self.current_state.twist.twist.angular.y
+		self.current_ang_vz=self.current_state.twist.twist.angular.z
+		self.quaternion = [self.current_state.pose.pose.orientation.x, self.current_state.pose.pose.orientation.y,
+					self.current_state.pose.pose.orientation.z, self.current_state.pose.pose.orientation.w
 				]
 		self.current_roll, self.current_pitch, self.current_yaw = tf.transformations.euler_from_quaternion(self.quaternion)
-		self.current_yaw_rate = msg.twist.twist.angular.z
+		self.current_yaw_rate = self.current_state.twist.twist.angular.z
 
-		self.frame_id = msg.header.frame_id
+		self.frame_id = self.current_state.header.frame_id
 
 	def rotors_takeoff_land(self,req):
 		quaternion = tf.transformations.quaternion_from_euler(0, 0, 0.0)
