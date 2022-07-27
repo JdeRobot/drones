@@ -49,6 +49,9 @@ class Rotors_Driver():
 		self.current_yaw_rate = self.current_state.twist.twist.angular.z
 
 		self.frame_id = self.current_state.header.frame_id
+
+		self.frontal_image = Image()
+		self.ventral_image = Image()
 		
 		self.arm_client = rospy.Service('mavros/cmd/arming', CommandBool, self.rotors_arm)
 		self.mode_client = rospy.Service('mavros/set_mode', SetMode, self.rotors_set_mode)
