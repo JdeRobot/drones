@@ -95,7 +95,7 @@ class Rotors_Driver():
 		self.rqt_extended_state_publisher.publish(ext_state)
 
 
-		state = State()
+		state = State(mode = "OFFBOARD", armed = True)
 		self.rqt_state_publisher.publish(state)
 		rospy.logdebug('State updated')
 
@@ -145,7 +145,6 @@ class Rotors_Driver():
 		rospy.logdebug('Ventral image updated')
 
 	def get_pose(self,msg):
-
 		self.current_state = msg
 		
 		self.current_x=self.current_state.pose.pose.position.x
@@ -165,6 +164,12 @@ class Rotors_Driver():
 
 		self.frame_id = self.current_state.header.frame_id
 
+		if self.current_z<0.1:
+			self.__is_flying = False
+		else:
+			self.__is_flying = True
+
+
 	def rotors_takeoff_land(self,req):
 		quaternion = tf.transformations.quaternion_from_euler(0, 0, 0.0)
 		traj = MultiDOFJointTrajectory()
@@ -177,24 +182,26 @@ class Rotors_Driver():
 		
 		if req:
 			transforms =Transform(translation=Point(0.0, 0.0, 1.0), rotation=Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3]))
+			velocities =Twist()
+			accelerations=Twist()
 		else:
-			transforms =Transform(translation=Point(0.0, 0.0, 0.0), rotation=Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3]))
+			transforms =Transform(translation=Point(self.current_x, self.current_y, 0.0), rotation=Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3]))
+			velocities =Twist(linear = Vector3(x=0.0, y=0.0, z=0.0), angular=Vector3(x=0.0, y=0.0, z=0.0) )
+			accelerations=Twist(linear = Vector3(x=0.0, y=0.0, z=0.0), angular=Vector3(x=0.0, y=0.0, z=0.0) )
 
-		velocities =Twist()
-		accelerations=Twist()
+		
 		point = MultiDOFJointTrajectoryPoint([transforms],[velocities],[accelerations],rospy.Time(2))
 
 		traj.points.append(point)
+		
 
 		self.firefly_command_publisher.publish(traj)
 		time.sleep(1) #change the time if altitude val doesn't change
 		if req and 0.8<self.current_z<1.2:
-			self.__is_flying = True
 			return True, 0
 		elif not req and 0.0<=self.current_z<0.3:
 			rospy.loginfo("Firefly Disarming")
 			self.__is_armed = False
-			self.__is_flying = False
 			return True, 0
 		else:
 			return False,1
@@ -211,12 +218,12 @@ class Rotors_Driver():
 			self.__is_armed = True
 			time.sleep(1)  # waits 1 sec
 			tk_req = CommandTOL()
-			success, result = self.rotors_takeoff_land(1)  # arming is actually taking off in OFFBOARD flight mode
-			return success, result
+			# success, result = self.rotors_takeoff_land(1)  # arming is actually taking off in OFFBOARD flight mode
+			return True, 1
 		else:
 			rospy.loginfo("Firefly Disarming")
 			self.__is_armed = False
-			return True, 0
+			return False, 0
 
 	def rotors_set_mode(self, req):
 		# uint8 base_mode
@@ -226,7 +233,6 @@ class Rotors_Driver():
 		return False
 	def rotors_land(self, req):
 		
-		self.__is_flying = False
 		rospy.loginfo("Landing!")
 		self.__is_flying = False
 
