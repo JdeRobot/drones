@@ -18,8 +18,8 @@ CONT = 0
 TEMP = "{}\n" \
        "\n" \
        "###########################\n" \
-       "#      TELLO STATUS       #\n" \
-       "#                         #\n" \
+       "#      ROTORS STATUS       #\n" \
+       "#  (some are dummy params) #\n" \
        "#  MODE: {}       #\n" \
        "#  STATE: {}       #\n" \
        "#  BAT:   {:02d} %            #\n" \
@@ -70,7 +70,7 @@ def global_cb(msg):
 
 
 def print_status():
-    os.system('clear')  # Elegant-less
+    os.system('clear')  
     print(TEMP.format(CONT, state.mode, ext_state_codes[ext_state], bat_percent, h), end='\r')
 
 

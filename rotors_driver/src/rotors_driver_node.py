@@ -218,7 +218,6 @@ class Rotors_Driver():
 			self.__is_armed = True
 			time.sleep(1)  # waits 1 sec
 			tk_req = CommandTOL()
-			# success, result = self.rotors_takeoff_land(1)  # arming is actually taking off in OFFBOARD flight mode
 			return True, 1
 		else:
 			rospy.loginfo("Firefly Disarming")
@@ -245,13 +244,8 @@ class Rotors_Driver():
 		'''speed in m/s'''
 		speed = self.CONSTRAINTS.constraint_speed(int(speed)*100)  # to cm/s
 
-		# if self.__send_cmd("speed {}".format(str(speed))):
-		# 	rospy.loginfo("Rotors drone speed updated to " + str(speed))
-		# 	rospy.set_param("/rotors/speed", speed)
 		return True
-		# else:
-		# 	return False
-
+	
 	def rotors_param_set(self, param_id, value=float(12.0)):
         # string param_id
         # mavros_msgs/ParamValue value
@@ -321,7 +315,6 @@ class Rotors_Driver():
 
 
 		
-		# print("publishing","current x:",self.current_x, "current y:",self.current_y, "current z:", self.current_z, "current des_vel_x:", self.vx_des, "current des_vel_y:", self.vy_des, "current des_vel_z:", self.vz_des)
 
 		quaternion = tf.transformations.quaternion_from_euler(0, 0, desired_yaw_to_go)
 
@@ -356,7 +349,6 @@ if __name__ == '__main__':
 
 
 		rospy.spin()
-		# rospy.loginfo(" >> Published waypoint: x: {}, y: {}, z: {}, yaw: {}".format(x_des, y_des, z_des, yaw_des,vx_des, vy_des, vz_des))
 
 
 	except rospy.ROSInterruptException:
