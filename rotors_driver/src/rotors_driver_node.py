@@ -12,6 +12,15 @@ from mavros_msgs.srv import CommandBool, SetMode, CommandTOL, \
     ParamSet, ParamGet
 import tf
 import time
+from enum import Enum
+
+class States(Enum):
+    
+    ARMING = 1
+    TAKEOFF = 2
+    LANDING = 3
+    FLYING = 4
+    DISARMING = 5
 
 class RotorsConstraints:
     MIN_SPEED = 10
@@ -23,15 +32,15 @@ class RotorsConstraints:
         '''
         return self.MIN_SPEED if s < self.MIN_SPEED else self.MAX_SPEED if s > self.MAX_SPEED else s
 
-class Rotors_Driver():
+class RotorsDriver():
 	CONSTRAINTS = RotorsConstraints()
 
 	def __init__(self):
-		self.sample_time = 1.0
-		self.mav_name = "firefly"
-		self.__is_armed = False
-		self.__is_flying = False
-		self.__state_dict = {}
+		self.sample_time = rospy.get_param('sample_time', 1.0)
+		self.mav_name = rospy.get_param('drone_model', 'firefly')
+		self.drone_state_upd_freq = rospy.get_param('drone_state_timer_frequency', 0.01)
+		self.misc_state_upd_freq = rospy.get_param('misc_state_timer_frequency', 1.0)
+		self.drone_flight_state = States.LANDING
 		self.current_state = Odometry()
 		self.current_x=self.current_state.pose.pose.position.x
 		self.current_y=self.current_state.pose.pose.position.y
@@ -59,20 +68,20 @@ class Rotors_Driver():
 		self.set_param = rospy.Service('mavros/param/set', ParamSet, self.rotors_param_set)
 		self.get_param = rospy.Service('mavros/param/get', ParamGet, self.rotors_param_get)
 		
-		self.rqt_extended_state_publisher = rospy.Publisher('mavros/extended_state', ExtendedState,
+		self.extended_state_publisher = rospy.Publisher('mavros/extended_state', ExtendedState,
                                                             queue_size=1)
-		self.rqt_state_publisher = rospy.Publisher('mavros/state', State,
+		self.state_publisher = rospy.Publisher('mavros/state', State,
                                                             queue_size=1)
 		self.battery_state_publisher = rospy.Publisher('mavros/battery', BatteryState, queue_size=1)
-		self.rqt_pose_publisher = rospy.Publisher( 'mavros/local_position/pose', PoseStamped,
+		self.pose_publisher = rospy.Publisher( 'mavros/local_position/pose', PoseStamped,
                                                   queue_size=1)
-		self.rqt_global_position_publisher = rospy.Publisher( 'mavros/global_position/global', NavSatFix,
+		self.global_position_publisher = rospy.Publisher( 'mavros/global_position/global', NavSatFix,
                                                   queue_size=1)
-		self.rqt_velocity_body_publisher = rospy.Publisher('mavros/local_position/velocity_body',
+		self.velocity_body_publisher = rospy.Publisher('mavros/local_position/velocity_body',
                                                            TwistStamped, queue_size=1)
-		self.rqt_cam_frontal_publisher = rospy.Publisher('/' + self.mav_name + '/cam_frontal/image_raw', Image,
+		self.cam_frontal_publisher = rospy.Publisher('/' + self.mav_name + '/cam_frontal/image_raw', Image,
                                                          queue_size=1)
-		self.rqt_cam_ventral_publisher = rospy.Publisher('/' + self.mav_name + '/cam_ventral/image_raw', Image,
+		self.cam_ventral_publisher = rospy.Publisher('/' + self.mav_name + '/cam_ventral/image_raw', Image,
                                                          queue_size=1)
 
 
@@ -82,59 +91,52 @@ class Rotors_Driver():
 		rospy.Subscriber("mavros/setpoint_raw/local", PositionTarget, self.publish_position_desired)
 		
 
-		rospy.Subscriber("/firefly/ground_truth/odometry", Odometry, self.get_pose)
-		rospy.Subscriber("/firefly/frontal_cam/camera_nadir/image_raw", Image, self.cam_frontal)
-		rospy.Subscriber("/firefly/ventral_cam/camera_nadir/image_raw", Image, self.cam_ventral)
+		rospy.Subscriber('/' + self.mav_name +"/ground_truth/odometry", Odometry, self.odom_callback)
+		rospy.Subscriber('/' + self.mav_name +"/frontal_cam/camera_nadir/image_raw", Image, self.cam_frontal)
+		rospy.Subscriber('/' + self.mav_name +"/ventral_cam/camera_nadir/image_raw", Image, self.cam_ventral)
 		self.firefly_command_publisher = rospy.Publisher('/firefly/command/trajectory', MultiDOFJointTrajectory, queue_size=10)
 		time.sleep(1.0)
-		rospy.Timer(rospy.Duration(1.0/10.0), self.timer_callback)
+		rospy.Timer(rospy.Duration(self.drone_state_upd_freq), self.drone_state_update_callback)
+		rospy.Timer(rospy.Duration(self.misc_state_upd_freq), self.misc_state_update_callback)
 		
-	def timer_callback(self, event=None):
-		landed_state = 2 if self.__is_flying else 1
+	def drone_state_update_callback(self, event=None):
+		
+		pose = PoseStamped(pose=Pose(position=Point(x=self.current_x, y=self.current_y, z=self.current_z),
+                                     orientation=Quaternion(x=float(self.quaternion[0]), y=float(self.quaternion[1]), z=float(self.quaternion[2]),
+                                                            w=float(self.quaternion[3]))),header = Header(frame_id = self.frame_id))
+		self.pose_publisher.publish(pose)
+
+		twist = TwistStamped(twist=Twist(linear=Vector3(x=self.current_vx, y=self.current_vy, z=self.current_vz),
+                                         angular=Vector3(x=self.current_ang_vx, y=self.current_ang_vy, z=self.current_ang_vz)),
+										 header = Header(frame_id = self.frame_id))
+		self.velocity_body_publisher.publish(twist)
+
+
+		self.cam_frontal_publisher.publish(self.frontal_image)
+		self.cam_ventral_publisher.publish(self.ventral_image)
+	
+	def misc_state_update_callback(self, event=None):
+		landed_state = 2 if self.drone_flight_state == 4 else 1
 		ext_state = ExtendedState(vtol_state=0, landed_state=landed_state)
-		self.rqt_extended_state_publisher.publish(ext_state)
+		self.extended_state_publisher.publish(ext_state)
 
 
 		state = State(mode = "OFFBOARD", armed = True)
-		self.rqt_state_publisher.publish(state)
+		self.state_publisher.publish(state)
 		rospy.logdebug('State updated')
 
-
-		try:
-			bat_percent = int(self.__state_dict["bat"])
-		except KeyError:
-			bat_percent = float('nan')
-			# rospy.logwarn("Battery state unknown.")
 		bat = BatteryState(voltage=0.0, current=float('nan'), charge=float('nan'),
-                           capacity=float('nan'), design_capacity=float('nan'), percentage=bat_percent,
+                           capacity=float('nan'), design_capacity=float('nan'), percentage=float('nan'),
                            power_supply_status=0, power_supply_health=0, power_supply_technology=0, present=True,
                            cell_voltage=[float('nan')], location="0",
                            serial_number="")
 		self.battery_state_publisher.publish(bat)
 
-
-		pose = PoseStamped(pose=Pose(position=Point(x=self.current_x, y=self.current_y, z=self.current_z),
-                                     orientation=Quaternion(x=float(self.quaternion[0]), y=float(self.quaternion[1]), z=float(self.quaternion[2]),
-                                                            w=float(self.quaternion[3]))),header = Header(frame_id = self.frame_id))
-		self.rqt_pose_publisher.publish(pose)
-
-
 		# Empty, global pos not known
 		nav_sat = NavSatFix(status=NavSatStatus(status=-1, service=0), latitude=float('nan'),
                             longitude=float('nan'), altitude=float('nan'), position_covariance=[float('nan')] * 9,
                             position_covariance_type=0)
-		self.rqt_global_position_publisher.publish(nav_sat)
-
-
-		twist = TwistStamped(twist=Twist(linear=Vector3(x=self.current_vx, y=self.current_vy, z=self.current_vz),
-                                         angular=Vector3(x=self.current_ang_vx, y=self.current_ang_vy, z=self.current_ang_vz)),
-										 header = Header(frame_id = self.frame_id))
-		self.rqt_velocity_body_publisher.publish(twist)
-
-
-		self.rqt_cam_frontal_publisher.publish(self.frontal_image)
-		self.rqt_cam_ventral_publisher.publish(self.ventral_image)
-
+		self.global_position_publisher.publish(nav_sat)
 
 	def cam_frontal(self, msg):
 		self.frontal_image = msg
@@ -144,7 +146,7 @@ class Rotors_Driver():
 		self.ventral_image = msg
 		rospy.logdebug('Ventral image updated')
 
-	def get_pose(self,msg):
+	def odom_callback(self,msg):
 		self.current_state = msg
 		
 		self.current_x=self.current_state.pose.pose.position.x
@@ -165,9 +167,9 @@ class Rotors_Driver():
 		self.frame_id = self.current_state.header.frame_id
 
 		if self.current_z<0.1:
-			self.__is_flying = False
+			self.drone_flight_state = States.LANDING
 		else:
-			self.__is_flying = True
+			self.drone_flight_state = States.FLYING
 
 
 	def rotors_takeoff_land(self,req):
@@ -199,9 +201,9 @@ class Rotors_Driver():
 		time.sleep(1) #change the time if altitude val doesn't change
 		if req and 0.8<self.current_z<1.2:
 			return True, 0
-		elif not req and 0.0<=self.current_z<0.3:
+		elif not req and 0.0<=self.current_z<0.1:
 			rospy.loginfo("Firefly Disarming")
-			self.__is_armed = False
+			self.drone_flight_state = States.DISARMING
 			return True, 0
 		else:
 			return False,1
@@ -215,13 +217,13 @@ class Rotors_Driver():
 		# uint8 result
 		if req.value:
 			rospy.loginfo("Firefly Arming")
-			self.__is_armed = True
+			self.drone_flight_state = States.ARMING
 			time.sleep(1)  # waits 1 sec
 			tk_req = CommandTOL()
 			return True, 1
 		else:
 			rospy.loginfo("Firefly Disarming")
-			self.__is_armed = False
+			self.drone_flight_state = States.DISARMING
 			return False, 0
 
 	def rotors_set_mode(self, req):
@@ -233,10 +235,9 @@ class Rotors_Driver():
 	def rotors_land(self, req):
 		
 		rospy.loginfo("Landing!")
-		self.__is_flying = False
+		self.drone_flight_state = States.LANDING
+		
 
-		cmd = CommandBool()
-		cmd.value = False
 		success, result = self.rotors_takeoff_land(0)
 		return success, result
 		
@@ -337,6 +338,10 @@ class Rotors_Driver():
 		# time.sleep(0.1) #commented out for vel control
 		self.firefly_command_publisher.publish(traj)
 
+	# Deleting (Calling destructor)
+	def __del__(self):
+		print('Destructor called, objs deleted.')
+
 
 		
 
@@ -345,7 +350,7 @@ if __name__ == '__main__':
 		
 		
 		rospy.init_node("rotors_driver", anonymous = True)
-		rotors = Rotors_Driver()
+		rotors = RotorsDriver()
 
 
 		rospy.spin()
@@ -353,4 +358,4 @@ if __name__ == '__main__':
 
 	except rospy.ROSInterruptException:
 		print("ROS Terminated")
-		pass
+		del rotors
