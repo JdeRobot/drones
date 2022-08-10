@@ -17,10 +17,13 @@ from enum import Enum
 class States(Enum):
     
     ARMING = 1
-    TAKEOFF = 2
-    LANDING = 3
+    ARMED = 2
+    TAKINGOFF = 3
     FLYING = 4
-    DISARMING = 5
+    LANDING = 5
+    LANDED = 6
+    DISARMING = 7
+    DISARMED = 8
 
 class RotorsConstraints:
     MIN_SPEED = 10
@@ -40,7 +43,7 @@ class RotorsDriver():
 		self.mav_name = rospy.get_param('drone_model', 'firefly')
 		self.drone_state_upd_freq = rospy.get_param('drone_state_timer_frequency', 0.01)
 		self.misc_state_upd_freq = rospy.get_param('misc_state_timer_frequency', 1.0)
-		self.drone_flight_state = States.LANDING
+		self.drone_flight_state = States.LANDED
 		self.current_state = Odometry()
 		self.current_x=self.current_state.pose.pose.position.x
 		self.current_y=self.current_state.pose.pose.position.y
@@ -166,13 +169,13 @@ class RotorsDriver():
 
 		self.frame_id = self.current_state.header.frame_id
 
-		if self.current_z<0.1:
-			self.drone_flight_state = States.LANDING
+		if self.current_z<0.09:
+			self.drone_flight_state = States.LANDED
 		else:
 			self.drone_flight_state = States.FLYING
 
 
-	def rotors_takeoff_land(self,req):
+	def rotors_landing(self,req):
 		quaternion = tf.transformations.quaternion_from_euler(0, 0, 0.0)
 		traj = MultiDOFJointTrajectory()
 		
@@ -182,11 +185,7 @@ class RotorsDriver():
 		traj.joint_names.append('base_link')
 		traj.header=header
 		
-		if req:
-			transforms =Transform(translation=Point(0.0, 0.0, 1.0), rotation=Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3]))
-			velocities =Twist()
-			accelerations=Twist()
-		else:
+		if not req:
 			transforms =Transform(translation=Point(self.current_x, self.current_y, 0.0), rotation=Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3]))
 			velocities =Twist(linear = Vector3(x=0.0, y=0.0, z=0.0), angular=Vector3(x=0.0, y=0.0, z=0.0) )
 			accelerations=Twist(linear = Vector3(x=0.0, y=0.0, z=0.0), angular=Vector3(x=0.0, y=0.0, z=0.0) )
@@ -197,13 +196,11 @@ class RotorsDriver():
 		traj.points.append(point)
 		
 
-		self.firefly_command_publisher.publish(traj)
-		time.sleep(1) #change the time if altitude val doesn't change
-		if req and 0.8<self.current_z<1.2:
-			return True, 0
-		elif not req and 0.0<=self.current_z<0.1:
-			rospy.loginfo("Firefly Disarming")
-			self.drone_flight_state = States.DISARMING
+		
+		while not(0.0<=self.current_z<0.1):
+			self.firefly_command_publisher.publish(traj)
+
+		if not req :
 			return True, 0
 		else:
 			return False,1
@@ -218,12 +215,14 @@ class RotorsDriver():
 		if req.value:
 			rospy.loginfo("Firefly Arming")
 			self.drone_flight_state = States.ARMING
-			time.sleep(1)  # waits 1 sec
-			tk_req = CommandTOL()
+			time.sleep(0.01) 
+			self.drone_flight_state = States.ARMED
 			return True, 1
 		else:
 			rospy.loginfo("Firefly Disarming")
 			self.drone_flight_state = States.DISARMING
+			time.sleep(0.01)
+			self.drone_flight_state = States.DISARMED
 			return False, 0
 
 	def rotors_set_mode(self, req):
@@ -236,9 +235,8 @@ class RotorsDriver():
 		
 		rospy.loginfo("Landing!")
 		self.drone_flight_state = States.LANDING
-		
-
-		success, result = self.rotors_takeoff_land(0)
+		success, result = self.rotors_landing(0)
+		self.drone_flight_state = States.LANDED
 		return success, result
 		
 	def rotors_change_speed(self, speed):
@@ -288,6 +286,10 @@ class RotorsDriver():
 		yaw_des = msg.yaw
 		yaw_rate_des = msg.yaw_rate
 
+		if self.drone_flight_state == 6 and int(desired_z_to_go):
+			self.drone_flight_state = States.TAKINGOFF
+
+
 		if (desired_x_to_go ==0.0 and desired_y_to_go ==0.0 and yaw_des == 0.0) and (vx_des >0.0 or vy_des >0.0  or yaw_rate_des>0) and vz_des >=0.0:
 			desired_x_to_go=self.current_x+(vx_des*self.sample_time)
 			desired_y_to_go=self.current_y+(vy_des*self.sample_time)
@@ -313,9 +315,6 @@ class RotorsDriver():
 			desired_yaw_to_go = self.current_yaw 
 			print("no motion asked")
 
-
-
-		
 
 		quaternion = tf.transformations.quaternion_from_euler(0, 0, desired_yaw_to_go)
 
