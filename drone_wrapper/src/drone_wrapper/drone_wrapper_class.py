@@ -100,7 +100,6 @@ class FRAMES:
             r --> rotations
             t --> translations
             s --> scale
-
         vin = np.array([twist.linear.x, twist.linear.y, twist.linear.z])
         result = np.dot(vin, H[:3, :3])
         """

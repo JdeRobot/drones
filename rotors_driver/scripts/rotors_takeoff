@@ -1,0 +1,2 @@
+#! /bin/sh
+rosservice call /mavros/cmd/arming 0.0 0.0 0.0 0.0 0.0
