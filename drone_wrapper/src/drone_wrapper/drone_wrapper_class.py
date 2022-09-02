@@ -657,7 +657,7 @@ class DroneWrapper:
         # cam_frontal_topic = rospy.get_param('cam_frontal_topic', None)
         # cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
 
-        drone_model = rospy.get_param('drone_model', 'iris')  # default --> iris
+        drone_model = rospy.get_param('drone_model', 'firefly')  # default --> iris
 
         self.frontal_image = Image()
         self.ventral_image = Image()
