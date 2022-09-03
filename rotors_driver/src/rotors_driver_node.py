@@ -40,7 +40,7 @@ class RotorsDriver():
 
 	def __init__(self):
 		self.sample_time = rospy.get_param('sample_time', 1.0)
-		self.mav_name = rospy.get_param('drone_model', 'firefly')
+		self.mav_name = rospy.get_param('drone_model', 'iris')
 		self.drone_state_upd_freq = rospy.get_param('drone_state_timer_frequency', 0.01)
 		self.misc_state_upd_freq = rospy.get_param('misc_state_timer_frequency', 1.0)
 		self.drone_flight_state = States.LANDED
@@ -97,7 +97,7 @@ class RotorsDriver():
 		rospy.Subscriber('/' + self.mav_name +"/ground_truth/odometry", Odometry, self.odom_callback)
 		rospy.Subscriber('/' + self.mav_name +"/frontal_cam/camera_nadir/image_raw", Image, self.cam_frontal)
 		rospy.Subscriber('/' + self.mav_name +"/ventral_cam/camera_nadir/image_raw", Image, self.cam_ventral)
-		self.firefly_command_publisher = rospy.Publisher('/firefly/command/trajectory', MultiDOFJointTrajectory, queue_size=10)
+		self.iris_command_publisher = rospy.Publisher('/iris/command/trajectory', MultiDOFJointTrajectory, queue_size=10)
 		time.sleep(1.0)
 		rospy.Timer(rospy.Duration(self.drone_state_upd_freq), self.drone_state_update_callback)
 		rospy.Timer(rospy.Duration(self.misc_state_upd_freq), self.misc_state_update_callback)
@@ -198,7 +198,7 @@ class RotorsDriver():
 
 		
 		while not(0.0<=self.current_z<0.1):
-			self.firefly_command_publisher.publish(traj)
+			self.iris_command_publisher.publish(traj)
 
 		if not req :
 			return True, 0
@@ -213,13 +213,13 @@ class RotorsDriver():
 		# bool success
 		# uint8 result
 		if req.value:
-			rospy.loginfo("Firefly Arming")
+			rospy.loginfo("iris Arming")
 			self.drone_flight_state = States.ARMING
 			time.sleep(0.01) 
 			self.drone_flight_state = States.ARMED
 			return True, 1
 		else:
-			rospy.loginfo("Firefly Disarming")
+			rospy.loginfo("iris Disarming")
 			self.drone_flight_state = States.DISARMING
 			time.sleep(0.01)
 			self.drone_flight_state = States.DISARMED
@@ -335,7 +335,7 @@ class RotorsDriver():
 		traj.points.append(point)
 
 		# time.sleep(0.1) #commented out for vel control
-		self.firefly_command_publisher.publish(traj)
+		self.iris_command_publisher.publish(traj)
 
 	# Deleting (Calling destructor)
 	def __del__(self):
