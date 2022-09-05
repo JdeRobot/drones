@@ -39,10 +39,11 @@ class RotorsDriver():
 	CONSTRAINTS = RotorsConstraints()
 
 	def __init__(self):
-		self.sample_time = rospy.get_param('sample_time', 1.0)
-		self.mav_name = rospy.get_param('drone_model', 'iris')
-		self.drone_state_upd_freq = rospy.get_param('drone_state_timer_frequency', 0.01)
-		self.misc_state_upd_freq = rospy.get_param('misc_state_timer_frequency', 1.0)
+		self.ns = rospy.get_namespace()
+		self.sample_time = rospy.get_param(self.ns +'sample_time', 1.0)
+		self.mav_name = rospy.get_param(self.ns +'drone_model', 'iris')
+		self.drone_state_upd_freq = rospy.get_param(self.ns +'drone_state_timer_frequency', 0.01)
+		self.misc_state_upd_freq = rospy.get_param(self.ns +'misc_state_timer_frequency', 1.0)
 		self.drone_flight_state = States.LANDED
 		self.current_state = Odometry()
 		self.current_x=self.current_state.pose.pose.position.x
@@ -82,9 +83,9 @@ class RotorsDriver():
                                                   queue_size=1)
 		self.velocity_body_publisher = rospy.Publisher('mavros/local_position/velocity_body',
                                                            TwistStamped, queue_size=1)
-		self.cam_frontal_publisher = rospy.Publisher('/' + self.mav_name + '/cam_frontal/image_raw', Image,
+		self.cam_frontal_publisher = rospy.Publisher(self.ns + 'cam_frontal/image_raw', Image,
                                                          queue_size=1)
-		self.cam_ventral_publisher = rospy.Publisher('/' + self.mav_name + '/cam_ventral/image_raw', Image,
+		self.cam_ventral_publisher = rospy.Publisher(self.ns + 'cam_ventral/image_raw', Image,
                                                          queue_size=1)
 
 
@@ -94,10 +95,10 @@ class RotorsDriver():
 		rospy.Subscriber("mavros/setpoint_raw/local", PositionTarget, self.publish_position_desired)
 		
 
-		rospy.Subscriber('/' + self.mav_name +"/ground_truth/odometry", Odometry, self.odom_callback)
-		rospy.Subscriber('/' + self.mav_name +"/frontal_cam/camera_nadir/image_raw", Image, self.cam_frontal)
-		rospy.Subscriber('/' + self.mav_name +"/ventral_cam/camera_nadir/image_raw", Image, self.cam_ventral)
-		self.iris_command_publisher = rospy.Publisher('/iris/command/trajectory', MultiDOFJointTrajectory, queue_size=10)
+		rospy.Subscriber(self.ns + 'ground_truth/odometry', Odometry, self.odom_callback)
+		rospy.Subscriber(self.ns + 'frontal_cam/camera_nadir/image_raw', Image, self.cam_frontal)
+		rospy.Subscriber(self.ns + 'ventral_cam/camera_nadir/image_raw', Image, self.cam_ventral)
+		self.iris_command_publisher = rospy.Publisher(self.ns + 'command/trajectory', MultiDOFJointTrajectory, queue_size=10)
 		time.sleep(1.0)
 		rospy.Timer(rospy.Duration(self.drone_state_upd_freq), self.drone_state_update_callback)
 		rospy.Timer(rospy.Duration(self.misc_state_upd_freq), self.misc_state_update_callback)
