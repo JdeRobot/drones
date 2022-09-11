@@ -30,10 +30,11 @@
             <name>Gazebo/Grey</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
-          <ambient>0 0 1 1</ambient>
-          <diffuse>0.3 0.3 0.8 1</diffuse>
-          <specular>0.1 0.1 0.005 1</specular>
-          <emissive>0 0 0 1</emissive>
+          <!-- Red -->
+          <ambient>0.3 0.1 0.1 1</ambient>
+          <diffuse>0.8 0.05 0.05 1</diffuse>
+          <specular>0.01 0.1 0.01 1</specular>
+          <emissive>0.1 0 0.1 1</emissive>
           <shader type='vertex'>
             <normal_map>__default__</normal_map>
           </shader>
