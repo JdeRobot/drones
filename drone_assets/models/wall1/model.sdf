@@ -29,6 +29,7 @@
             <name>Gazebo/Grey</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
+          <!-- Blue -->
           <ambient>0 0 1 1</ambient>
           <diffuse>0.3 0.3 0.8 1</diffuse>
           <specular>0.01 0.1 0.01 1</specular>
