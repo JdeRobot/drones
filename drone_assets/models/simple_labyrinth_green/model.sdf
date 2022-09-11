@@ -21,8 +21,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -50,8 +51,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -79,8 +81,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -108,8 +111,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -137,8 +141,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -166,8 +171,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -195,8 +201,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -224,8 +231,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -253,8 +261,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -282,8 +291,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -311,8 +321,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -340,8 +351,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -369,8 +381,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -398,8 +411,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -427,8 +441,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -456,8 +471,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
@@ -485,8 +501,9 @@
         </geometry>
         <material>
           <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
+            <uri>model://simple_labyrinth_green/materials/scripts</uri>
+            <uri>model://simple_labyrinth_green/materials/textures</uri>
+            <name>simple_labyrinth_green</name>
           </script>
         </material>
       </visual>
