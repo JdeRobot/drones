@@ -1,4 +1,4 @@
-material package_box
+material package_box_02
 {
     receive shadows off
     technique
@@ -11,7 +11,7 @@ material package_box
 
             texture_unit
             {
-                texture qr_coord.png
+                texture package_box_02.png
                 filtering anistropic
                 max_anisotropy 16
             }
