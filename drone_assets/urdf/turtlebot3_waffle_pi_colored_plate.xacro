@@ -7,7 +7,7 @@
     <xacro:include filename="$(find turtlebot3_description)/urdf/turtlebot3_waffle_pi.urdf.xacro" />
 
     <material name="green1">
-        <color rgba="0.0 0.8 0.0 1.0"/>
+        <texture filename="file://$(find drone_assets)/urdf/marker0.png" />
     </material>
 
     <link name="colored_plate">
@@ -21,7 +21,7 @@
     </link>
 
     <gazebo reference="colored_plate">
-        <material>Gazebo/Green</material>
+        <material>marker0</material>
     </gazebo>
 
     <joint name="base_to_colored_plate" type="fixed">
