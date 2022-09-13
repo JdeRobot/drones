@@ -44,6 +44,7 @@ class RotorsDriver():
 		self.mav_name = rospy.get_param(self.ns +'drone_model', 'iris')
 		self.drone_state_upd_freq = rospy.get_param(self.ns +'drone_state_timer_frequency', 0.01)
 		self.misc_state_upd_freq = rospy.get_param(self.ns +'misc_state_timer_frequency', 1.0)
+		self.enable_depth = rospy.get_param(self.ns +'enable_depth', False)
 		self.drone_flight_state = States.LANDED
 		self.current_state = Odometry()
 		self.current_x=self.current_state.pose.pose.position.x
@@ -89,8 +90,16 @@ class RotorsDriver():
                                                          queue_size=1)
 
 
-		
-		
+		if self.enable_depth:
+			self.depth_frontal_image = Image()
+			self.depth_ventral_image = Image()
+			self.depth_cam_frontal_publisher = rospy.Publisher(self.ns + 'depth_cam_frontal/image_raw', Image,
+                                                         queue_size=1)
+			self.depth_cam_ventral_publisher = rospy.Publisher(self.ns + 'depth_cam_ventral/image_raw', Image,
+                                                         queue_size=1)
+			rospy.Subscriber(self.ns + 'vi_sensor_frontal/camera_depth/camera/image_raw', Image, self.depth_cam_frontal)
+			rospy.Subscriber(self.ns + 'vi_sensor_ventral/camera_depth/camera/image_raw', Image, self.depth_cam_ventral)
+
 		
 		rospy.Subscriber("mavros/setpoint_raw/local", PositionTarget, self.publish_position_desired)
 		
@@ -118,6 +127,10 @@ class RotorsDriver():
 
 		self.cam_frontal_publisher.publish(self.frontal_image)
 		self.cam_ventral_publisher.publish(self.ventral_image)
+
+		if self.enable_depth:
+			self.depth_cam_frontal_publisher.publish(self.depth_frontal_image)
+			self.depth_cam_ventral_publisher.publish(self.depth_ventral_image)
 	
 	def misc_state_update_callback(self, event=None):
 		landed_state = 2 if self.drone_flight_state == 4 else 1
@@ -149,6 +162,14 @@ class RotorsDriver():
 	def cam_ventral(self, msg):
 		self.ventral_image = msg
 		rospy.logdebug('Ventral image updated')
+	
+	def depth_cam_frontal(self, msg):
+		self.depth_frontal_image = msg
+		rospy.logdebug('Frontal depth image updated')
+
+	def depth_cam_ventral(self, msg):
+		self.depth_ventral_image = msg
+		rospy.logdebug('Ventral depth image updated')
 
 	def odom_callback(self,msg):
 		self.current_state = msg

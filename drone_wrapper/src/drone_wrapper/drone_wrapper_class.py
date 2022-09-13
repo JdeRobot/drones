@@ -263,6 +263,18 @@ class DroneWrapper:
         rospy.logdebug('Ventral image updated')
 
         self.rqt_cam_ventral_publisher.publish(self.ventral_image)
+    
+    def depth_cam_frontal_cb(self, msg):
+        self.depth_frontal_image = msg
+        rospy.logdebug('Frontal depth image updated')
+
+        self.rqt_depth_cam_frontal_publisher.publish(self.depth_frontal_image)
+
+    def depth_cam_ventral_cb(self, msg):
+        self.depth_ventral_image = msg
+        rospy.logdebug('Ventral depth image updated')
+
+        self.rqt_depth_cam_ventral_publisher.publish(self.depth_ventral_image)
 
     def stay_armed_stay_offboard_cb(self, event):
         try:
@@ -280,6 +292,12 @@ class DroneWrapper:
 
     def get_ventral_image(self):
         return self.bridge.imgmsg_to_cv2(self.ventral_image)
+    
+    def get_depth_frontal_image(self):
+        return self.bridge.imgmsg_to_cv2(self.depth_frontal_image)
+
+    def get_depth_ventral_image(self):
+        return self.bridge.imgmsg_to_cv2(self.depth_ventral_image)
 
     def get_position(self, frame="map"):
         ps = self.frames_tf.transform(self.pose_stamped.header.frame_id, frame, 
@@ -658,6 +676,7 @@ class DroneWrapper:
         # cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
 
         drone_model = rospy.get_param(self.ns +'drone_model', 'iris')  # default --> iris
+        enable_depth = rospy.get_param(self.ns +'enable_depth', False)
 
         self.frontal_image = Image()
         self.ventral_image = Image()
@@ -665,6 +684,18 @@ class DroneWrapper:
         cam_ventral_topic = '/' + drone_model + '/cam_ventral/image_raw'
         rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
         rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
+
+        if enable_depth:
+            self.rqt_depth_cam_frontal_publisher = rospy.Publisher(self.ns + 'drone_wrapper/depth_cam_frontal/image_raw', Image,
+                                                         queue_size=1)
+            self.rqt_depth_cam_ventral_publisher = rospy.Publisher(self.ns + 'drone_wrapper/depth_cam_ventral/image_raw', Image,
+                                                         queue_size=1)
+            self.depth_frontal_image = Image()
+            self.depth_ventral_image = Image()
+            depth_cam_frontal_topic = '/' + drone_model + '/depth_cam_frontal/image_raw'
+            depth_cam_ventral_topic = '/' + drone_model + '/depth_cam_ventral/image_raw'
+            rospy.Subscriber(depth_cam_frontal_topic, Image, self.depth_cam_frontal_cb)
+            rospy.Subscriber(depth_cam_ventral_topic, Image, self.depth_cam_ventral_cb)
 
         self.setpoint_raw_publisher = rospy.Publisher(self.ns + 'mavros/setpoint_raw/local', PositionTarget,
                                                       queue_size=1)
