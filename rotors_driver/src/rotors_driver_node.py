@@ -100,17 +100,15 @@ class RotorsDriver():
 			rospy.Subscriber(self.ns + 'vi_sensor_frontal/camera_depth/camera/image_raw', Image, self.depth_cam_frontal)
 			rospy.Subscriber(self.ns + 'vi_sensor_ventral/camera_depth/camera/image_raw', Image, self.depth_cam_ventral)
 
-		
-		rospy.Subscriber("mavros/setpoint_raw/local", PositionTarget, self.publish_position_desired)
-		
-
 		rospy.Subscriber(self.ns + 'ground_truth/odometry', Odometry, self.odom_callback)
 		rospy.Subscriber(self.ns + 'frontal_cam/camera_nadir/image_raw', Image, self.cam_frontal)
 		rospy.Subscriber(self.ns + 'ventral_cam/camera_nadir/image_raw', Image, self.cam_ventral)
-		self.iris_command_publisher = rospy.Publisher(self.ns + 'command/trajectory', MultiDOFJointTrajectory, queue_size=10)
+		
 		time.sleep(1.0)
 		rospy.Timer(rospy.Duration(self.drone_state_upd_freq), self.drone_state_update_callback)
 		rospy.Timer(rospy.Duration(self.misc_state_upd_freq), self.misc_state_update_callback)
+		self.iris_command_publisher = rospy.Publisher(self.ns + 'command/trajectory', MultiDOFJointTrajectory, queue_size=10)
+		rospy.Subscriber("mavros/setpoint_raw/local", PositionTarget, self.publish_position_desired)
 		
 	def drone_state_update_callback(self, event=None):
 		
