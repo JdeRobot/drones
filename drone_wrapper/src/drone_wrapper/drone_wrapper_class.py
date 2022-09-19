@@ -42,7 +42,7 @@ class FRAMES:
         elif str(frame).lower() in ["frd", "body_frd", "base_link_frd"]:
             return "base_link_frd"
         else:
-            raise self.UnknownFrameError
+            return
 
     def get_frame_id(self, frame):
         if str(frame).lower() in ["enu", "local_enu", "map", "world"]:
@@ -54,7 +54,7 @@ class FRAMES:
         elif str(frame).lower() in ["frd", "body_frd", "base_link_frd"]:
             return 12
         else:
-            raise self.UnknownFrameError
+            return
 
     def id2frame(self, id_):
         if id_ == self.LOCAL_ENU:
@@ -66,7 +66,7 @@ class FRAMES:
         elif id_ == self.BODY_FRD:
             return "base_link_frd"
         else:
-            raise self.UnknownFrameError
+            return
 
     def __transform_pose(self, from_, to, pose):
         if from_ == to:
@@ -550,22 +550,61 @@ class DroneWrapper:
             rospy.loginfo('Drone is already flying!')
             return
 
-        self.set_cmd_pos(0, 0, 0, 0)
-        self.hold_setpoint_raw()
-        self.arm(True)
-        self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(3), self.stay_armed_stay_offboard_cb)
-        while True:
-            while not (self.state.armed and self.state.mode == 'OFFBOARD'):
-                self.rate.sleep()
-            rospy.loginfo('Sleeping 1 secs to confirm change')
-            rospy.sleep(1)
-            if self.state.mode == 'OFFBOARD':
-                break
-        self.set_cmd_mix(z=h)
-        rospy.loginfo('Taking off!!!')
-        while True:
-            if abs(self.pose_stamped.pose.position.z - h) < precision:
-                break
+        if self.drone_model == 'iris' or self.drone_model == 'iris1':   #This condition is specifically for solving Rotors sim bug so dev 
+                                                                        #who are using drone_model name as  iris, please try to change it or vary the script accordingly for rotors
+            
+            self.arm(True)
+            self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(3), self.stay_armed_stay_offboard_cb)
+            pose = Pose(position=Point(x=self.pose_stamped.pose.position.x, 
+                                    y=self.pose_stamped.pose.position.y, z=h))
+            pose = self.frames_tf.transform("map", "map", pose).pose
+
+            twist = Twist(linear=Vector3(x=0.0, y=0.0, z=0),
+                        angular=Vector3(x=0, y=0, z=0.0))
+            twist = self.frames_tf.transform("flu", "flu", twist).twist
+
+            self.coord_frame = 8
+            self.setpoint_raw.header.frame_id = self.frames_tf.get_frame("flu")
+            self.setpoint_raw.coordinate_frame = self.coord_frame
+
+            self.posx = self.pose_stamped.pose.position.x
+            self.posy = self.pose_stamped.pose.position.y
+            self.height = pose.position.z
+            self.vx = twist.linear.x
+            self.vy = twist.linear.y
+            self.vz = 0
+
+            self.setpoint_raw.position.z = pose.position.z
+            self.setpoint_raw.velocity.x = twist.linear.x
+            self.setpoint_raw.velocity.y = twist.linear.y
+            self.setpoint_raw.yaw_rate = twist.angular.z
+
+            global CMD
+            CMD = 2  # MIX
+            self.setpoint_raw.type_mask = 1987  # vx vy vz z yaw_rate
+
+            self.setpoint_raw_publisher.publish(self.setpoint_raw)
+
+            rospy.loginfo('Taking off!!!')
+            
+        
+        else:
+            self.set_cmd_pos(0, 0, 0, 0)
+            self.hold_setpoint_raw()
+            self.arm(True)
+            self.stay_armed_stay_offboard_timer = rospy.Timer(rospy.Duration(3), self.stay_armed_stay_offboard_cb)
+            while True:
+                while not (self.state.armed and self.state.mode == 'OFFBOARD'):
+                    self.rate.sleep()
+                rospy.loginfo('Sleeping 1 secs to confirm change')
+                rospy.sleep(1)
+                if self.state.mode == 'OFFBOARD':
+                    break
+            self.set_cmd_mix(z=h)
+            rospy.loginfo('Taking off!!!')
+            while True:
+                if abs(self.pose_stamped.pose.position.z - h) < precision:
+                    break
         self.set_cmd_vel()
 
     # NOT USED
@@ -609,7 +648,7 @@ class DroneWrapper:
 
         rospy.on_shutdown(self.shutdown)
 
-        drone_model = rospy.get_param('drone_model', 'iris')  # default --> iris
+        self.drone_model = rospy.get_param('drone_model', 'iris')  # default --> iris
 
         self.state = State()
         self.extended_state = ExtendedState()
@@ -675,13 +714,13 @@ class DroneWrapper:
         # cam_frontal_topic = rospy.get_param('cam_frontal_topic', None)
         # cam_frontal_topic = rospy.get_param('cam_frontal_topic', '/iris/cam_frontal/image_raw')
 
-        drone_model = rospy.get_param(self.ns +'drone_model', 'iris')  # default --> iris
+        self.drone_model = rospy.get_param(self.ns +'drone_model', 'iris')  # default --> iris
         enable_depth = rospy.get_param(self.ns +'enable_depth', False)
 
         self.frontal_image = Image()
         self.ventral_image = Image()
-        cam_frontal_topic = '/' + drone_model + '/cam_frontal/image_raw'
-        cam_ventral_topic = '/' + drone_model + '/cam_ventral/image_raw'
+        cam_frontal_topic = '/' + self.drone_model + '/cam_frontal/image_raw'
+        cam_ventral_topic = '/' + self.drone_model + '/cam_ventral/image_raw'
         rospy.Subscriber(cam_frontal_topic, Image, self.cam_frontal_cb)
         rospy.Subscriber(cam_ventral_topic, Image, self.cam_ventral_cb)
 
@@ -692,8 +731,8 @@ class DroneWrapper:
                                                          queue_size=1)
             self.depth_frontal_image = Image()
             self.depth_ventral_image = Image()
-            depth_cam_frontal_topic = '/' + drone_model + '/depth_cam_frontal/image_raw'
-            depth_cam_ventral_topic = '/' + drone_model + '/depth_cam_ventral/image_raw'
+            depth_cam_frontal_topic = '/' + self.drone_model + '/depth_cam_frontal/image_raw'
+            depth_cam_ventral_topic = '/' + self.drone_model + '/depth_cam_ventral/image_raw'
             rospy.Subscriber(depth_cam_frontal_topic, Image, self.depth_cam_frontal_cb)
             rospy.Subscriber(depth_cam_ventral_topic, Image, self.depth_cam_ventral_cb)
 

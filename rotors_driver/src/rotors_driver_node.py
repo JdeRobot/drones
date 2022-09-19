@@ -310,13 +310,13 @@ class RotorsDriver():
 			self.drone_flight_state = States.TAKINGOFF
 
 
-		if (desired_x_to_go ==0.0 and desired_y_to_go ==0.0 and yaw_des == 0.0) and (vx_des >0.0 or vy_des >0.0  or yaw_rate_des>0) and vz_des >=0.0:
+		if (desired_x_to_go ==0.0 and desired_y_to_go ==0.0 and yaw_des == 0.0 and desired_z_to_go == 0.0) and (vx_des >0.0 or vy_des >0.0  or yaw_rate_des>0) and vz_des >=0.0:
 			desired_x_to_go=self.current_x+(vx_des*self.sample_time)
 			desired_y_to_go=self.current_y+(vy_des*self.sample_time)
 			desired_z_to_go=self.current_z+(vz_des*self.sample_time)
 			desired_yaw_to_go = self.current_yaw +(yaw_rate_des*self.sample_time)
 			print("Vel control")
-		elif (desired_x_to_go ==0.0 and desired_y_to_go ==0.0 and vz_des ==0.0 and yaw_des == 0.0) and ((vx_des >0.0 or vy_des >0.0 or yaw_rate_des>0)and desired_z_to_go>0.0 ):
+		elif (desired_x_to_go ==0.0 and desired_y_to_go ==0.0 and vz_des ==0.0 and yaw_des == 0.0) and ((vx_des >0.0 or vy_des >0.0 or yaw_rate_des>0)and desired_z_to_go>=0.0 ):
 			desired_x_to_go=self.current_x+(vx_des*self.sample_time)
 			desired_y_to_go=self.current_y+(vy_des*self.sample_time)
 			desired_z_to_go= desired_z_to_go
